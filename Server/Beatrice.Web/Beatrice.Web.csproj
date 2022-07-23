@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+	<TargetFramework>net6.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor.Extensions.WebUSB" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.6" />
+    <PackageReference Include="Sentry.AspNetCore" Version="3.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Beatrice.Service\Beatrice.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Api\" />
+    <Folder Include="ViewModel\" />
+    <Folder Include="wwwroot\lib\signalr\dist\browser\" />
+  </ItemGroup>
+
+</Project>
