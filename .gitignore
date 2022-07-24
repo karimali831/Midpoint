@@ -3,8 +3,6 @@ obj/
 .vs/
 .expo/
 
-Server/Beatrice.Web/wwwroot/*
-
 # Local Netlify folder
 .netlify
 

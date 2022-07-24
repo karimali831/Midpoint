@@ -20,7 +20,6 @@
   <ItemGroup>
     <Folder Include="Controllers\Api\" />
     <Folder Include="ViewModel\" />
-    <Folder Include="wwwroot\lib\signalr\dist\browser\" />
   </ItemGroup>
 
 </Project>
