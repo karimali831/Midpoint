@@ -1,7 +1,7 @@
 import { IUser } from '../../../models/IUser';
 
 export interface IUserState {
-    user: IUser | null;
+    user: IUser | null
     signingIn: boolean;
     authSuccess: boolean;
 }

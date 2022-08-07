@@ -12,5 +12,6 @@ export type RootNavigatorParamsList = {
 
 export type RouteParamList = {
     [AppScreen.Splash]: undefined;
-    [AppScreen.Host]: undefined
+    [AppScreen.Login]: undefined;
+    [AppScreen.Host]: undefined;
 };

@@ -27,6 +27,7 @@
         "react-native-screens": "*"
     },
     "dependencies": {
+        "@aws-amplify/ui-react": "^3.2.1",
         "@fortawesome/fontawesome-svg-core": "^6.1.1",
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@fortawesome/react-native-fontawesome": "^0.2.7",
@@ -38,8 +39,9 @@
         "@types/react-router-dom": "^5.3.3",
         "@types/react-router-redux": "^5.0.21",
         "@types/route-parser": "^0.1.4",
+        "aws-amplify": "^4.3.29",
         "axios": "^0.27.2",
-        "firebase": "9.6.11",
+        "firebase": "^9.9.1",
         "history": "^4.10.1",
         "moment": "^2.29.1",
         "native-base": "^3.4.5",

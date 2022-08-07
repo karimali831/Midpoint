@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-beatrice-dev-202849-authRole",
+      "UnauthRoleArn": "arn:aws:iam::909425903137:role/amplify-beatrice-dev-202849-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::909425903137:role/amplify-beatrice-dev-202849-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-beatrice-dev-202849-deployment",
+      "UnauthRoleName": "amplify-beatrice-dev-202849-unauthRole",
+      "StackName": "amplify-beatrice-dev-202849",
+      "StackId": "arn:aws:cloudformation:us-west-1:909425903137:stack/amplify-beatrice-dev-202849/02bd3130-1107-11ed-adf0-02d5b18b2adf",
+      "AmplifyAppId": "d3868im66se7sp"
+    }
+  }
+}

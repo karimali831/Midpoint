@@ -53,7 +53,7 @@ export function* doTest() {
 export function* userLoggedOut() {
     yield put(
         ShowScreenAction({
-            screen: AppScreen.Host,
+            screen: AppScreen.Login,
         })
     );
 }

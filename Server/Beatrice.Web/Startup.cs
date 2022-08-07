@@ -1,7 +1,9 @@
 using Beatrice.Service;
+using Beatrice.Web.Controllers.Api;
 using Beatrice.Web.ErrorHandler;
 using Beatrice.Web.Helper;
 using Blazor.Extensions.WebUSB;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beatrice.Web
@@ -12,6 +14,11 @@ namespace Beatrice.Web
 
         public Startup(IWebHostEnvironment env)
         {
+            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(20);
+            GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(30);
+            GlobalHost.Configuration.KeepAlive = null;
+
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile($"appsettings.json", optional: true, reloadOnChange: true)
@@ -43,7 +50,10 @@ namespace Beatrice.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddSignalR();
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
 
             // Blazor
             services.AddServerSideBlazor();
@@ -58,6 +68,7 @@ namespace Beatrice.Web
                 {
                     builder.WithOrigins(
                         "*",
+                        "http://localhost:3000",
                         "https://karimali-001-site5.itempurl.com"
                     )
                     .AllowAnyHeader()
@@ -104,6 +115,8 @@ namespace Beatrice.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<WebRTCHub>("/webrtchub");
+                endpoints.MapHub<WebRTCHub2>("/WebRTCHub2");
                 endpoints.MapRazorPages();
 
                 endpoints.MapControllerRoute(
@@ -111,7 +124,6 @@ namespace Beatrice.Web
                     pattern: "{controller=Home}/{action=index}/{id?}"
                 );
 
-                endpoints.MapHub<WebRTCHub>("/WebRTCHub");
                 endpoints.MapBlazorHub();
             });
 

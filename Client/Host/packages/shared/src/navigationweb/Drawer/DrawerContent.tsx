@@ -80,7 +80,7 @@ export const DrawerContent = () => {
                                     ? auth.signOut()
                                     : dispatch(
                                         ShowScreenAction({
-                                            screen: AppScreen.Host,
+                                            screen: AppScreen.Login,
                                         })
                                     )
                             }

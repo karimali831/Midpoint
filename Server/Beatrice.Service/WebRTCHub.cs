@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Beatrice.Service
 {
-    public class WebRTCHub : Hub
+    public class WebRTCHub2 : Hub
     {
         private static RoomManager roomManager = new RoomManager();
 

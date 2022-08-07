@@ -11,6 +11,7 @@ import {
     ShowScreenAction
 } from '../../state/contexts/app/Actions';
 import { getAppState } from '../../state/contexts/app/Selectors';
+import { getUser } from '../../state/contexts/user/Selectors';
 import styles from './styles';
 
 const Splash = () => {
@@ -18,6 +19,7 @@ const Splash = () => {
     const dispatch = useDispatch();
 
     const { appReady } = useSelector(getAppState);
+    const user = useSelector(getUser)
 
     React.useEffect(() => {
         console.log('[MOUNT] Splash screen');
@@ -44,7 +46,7 @@ const Splash = () => {
             setTimeout(() => {
                 dispatch(
                     ShowScreenAction({
-                        screen: AppScreen.Host,
+                        screen: user ? AppScreen.Host : AppScreen.Login,
                     })
                 );
             }, 1000);
