@@ -2,9 +2,7 @@ using Beatrice.Service;
 using Beatrice.Web.Controllers.Api;
 using Beatrice.Web.ErrorHandler;
 using Beatrice.Web.Helper;
-using Blazor.Extensions.WebUSB;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Beatrice.Web
 {
@@ -116,7 +114,6 @@ namespace Beatrice.Web
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<WebRTCHub>("/webrtchub");
-                endpoints.MapHub<WebRTCHub2>("/WebRTCHub2");
                 endpoints.MapRazorPages();
 
                 endpoints.MapControllerRoute(
