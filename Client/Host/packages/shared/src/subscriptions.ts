@@ -5,14 +5,13 @@
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
-      userId
+      id
       firebaseUid
       email
       displayName
       channels {
         nextToken
       }
-      id
       createdAt
       updatedAt
     }
@@ -21,14 +20,13 @@ export const onCreateUser = /* GraphQL */ `
 export const onUpdateUser = /* GraphQL */ `
   subscription OnUpdateUser {
     onUpdateUser {
-      userId
+      id
       firebaseUid
       email
       displayName
       channels {
         nextToken
       }
-      id
       createdAt
       updatedAt
     }
@@ -37,14 +35,13 @@ export const onUpdateUser = /* GraphQL */ `
 export const onDeleteUser = /* GraphQL */ `
   subscription OnDeleteUser {
     onDeleteUser {
-      userId
+      id
       firebaseUid
       email
       displayName
       channels {
         nextToken
       }
-      id
       createdAt
       updatedAt
     }
@@ -56,11 +53,10 @@ export const onCreateUserChannel = /* GraphQL */ `
       id
       name
       user {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }
@@ -76,11 +72,10 @@ export const onUpdateUserChannel = /* GraphQL */ `
       id
       name
       user {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }
@@ -96,11 +91,10 @@ export const onDeleteUserChannel = /* GraphQL */ `
       id
       name
       user {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }

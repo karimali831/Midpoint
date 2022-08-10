@@ -1,11 +1,12 @@
-// import firebase from "firebase/app";
+import { Amplify } from 'aws-amplify';
+import firebase from "firebase/app";
 import { NativeBaseProvider } from 'native-base';
 import React from "react";
 import { Provider } from 'react-redux';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/es/integration/react';
-import firebaseApp from '../config/firebase';
+import awsmobile from './aws-exports.js';
 import Alert from './components/AlertModal';
 import { Router } from './router/Router';
 import store from './state/InitialiseStore';
@@ -19,10 +20,17 @@ const rrfConfig = {
 };
 
 const rrfProps = {
-    firebase: firebaseApp,
+    firebase,
     config: rrfConfig,
     dispatch: store.dispatch,
 };
+
+Amplify.configure({
+    ...awsmobile,
+    Analytics: {
+        disabled: true,
+    }
+})
 
 export function App() {
 

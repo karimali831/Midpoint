@@ -18,15 +18,13 @@ import { getWebRTCState } from '../../state/contexts/webrtc/Selectors';
 import { newHubConnection } from '../../utils/HubHelper';
 import styles from './styles';
 
-const StartHost = () => {
-    const appState = useSelector(getAppState)
-    const webRTCState = useSelector(getWebRTCState)
+export function StartHost() {
 
     const user = useSelector(getUser)
 
-    if (user === null) {
-        return null
-    }
+    const appState = useSelector(getAppState)
+    const webRTCState = useSelector(getWebRTCState)
+
 
     const dispatch = useDispatch()
     const {
@@ -41,6 +39,7 @@ const StartHost = () => {
 
     const [channelName, setChannelName] = useState<string>('')
     const [error, setError] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false)
     const [isInitiator, setIsInitiator] = useState<boolean>(false)
 
     let localVideoRef = useRef<HTMLVideoElement>(null)
@@ -56,6 +55,7 @@ const StartHost = () => {
     const peerConn = new RTCPeerConnection(configuration);
 
     const activeUserConnection = userConnections.filter(x => x.focused)[0]
+
 
     React.useEffect(() => {
         if (error !== '') {
@@ -82,73 +82,73 @@ const StartHost = () => {
         }
     }, [userConnections])
 
+    if (user == null) {
+        return null
+    }
+
+
     const start = (userConnection: IUserConnection) => {
         const { hubConnection } = userConnection
 
         if (hubConnection.state === HubConnectionState.Disconnected) {
-            try {
-                hubConnection.start()
-                    .then(a => {
-                        grabWebCamVideo()
-                        dispatch(SetConnectionStateAction(hubConnection.state))
 
-                        if (hubConnection.connectionId) {
-                            console.log("*[Channel] Connected Id: " + hubConnection.connectionId)
+            hubConnection.start()
+                .then(a => {
+                    grabWebCamVideo()
+                    dispatch(SetConnectionStateAction(hubConnection.state))
+
+                    console.log("*[Channel] Connected Id: " + hubConnection.connectionId)
 
 
-                            hubConnection.on("ReceiveMessage", (message: IMessage) => {
-                                console.log("*[Channel] ReceiveMessage")
+                    hubConnection.on("ReceiveMessage", (message: IMessage) => {
+                        console.log("*[Channel] ReceiveMessage")
 
-                                if (message.userId === user.id) {
-                                    dispatch(
-                                        MessageReceivedAction({
-                                            message, roomId: activeUserConnection.roomId
-                                        })
-                                    )
-                                }
-                                else {
-                                    dispatch(
-                                        SendMessageAction({ message, roomId: activeUserConnection.roomId })
-                                    )
-                                }
-
-                                createPeerConnection()
-                            });
-
-                            hubConnection.on("UsersInRoom", (users: IUserConnection[]) => {
-                                dispatch(UsersInRoomAction(users))
-                            });
-
-                            hubConnection.onclose(() => {
-                                console.log("*[CHAT] Connection closed")
-
-                                closeConnection()
-                                    .then(() => dispatch(SetConnectionStateAction(HubConnectionState.Disconnected)))
-                            });
-
-                            hubConnection.onreconnecting(() => {
-                                console.log("*[CHAT] Lost connection")
-                                dispatch(SetConnectionStateAction(HubConnectionState.Reconnecting))
-                            });
-
-                            hubConnection.onreconnected(() => {
-                                console.log("*[CHAT] Re-connected")
-                                dispatch(SetConnectionStateAction(HubConnectionState.Connected))
-                            })
-
-                            hubConnection.invoke("JoinRoom", userConnection)
+                        if (message.userId === user.id) {
+                            dispatch(
+                                MessageReceivedAction({
+                                    message, roomId: activeUserConnection.roomId
+                                })
+                            )
                         }
                         else {
-                            alert("error")
+                            dispatch(
+                                SendMessageAction({ message, roomId: activeUserConnection.roomId })
+                            )
                         }
+
+                        createPeerConnection()
+                    });
+
+                    hubConnection.on("UsersInRoom", (users: IUserConnection[]) => {
+                        dispatch(UsersInRoomAction(users))
+                    });
+
+                    hubConnection.onclose(() => {
+                        console.log("*[CHAT] Connection closed")
+
+                        closeConnection()
+                            .then(() => dispatch(SetConnectionStateAction(HubConnectionState.Disconnected)))
+                    });
+
+                    hubConnection.onreconnecting(() => {
+                        console.log("*[CHAT] Lost connection")
+                        dispatch(SetConnectionStateAction(HubConnectionState.Reconnecting))
+                    });
+
+                    hubConnection.onreconnected(() => {
+                        console.log("*[CHAT] Re-connected")
+                        dispatch(SetConnectionStateAction(HubConnectionState.Connected))
                     })
-            }
-            catch (err: any) {
-                dispatch(ShowAlertAction({
-                    title: "Error while establishing connection",
-                    message: err.message
-                }))
-            }
+
+                    hubConnection.invoke("JoinRoom", userConnection)
+
+                })
+                .catch(error => {
+                    dispatch(ShowAlertAction({ title: error.message }))
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
         }
     }
 
@@ -161,7 +161,7 @@ const StartHost = () => {
                     isBot: true,
                     id: "",
                     userId: user.id,
-                    name: user.name,
+                    name: user.displayName,
                     message: peerConn.localDescription?.toJSON(),
                     date: new Date()
                 }
@@ -226,6 +226,8 @@ const StartHost = () => {
                 roomId: existingConnection.roomId,
                 isActive: true
             }))
+
+            setLoading(false)
         }
         else {
             const userConnection: IUserConnection = {
@@ -233,7 +235,7 @@ const StartHost = () => {
                 connectionState: HubConnectionState.Disconnected,
                 showConnectionStatus: false,
                 userId: user.id,
-                name: user.name,
+                name: user.displayName,
                 roomId: channelName,
                 isGroup: false,
                 focused: true
@@ -250,6 +252,7 @@ const StartHost = () => {
             setError('Channel name must be at least 3 characters')
         }
         else {
+            setLoading(true)
             join()
         }
     }
@@ -304,12 +307,10 @@ const StartHost = () => {
                     <Input placeholder="Enter channel name" onChangeText={setChannelName} />
                     {error !== '' && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
                 </FormControl>
-                <Button onPress={onSubmit} mt="5" colorScheme="cyan">
+                <Button onPress={onSubmit} mt="5" colorScheme="cyan" isLoading={loading} isLoadingText="Initialising...">
                     Start Host Or Join Channel
                 </Button>
             </VStack>
         </Box>
     );
 };
-
-export default StartHost;

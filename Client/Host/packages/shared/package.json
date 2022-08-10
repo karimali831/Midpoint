@@ -41,7 +41,7 @@
         "@types/route-parser": "^0.1.4",
         "aws-amplify": "^4.3.29",
         "axios": "^0.27.2",
-        "firebase": "^9.9.1",
+        "firebase": "8.2.3",
         "history": "^4.10.1",
         "moment": "^2.29.1",
         "native-base": "^3.4.5",

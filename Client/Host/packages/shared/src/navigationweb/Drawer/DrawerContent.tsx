@@ -63,7 +63,7 @@ export const DrawerContent = () => {
                             <ListItemIcon>
                                 <FontAwesomeIcon icon={faUser} />
                             </ListItemIcon>
-                            <ListItemText primary={user?.name ?? 'Welcome'} />
+                            <ListItemText primary={user?.displayName ?? 'Welcome'} />
                         </ListItem>
                         <Divider />
                         {Routes.filter(

@@ -1,5 +1,5 @@
 import { AppScreen } from '../enum/AppScreen';
-import StartHost from '../screens/Host';
+import { StartHost } from '../screens/Host';
 import { Login } from '../screens/Login';
 import Splash from '../screens/Splash';
 import { IRoute } from './Route';

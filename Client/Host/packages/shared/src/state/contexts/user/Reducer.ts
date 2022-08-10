@@ -3,8 +3,7 @@ import {
     FirebaseAuthEmptyAction,
     LoginSuccessAction,
     SigninLoadingAction,
-    UpdateUserInfoSuccessAction,
-    UpdateUserPushTokenAction,
+    UpdateUserInfoSuccessAction
 } from './Actions';
 import { userInitialState } from './IUserState';
 
@@ -27,9 +26,4 @@ export const userReducer = createReducer(userInitialState, (builder) => {
             state.user = null;
             state.authSuccess = false;
         })
-        .addCase(UpdateUserPushTokenAction, (state, action) => {
-            state.user = Object.assign({}, state.user, {
-                pushToken: action.payload,
-            });
-        });
 });

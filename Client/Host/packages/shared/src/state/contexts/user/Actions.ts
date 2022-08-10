@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
+import { IFirebaseUser } from '../../../../types/types';
 import { ICreateUserDTO } from '../../../api/userApi';
-import { IFirebaseUser } from '../../../models/IFirebaseUser';
 import { IUser } from '../../../models/IUser';
 
 const SigninLoadingAction = createAction('@@user/signinLoading');
@@ -18,20 +18,15 @@ const UpdateUserInfoSuccessAction = createAction<{
 }>('@@user/updateuserinfosuccess');
 
 const LoginSuccessAction = createAction<IUser>('@@user/loginsuccess');
-const UpdateUserPushTokenAction = createAction<string>(
-    '@@user/updateuserpushtoken'
-);
-const TestAction = createAction('@@user/test');
-const RegisterUserAction = createAction<ICreateUserDTO>('@@user/registeruser');
+const CreateUserAction = createAction<ICreateUserDTO>('@@user/createuser');
 
 export {
     SigninLoadingAction,
     FirebaseAuthEmptyAction,
     FirebaseAuthenticatedAction,
-    RegisterUserAction,
     UpdateUserInfoAction,
     UpdateUserInfoSuccessAction,
     LoginSuccessAction,
-    UpdateUserPushTokenAction,
-    TestAction,
+    CreateUserAction
 };
+

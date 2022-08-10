@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import firebase from "firebase/app";
 import { AppScreen } from '../src/enum/AppScreen';
 
 export type TopNavigatorParamsList = {
@@ -15,3 +16,5 @@ export type RouteParamList = {
     [AppScreen.Login]: undefined;
     [AppScreen.Host]: undefined;
 };
+
+export type IFirebaseUser = firebase.User

@@ -3,7 +3,7 @@
 input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
 
 type User @model {
-    userId: ID!
+    id: ID!
     firebaseUid: ID!
     email: String!
     displayName: String!

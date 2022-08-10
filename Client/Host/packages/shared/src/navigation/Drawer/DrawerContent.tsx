@@ -33,7 +33,7 @@ export const DrawerContent: React.FC<IOwnProps> = (props) => {
                         ) : (
                             <>
                                 <Text style={styles.nameTxt}>
-                                    {props.user.name}
+                                    {props.user.displayName}
                                 </Text>
                                 <Text style={styles.emailTxt}>
                                     {props.user.email}

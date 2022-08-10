@@ -1,5 +1,4 @@
 import { all, fork } from 'redux-saga/effects';
-import notificationApiSaga from './api/notificationApiSaga';
 import userApiSaga from './api/userApiSaga';
 import webRTCApiSaga from './api/webRTCApiSaga';
 import appSaga from './appSaga';
@@ -11,7 +10,6 @@ export function* rootSaga() {
         // App sagas
         fork(appSaga),
         fork(navigationSaga),
-        fork(notificationApiSaga),
         fork(userApiSaga),
 
         // Business sagas

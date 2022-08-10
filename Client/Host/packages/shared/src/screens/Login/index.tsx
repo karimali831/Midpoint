@@ -1,6 +1,6 @@
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { browserLocalPersistence, createUserWithEmailAndPassword, setPersistence, signInWithEmailAndPassword } from "firebase/auth";
+import firebase from 'firebase';
 import { Box, Button, Center, FormControl, Heading, HStack, Input, Link, Text, VStack } from 'native-base';
 import React, { useState } from 'react';
 import { ActivityIndicator, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { auth } from '../../../config/firebase';
 import { DefaultScreen } from '../../navigation/RootNavigation';
 import { ShowAlertAction, ShowScreenAction } from '../../state/contexts/app/Actions';
-import { RegisterUserAction, SigninLoadingAction } from '../../state/contexts/user/Actions';
+import { CreateUserAction, SigninLoadingAction } from '../../state/contexts/user/Actions';
 import { getUserState } from '../../state/contexts/user/Selectors';
 
 export function Login() {
@@ -45,11 +45,11 @@ export function Login() {
     const handleLogin = () => {
         dispatch(SigninLoadingAction())
 
-        setPersistence(auth, browserLocalPersistence)
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             .then(() => {
 
-                signInWithEmailAndPassword(auth, email, password)
-                    .catch(error => {
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch((error: any) => {
                         dispatch(ShowAlertAction({
                             title: "Error",
                             message: error.message,
@@ -71,12 +71,12 @@ export function Login() {
     const handleSignUp = () => {
         dispatch(SigninLoadingAction())
 
-        createUserWithEmailAndPassword(auth, email, password)
+        auth.createUserWithEmailAndPassword(email, password)
             .then(userCredentials => {
                 const user = userCredentials.user;
 
                 if (user) {
-                    dispatch(RegisterUserAction({
+                    dispatch(CreateUserAction({
                         name,
                         email,
                         FirebaseUid: user.uid

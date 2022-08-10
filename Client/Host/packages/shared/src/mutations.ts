@@ -8,14 +8,13 @@ export const createUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     createUser(input: $input, condition: $condition) {
-      userId
+      id
       firebaseUid
       email
       displayName
       channels {
         nextToken
       }
-      id
       createdAt
       updatedAt
     }
@@ -27,14 +26,13 @@ export const updateUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     updateUser(input: $input, condition: $condition) {
-      userId
+      id
       firebaseUid
       email
       displayName
       channels {
         nextToken
       }
-      id
       createdAt
       updatedAt
     }
@@ -46,14 +44,13 @@ export const deleteUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     deleteUser(input: $input, condition: $condition) {
-      userId
+      id
       firebaseUid
       email
       displayName
       channels {
         nextToken
       }
-      id
       createdAt
       updatedAt
     }
@@ -68,11 +65,10 @@ export const createUserChannel = /* GraphQL */ `
       id
       name
       user {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }
@@ -91,11 +87,10 @@ export const updateUserChannel = /* GraphQL */ `
       id
       name
       user {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }
@@ -114,11 +109,10 @@ export const deleteUserChannel = /* GraphQL */ `
       id
       name
       user {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }

@@ -3,14 +3,14 @@
 //  This file was automatically generated and should not be edited.
 
 export type CreateUserInput = {
-  userId: string,
+  id?: string | null,
+  firebaseUid: string,
   email: string,
   displayName: string,
-  id?: string | null,
 };
 
 export type ModelUserConditionInput = {
-  userId?: ModelIDInput | null,
+  firebaseUid?: ModelIDInput | null,
   email?: ModelStringInput | null,
   displayName?: ModelStringInput | null,
   and?: Array< ModelUserConditionInput | null > | null,
@@ -76,11 +76,11 @@ export type ModelStringInput = {
 
 export type User = {
   __typename: "User",
-  userId: string,
+  id: string,
+  firebaseUid: string,
   email: string,
   displayName: string,
   channels?: ModelUserChannelConnection | null,
-  id: string,
   createdAt: string,
   updatedAt: string,
 };
@@ -102,7 +102,8 @@ export type UserChannel = {
 };
 
 export type UpdateUserInput = {
-  userId?: string | null,
+  id: string,
+  firebaseUid?: string | null,
   email?: string | null,
   displayName?: string | null,
 };
@@ -136,7 +137,8 @@ export type DeleteUserChannelInput = {
 };
 
 export type ModelUserFilterInput = {
-  userId?: ModelIDInput | null,
+  id?: ModelIDInput | null,
+  firebaseUid?: ModelIDInput | null,
   email?: ModelStringInput | null,
   displayName?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
@@ -167,14 +169,14 @@ export type CreateUserMutationVariables = {
 export type CreateUserMutation = {
   createUser?:  {
     __typename: "User",
-    userId: string,
+    id: string,
+    firebaseUid: string,
     email: string,
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
       nextToken?: string | null,
     } | null,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -188,14 +190,14 @@ export type UpdateUserMutationVariables = {
 export type UpdateUserMutation = {
   updateUser?:  {
     __typename: "User",
-    userId: string,
+    id: string,
+    firebaseUid: string,
     email: string,
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
       nextToken?: string | null,
     } | null,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -209,14 +211,14 @@ export type DeleteUserMutationVariables = {
 export type DeleteUserMutation = {
   deleteUser?:  {
     __typename: "User",
-    userId: string,
+    id: string,
+    firebaseUid: string,
     email: string,
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
       nextToken?: string | null,
     } | null,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -234,10 +236,10 @@ export type CreateUserChannelMutation = {
     name: string,
     user?:  {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -259,10 +261,10 @@ export type UpdateUserChannelMutation = {
     name: string,
     user?:  {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -284,10 +286,10 @@ export type DeleteUserChannelMutation = {
     name: string,
     user?:  {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -304,14 +306,14 @@ export type GetUserQueryVariables = {
 export type GetUserQuery = {
   getUser?:  {
     __typename: "User",
-    userId: string,
+    id: string,
+    firebaseUid: string,
     email: string,
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
       nextToken?: string | null,
     } | null,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -328,10 +330,10 @@ export type ListUsersQuery = {
     __typename: "ModelUserConnection",
     items:  Array< {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -350,10 +352,10 @@ export type GetUserChannelQuery = {
     name: string,
     user?:  {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -387,14 +389,14 @@ export type ListUserChannelsQuery = {
 export type OnCreateUserSubscription = {
   onCreateUser?:  {
     __typename: "User",
-    userId: string,
+    id: string,
+    firebaseUid: string,
     email: string,
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
       nextToken?: string | null,
     } | null,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -403,14 +405,14 @@ export type OnCreateUserSubscription = {
 export type OnUpdateUserSubscription = {
   onUpdateUser?:  {
     __typename: "User",
-    userId: string,
+    id: string,
+    firebaseUid: string,
     email: string,
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
       nextToken?: string | null,
     } | null,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -419,14 +421,14 @@ export type OnUpdateUserSubscription = {
 export type OnDeleteUserSubscription = {
   onDeleteUser?:  {
     __typename: "User",
-    userId: string,
+    id: string,
+    firebaseUid: string,
     email: string,
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
       nextToken?: string | null,
     } | null,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -439,10 +441,10 @@ export type OnCreateUserChannelSubscription = {
     name: string,
     user?:  {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -459,10 +461,10 @@ export type OnUpdateUserChannelSubscription = {
     name: string,
     user?:  {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -479,10 +481,10 @@ export type OnDeleteUserChannelSubscription = {
     name: string,
     user?:  {
       __typename: "User",
-      userId: string,
+      id: string,
+      firebaseUid: string,
       email: string,
       displayName: string,
-      id: string,
       createdAt: string,
       updatedAt: string,
     } | null,

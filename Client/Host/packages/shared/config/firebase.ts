@@ -1,10 +1,20 @@
-import { getAnalytics } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import config from './config';
 
-const firebaseApp = initializeApp(config.firebase);
-const analytics = getAnalytics(firebaseApp);
+// Initialize Firebase
+let firebaseApp;
+if (firebase.apps.length === 0) {
+    firebaseApp = firebase.initializeApp(config.firebase);
+} else {
+    firebaseApp = firebase.app()
+}
 
-export const auth = getAuth(firebaseApp);
+// Add or Remove authentification methods here.
+export const Providers = {
+    google: new firebase.auth.GoogleAuthProvider(),
+    facebook: new firebase.auth.FacebookAuthProvider(),
+};
+
+export const auth = firebase.auth();
 export default firebaseApp;

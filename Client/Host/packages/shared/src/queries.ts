@@ -5,14 +5,13 @@
 export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
-      userId
+      id
       firebaseUid
       email
       displayName
       channels {
         nextToken
       }
-      id
       createdAt
       updatedAt
     }
@@ -26,11 +25,10 @@ export const listUsers = /* GraphQL */ `
   ) {
     listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }
@@ -44,11 +42,10 @@ export const getUserChannel = /* GraphQL */ `
       id
       name
       user {
-        userId
+        id
         firebaseUid
         email
         displayName
-        id
         createdAt
         updatedAt
       }
