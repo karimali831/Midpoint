@@ -15,6 +15,7 @@ export type RouteParamList = {
     [AppScreen.Splash]: undefined;
     [AppScreen.Login]: undefined;
     [AppScreen.Host]: undefined;
+    [AppScreen.GamepadDebugger]: undefined
 };
 
 export type IFirebaseUser = firebase.User

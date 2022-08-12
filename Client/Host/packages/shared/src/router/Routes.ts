@@ -1,3 +1,4 @@
+import { GamepadDebugger } from '../components/GamepadDebugger';
 import { AppScreen } from '../enum/AppScreen';
 import { StartHost } from '../screens/Host';
 import { Login } from '../screens/Login';
@@ -21,6 +22,7 @@ export const Routes: IRoute[] = [
         memberOnly: false,
         headerShown: false,
         navigationShown: true,
+        menuName: "Login",
         url: '/login',
     },
     {
@@ -30,6 +32,17 @@ export const Routes: IRoute[] = [
         memberOnly: true,
         headerShown: false,
         navigationShown: true,
+        menuName: "App Host",
         url: '/host',
+    },
+    {
+        screen: AppScreen.GamepadDebugger,
+        component: GamepadDebugger,
+        displayOnMenu: true,
+        memberOnly: true,
+        headerShown: false,
+        navigationShown: true,
+        menuName: "Gamepad Debugger",
+        url: '/gamepaddebugger',
     },
 ];
