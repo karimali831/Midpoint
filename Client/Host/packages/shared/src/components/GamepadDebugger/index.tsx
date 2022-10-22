@@ -14,8 +14,8 @@ export function GamepadDebugger() {
         axes: Ps4GamepadMap.axes
     })
 
-    const [gamepads, setGamepads] = useState<any>([])
-    const [actions, setActions] = useState<any>([])
+    const [gamepads, setGamepads] = useState<any[]>([])
+    const [actions, setActions] = useState<any[]>([])
     const [axes, setAxes] = useState<
         {
             label: any;
@@ -65,13 +65,23 @@ export function GamepadDebugger() {
             clearInterval(pollingIntervalId.current);
         }
 
+
+        console.log("polling interval id" + JSON.stringify(pollingIntervalId, null, 2))
+
+
         pollingIntervalId.current = setInterval(() => {
             const gamepads = GamepadApi.getGamepads();
+
+            console.log("Gamepads: " + JSON.stringify(gamepads, null, 2))
+
 
             for (const [gamepadId, gamepad] of Object.entries(gamepads)) {
                 if (!gamepad) {
                     continue;
                 }
+
+
+
                 const newButtonActions = gamepad
                     .buttons
                     .reduce((acc: IGamepad[], button: any, index: number) => {
@@ -124,7 +134,7 @@ export function GamepadDebugger() {
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
 
-                    {actions.lengh > 0 ? actions.map((x: any, idx: number) => {
+                    {actions.length > 0 ? actions.map((x: any, idx: number) => {
                         return (
                             <View key={idx} style={{ flexDirection: 'column' }}>
                                 <Text>{x.gamepadId}</Text>

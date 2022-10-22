@@ -28,7 +28,7 @@ class UserApi {
             return null
         }
         catch (error: any) {
-            console.error(UserApi.name, "fetchUser", error.message)
+            console.error(UserApi.name, "fetchUser", JSON.stringify(error, null, 2))
             return null
         }
     }

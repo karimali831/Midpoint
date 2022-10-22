@@ -14,4 +14,15 @@ type UserChannel @model {
     id: ID!
     name: String!
     user: User @belongsTo
+    midiMessages: [MidiMessage] @hasMany
+}
+
+type MidiMessage @model {
+    id: ID!
+    midiData: String!,
+    channel: UserChannel @belongsTo   
+}
+
+type Subscription {
+    onMidiMessage(channelId: ID!, midiData: String!): MidiMessage @aws_subscribe(mutations: ["updateMidiMessage"])
 }

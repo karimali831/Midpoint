@@ -1,4 +1,5 @@
-import MenuItem from '@material-ui/core/MenuItem';
+
+import { MenuItem } from '@mui/material';
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 

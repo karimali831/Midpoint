@@ -39,10 +39,10 @@ export const Routes: IRoute[] = [
         screen: AppScreen.GamepadDebugger,
         component: GamepadDebugger,
         displayOnMenu: true,
-        memberOnly: true,
+        memberOnly: false,
         headerShown: false,
         navigationShown: true,
         menuName: "Gamepad Debugger",
         url: '/gamepaddebugger',
-    },
+    }
 ];

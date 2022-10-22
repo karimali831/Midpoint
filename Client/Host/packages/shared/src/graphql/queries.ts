@@ -10,6 +10,13 @@ export const getUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -29,6 +36,9 @@ export const listUsers = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -46,8 +56,21 @@ export const getUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      midiMessages {
+        items {
+          id
+          midiData
+          createdAt
+          updatedAt
+          userChannelMidiMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -65,9 +88,74 @@ export const listUserChannels = /* GraphQL */ `
       items {
         id
         name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
         createdAt
         updatedAt
         userChannelsId
+      }
+      nextToken
+    }
+  }
+`;
+export const getMidiMessage = /* GraphQL */ `
+  query GetMidiMessage($id: ID!) {
+    getMidiMessage(id: $id) {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
+    }
+  }
+`;
+export const listMidiMessages = /* GraphQL */ `
+  query ListMidiMessages(
+    $filter: ModelMidiMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMidiMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        midiData
+        channel {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
+        createdAt
+        updatedAt
+        userChannelMidiMessagesId
       }
       nextToken
     }

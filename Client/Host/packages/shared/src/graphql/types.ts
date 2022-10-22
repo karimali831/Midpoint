@@ -96,9 +96,26 @@ export type UserChannel = {
   id: string,
   name: string,
   user?: User | null,
+  midiMessages?: ModelMidiMessageConnection | null,
   createdAt: string,
   updatedAt: string,
   userChannelsId?: string | null,
+};
+
+export type ModelMidiMessageConnection = {
+  __typename: "ModelMidiMessageConnection",
+  items:  Array<MidiMessage | null >,
+  nextToken?: string | null,
+};
+
+export type MidiMessage = {
+  __typename: "MidiMessage",
+  id: string,
+  midiData: string,
+  channel?: UserChannel | null,
+  createdAt: string,
+  updatedAt: string,
+  userChannelMidiMessagesId?: string | null,
 };
 
 export type UpdateUserInput = {
@@ -136,6 +153,30 @@ export type DeleteUserChannelInput = {
   id: string,
 };
 
+export type CreateMidiMessageInput = {
+  id?: string | null,
+  midiData: string,
+  userChannelMidiMessagesId?: string | null,
+};
+
+export type ModelMidiMessageConditionInput = {
+  midiData?: ModelStringInput | null,
+  and?: Array< ModelMidiMessageConditionInput | null > | null,
+  or?: Array< ModelMidiMessageConditionInput | null > | null,
+  not?: ModelMidiMessageConditionInput | null,
+  userChannelMidiMessagesId?: ModelIDInput | null,
+};
+
+export type UpdateMidiMessageInput = {
+  id: string,
+  midiData?: string | null,
+  userChannelMidiMessagesId?: string | null,
+};
+
+export type DeleteMidiMessageInput = {
+  id: string,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   firebaseUid?: ModelIDInput | null,
@@ -161,6 +202,15 @@ export type ModelUserChannelFilterInput = {
   userChannelsId?: ModelIDInput | null,
 };
 
+export type ModelMidiMessageFilterInput = {
+  id?: ModelIDInput | null,
+  midiData?: ModelStringInput | null,
+  and?: Array< ModelMidiMessageFilterInput | null > | null,
+  or?: Array< ModelMidiMessageFilterInput | null > | null,
+  not?: ModelMidiMessageFilterInput | null,
+  userChannelMidiMessagesId?: ModelIDInput | null,
+};
+
 export type CreateUserMutationVariables = {
   input: CreateUserInput,
   condition?: ModelUserConditionInput | null,
@@ -175,6 +225,14 @@ export type CreateUserMutation = {
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
+      items:  Array< {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -196,6 +254,14 @@ export type UpdateUserMutation = {
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
+      items:  Array< {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -217,6 +283,14 @@ export type DeleteUserMutation = {
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
+      items:  Array< {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -240,8 +314,24 @@ export type CreateUserChannelMutation = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    midiMessages?:  {
+      __typename: "ModelMidiMessageConnection",
+      items:  Array< {
+        __typename: "MidiMessage",
+        id: string,
+        midiData: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelMidiMessagesId?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -265,8 +355,24 @@ export type UpdateUserChannelMutation = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    midiMessages?:  {
+      __typename: "ModelMidiMessageConnection",
+      items:  Array< {
+        __typename: "MidiMessage",
+        id: string,
+        midiData: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelMidiMessagesId?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -290,12 +396,139 @@ export type DeleteUserChannelMutation = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    midiMessages?:  {
+      __typename: "ModelMidiMessageConnection",
+      items:  Array< {
+        __typename: "MidiMessage",
+        id: string,
+        midiData: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelMidiMessagesId?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
     userChannelsId?: string | null,
+  } | null,
+};
+
+export type CreateMidiMessageMutationVariables = {
+  input: CreateMidiMessageInput,
+  condition?: ModelMidiMessageConditionInput | null,
+};
+
+export type CreateMidiMessageMutation = {
+  createMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
+  } | null,
+};
+
+export type UpdateMidiMessageMutationVariables = {
+  input: UpdateMidiMessageInput,
+  condition?: ModelMidiMessageConditionInput | null,
+};
+
+export type UpdateMidiMessageMutation = {
+  updateMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
+  } | null,
+};
+
+export type DeleteMidiMessageMutationVariables = {
+  input: DeleteMidiMessageInput,
+  condition?: ModelMidiMessageConditionInput | null,
+};
+
+export type DeleteMidiMessageMutation = {
+  deleteMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
   } | null,
 };
 
@@ -312,6 +545,14 @@ export type GetUserQuery = {
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
+      items:  Array< {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -334,6 +575,10 @@ export type ListUsersQuery = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -356,8 +601,24 @@ export type GetUserChannelQuery = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    midiMessages?:  {
+      __typename: "ModelMidiMessageConnection",
+      items:  Array< {
+        __typename: "MidiMessage",
+        id: string,
+        midiData: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelMidiMessagesId?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -378,11 +639,126 @@ export type ListUserChannelsQuery = {
       __typename: "UserChannel",
       id: string,
       name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
       userChannelsId?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type GetMidiMessageQueryVariables = {
+  id: string,
+};
+
+export type GetMidiMessageQuery = {
+  getMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
+  } | null,
+};
+
+export type ListMidiMessagesQueryVariables = {
+  filter?: ModelMidiMessageFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMidiMessagesQuery = {
+  listMidiMessages?:  {
+    __typename: "ModelMidiMessageConnection",
+    items:  Array< {
+      __typename: "MidiMessage",
+      id: string,
+      midiData: string,
+      channel?:  {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelMidiMessagesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type OnMidiMessageSubscriptionVariables = {
+  channelId: string,
+  midiData: string,
+};
+
+export type OnMidiMessageSubscription = {
+  onMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
   } | null,
 };
 
@@ -395,6 +771,14 @@ export type OnCreateUserSubscription = {
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
+      items:  Array< {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -411,6 +795,14 @@ export type OnUpdateUserSubscription = {
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
+      items:  Array< {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -427,6 +819,14 @@ export type OnDeleteUserSubscription = {
     displayName: string,
     channels?:  {
       __typename: "ModelUserChannelConnection",
+      items:  Array< {
+        __typename: "UserChannel",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelsId?: string | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -445,8 +845,24 @@ export type OnCreateUserChannelSubscription = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    midiMessages?:  {
+      __typename: "ModelMidiMessageConnection",
+      items:  Array< {
+        __typename: "MidiMessage",
+        id: string,
+        midiData: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelMidiMessagesId?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -465,8 +881,24 @@ export type OnUpdateUserChannelSubscription = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    midiMessages?:  {
+      __typename: "ModelMidiMessageConnection",
+      items:  Array< {
+        __typename: "MidiMessage",
+        id: string,
+        midiData: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelMidiMessagesId?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -485,11 +917,123 @@ export type OnDeleteUserChannelSubscription = {
       firebaseUid: string,
       email: string,
       displayName: string,
+      channels?:  {
+        __typename: "ModelUserChannelConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    midiMessages?:  {
+      __typename: "ModelMidiMessageConnection",
+      items:  Array< {
+        __typename: "MidiMessage",
+        id: string,
+        midiData: string,
+        createdAt: string,
+        updatedAt: string,
+        userChannelMidiMessagesId?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
     userChannelsId?: string | null,
+  } | null,
+};
+
+export type OnCreateMidiMessageSubscription = {
+  onCreateMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
+  } | null,
+};
+
+export type OnUpdateMidiMessageSubscription = {
+  onUpdateMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
+  } | null,
+};
+
+export type OnDeleteMidiMessageSubscription = {
+  onDeleteMidiMessage?:  {
+    __typename: "MidiMessage",
+    id: string,
+    midiData: string,
+    channel?:  {
+      __typename: "UserChannel",
+      id: string,
+      name: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        firebaseUid: string,
+        email: string,
+        displayName: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      midiMessages?:  {
+        __typename: "ModelMidiMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      userChannelsId?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    userChannelMidiMessagesId?: string | null,
   } | null,
 };

@@ -1,25 +1,31 @@
 import { HubConnectionState } from '@microsoft/signalr';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { List, ListItem, ListItemText } from '@mui/material';
+import Box from '@mui/material/Box';
 import {
-    Box,
     Button,
     FormControl,
     Input, Text, View, VStack
 } from 'native-base';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Chat } from '../../components/Chat';
+import DJCheckList from '../../components/DJCheckList';
+import { Peers } from '../../components/Peers';
+import WebMIDI from '../../components/WebMidi';
 import useEffectSkipInitialRender from '../../hooks/useEffectSkipInitialRender';
 import { IMessage } from '../../interface/IMessage';
 import { IUserConnection } from '../../interface/IUserConnection';
 import { ShowAlertAction } from '../../state/contexts/app/Actions';
 import { getAppState } from '../../state/contexts/app/Selectors';
-import { getUser } from '../../state/contexts/user/Selectors';
+import { getUser, getUserState } from '../../state/contexts/user/Selectors';
 import { AddUserConnectionAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, UpdateActiveUserConnectionAction, UsersInRoomAction } from '../../state/contexts/webrtc/Actions';
 import { getWebRTCState } from '../../state/contexts/webrtc/Selectors';
 import { newHubConnection } from '../../utils/HubHelper';
-import styles from './styles';
+import { uuidv4 } from '../../utils/Utils';
+import VideoStream from './stream.web';
 
 export function StartHost() {
-
     const user = useSelector(getUser)
 
     const appState = useSelector(getAppState)
@@ -33,17 +39,21 @@ export function StartHost() {
 
     const {
         userConnections,
-        onlineUsers,
         channelData
     } = webRTCState
+
+    const {
+        camOn
+    } = useSelector(getUserState)
 
     const [channelName, setChannelName] = useState<string>('')
     const [error, setError] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [isInitiator, setIsInitiator] = useState<boolean>(false)
 
-    let localVideoRef = useRef<HTMLVideoElement>(null)
-    let removeVideoRef = useRef<HTMLVideoElement>(null)
+
+    // let localVideoRef = useRef<HTMLVideoElement>(null)
+    // let removeVideoRef = useRef<HTMLVideoElement>(null)
 
     const configuration = {
         'iceServers': [{
@@ -94,14 +104,14 @@ export function StartHost() {
 
             hubConnection.start()
                 .then(a => {
-                    grabWebCamVideo()
+                    // grabWebCamVideo()
                     dispatch(SetConnectionStateAction(hubConnection.state))
 
                     console.log("*[Channel] Connected Id: " + hubConnection.connectionId)
 
 
                     hubConnection.on("ReceiveMessage", (message: IMessage) => {
-                        console.log("*[Channel] ReceiveMessage")
+                        console.log("*[Channel] ReceiveMessage" + message.id)
 
                         if (message.userId === user.id) {
                             dispatch(
@@ -159,7 +169,7 @@ export function StartHost() {
             else {
                 const message: IMessage = {
                     isBot: true,
-                    id: "",
+                    id: uuidv4(),
                     userId: user.id,
                     name: user.displayName,
                     message: peerConn.localDescription?.toJSON(),
@@ -170,12 +180,12 @@ export function StartHost() {
             }
         }
 
-        peerConn.ontrack = (event) => {
-            let video = removeVideoRef.current
-            if (video) {
-                video.srcObject = event.streams[0]
-            }
-        }
+        // peerConn.ontrack = (event) => {
+        //     let video = removeVideoRef.current
+        //     if (video) {
+        //         video.srcObject = event.streams[0]
+        //     }
+        // }
 
 
     }
@@ -194,28 +204,28 @@ export function StartHost() {
         }
     }
 
-    const grabWebCamVideo = () => {
-        navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: true
-        })
-            .then(gotStream)
-            .catch(err => {
-                console.error("error:", err)
-            })
-    }
+    // const grabWebCamVideo = () => {
+    //     navigator.mediaDevices.getUserMedia({
+    //         audio: true,
+    //         video: true
+    //     })
+    //         .then(gotStream)
+    //         .catch(err => {
+    //             console.error("error:", err)
+    //         })
+    // }
 
-    const gotStream = (stream: MediaStream) => {
-        console.log('getUserMedia video stream URL:', stream);
-        localStream = stream;
-        // peerConn.addStream(localStream);
+    // const gotStream = (stream: MediaStream) => {
+    //     console.log('getUserMedia video stream URL:', stream);
+    //     localStream = stream;
+    //     // peerConn.addStream(localStream);
 
-        let video = localVideoRef.current
-        if (video) {
-            video.srcObject = stream
-            video.play();
-        }
-    }
+    //     let video = localVideoRef.current
+    //     if (video) {
+    //         video.srcObject = stream
+    //         video.play();
+    //     }
+    // }
 
     const join = () => {
         const existingConnection = userConnections.find(x => x.roomId === channelName)
@@ -257,45 +267,103 @@ export function StartHost() {
         }
     }
 
+    const leaveHost = async () => {
+
+        dispatch(SetConnectionStateAction(HubConnectionState.Disconnected))
+
+    }
+
     if (userConnections.some(x => x.connectionState === HubConnectionState.Connected)) {
         return (
-            <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, flex: 1 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Connections</Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center', display: 'flex', marginTop: 50, marginBottom: 50 }}>
+                <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+                    <Box sx={{ boxShadow: 2, padding: 2, width: '28%', bgcolor: 'background.paper' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                            Host Channel
+                        </Text>
 
-                {userConnections.map((uc, idx) => {
-                    const youCreated = uc.userId === user.id
+                        {userConnections.map((uc, idx) => {
+                            const youCreated = uc.userId === user.id
+                            // youCreated && "(you created)"}
+                            const data = channelData.filter(x => x.roomId === uc.roomId)[0]
 
-                    const data = channelData.filter(x => x.roomId === uc.roomId)[0]
+                            return (
+                                <List key={idx} style={{ height: 220, overflowX: 'auto' }}>
+                                    <ListItem>
+                                        <ListItemText primary={uc.roomId} secondary={"CHANNEL NAME"} />
+                                    </ListItem>
+                                    <View style={{ alignSelf: "center", borderBottomColor: '#eee', borderBottomWidth: 1 }} />
+                                    {data && data.messages.length > 0 && data.messages.filter(x => x.isBot).reverse().map(x => {
+                                        return (
+                                            <ListItem key={x.id}>
+                                                <ListItemText primary={<>{x.message}</>} secondary={"System Message"}>
+                                                </ListItemText>
+                                            </ListItem>
+                                        )
+                                    })}
+                                </List>
+                            )
+                        })}
+                        <Button width={150} colorScheme="error" onPress={leaveHost} disabled={true}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: '#eee',
+                            }}>
+                                <span style={{ marginRight: 10 }}>Leave Host</span>
+                                <ExitToAppIcon />
+                            </div>
+                        </Button>
+                    </Box>
+                    <Box sx={{ boxShadow: 2, padding: 2, width: '28%', height: 300, overflowX: 'auto', bgcolor: 'background.paper' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Users Online</Text>
+                        <Peers />
 
-                    return (
-                        <View key={idx}>
-                            <Text>{uc.roomId} {youCreated && "(you created)"}</Text>
-                            <Text>Users in room: {onlineUsers.map(x => x.name).join(",")}</Text>
-                            <Text>Messages</Text>
-                            {data && data.messages.length > 0 && data.messages.map(x => {
-                                return (
-                                    <Text key={x.id}>{x.message}</Text>
-                                )
-                            })}
-                            <View>
-                                <div>
-                                    <h5>Video chat</h5>
-                                    <div className="videoArea">
-                                        <video id="localVideo" ref={localVideoRef} autoPlay={true} playsInline={true}></video>
-                                        <video id="remoteVideo" ref={removeVideoRef} autoPlay={true} playsInline={true}></video>
-                                    </div>
-                                </div>
-                                {/* <VideoStream ref={localVideoRef} /> */}
-                            </View>
-                        </View>
-                    )
-                })}
+                    </Box>
+                    <Box sx={{ boxShadow: 2, padding: 2, height: 300, overflowX: 'auto', width: '28%' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                            Setup
+                        </Text>
+                        <DJCheckList />
+
+                        <Button
+                            onPress={onSubmit}
+                            mt="5"
+                            width={150}
+                            colorScheme="success"
+                            isLoading={loading}
+                            isLoadingText="Initialising..."
+                            disabled={true}
+                            style={{ position: 'absolute', right: 45, bottom: 20 }}
+                        >
+                            Start VM
+                        </Button>
+                    </Box>
+                </View>
+                <View style={{ alignSelf: "center", borderBottomColor: '#ccc', borderBottomWidth: 2, marginTop: 30 }} />
+                <View style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-around' }}>
+                    <Chat />
+                    <Box sx={{ boxShadow: 2, padding: 2, width: '61%', bgcolor: 'background.paper', overflowY: 'auto', maxHeight: 400 }}>
+                        {
+                            camOn ?
+                                <VideoStream />
+                                :
+                                <View>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                                        Your MIDI Devices
+                                    </Text>
+                                    <WebMIDI />
+                                </View>
+                        }
+                    </Box>
+                </View>
             </View>
         )
     }
 
+
     return (
-        <Box alignItems="center" style={styles.form}>
+        <Box sx={{ alignSelf: "center", marginTop: 5, boxShadow: 2, padding: 2, width: 300, bgcolor: 'background.paper' }}>
             <VStack width="90%" mx="3" maxW="300px">
                 <FormControl isRequired isInvalid={error !== ''}>
                     <FormControl.Label

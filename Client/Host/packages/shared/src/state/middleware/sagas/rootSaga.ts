@@ -2,7 +2,7 @@ import { all, fork } from 'redux-saga/effects';
 import userApiSaga from './api/userApiSaga';
 import webRTCApiSaga from './api/webRTCApiSaga';
 import appSaga from './appSaga';
-import navigationSaga from './navigationSaga';
+import navigationSaga from './navigationSaga.web';
 
 // We `fork()` these tasks so they execute in the background.
 export function* rootSaga() {

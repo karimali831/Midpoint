@@ -10,6 +10,13 @@ export const getUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -29,6 +36,9 @@ export const listUsers = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -46,6 +56,9 @@ export const getUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -65,6 +78,14 @@ export const listUserChannels = /* GraphQL */ `
       items {
         id
         name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
         userChannelsId

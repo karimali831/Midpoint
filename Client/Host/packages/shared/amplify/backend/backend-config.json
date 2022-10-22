@@ -1,6 +1,6 @@
 {
   "api": {
-    "beatrice": {
+    "midpoint": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {

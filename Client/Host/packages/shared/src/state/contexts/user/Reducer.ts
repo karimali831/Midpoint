@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
+    CamToggleAction,
+    DJReadyAction,
     FirebaseAuthEmptyAction,
     LoginSuccessAction,
     SigninLoadingAction,
@@ -25,5 +27,11 @@ export const userReducer = createReducer(userInitialState, (builder) => {
         .addCase(FirebaseAuthEmptyAction, (state) => {
             state.user = null;
             state.authSuccess = false;
+        })
+        .addCase(CamToggleAction, (state) => {
+            state.camOn = !state.camOn
+        })
+        .addCase(DJReadyAction, (state, action) => {
+            state.djReady = action.payload
         })
 });

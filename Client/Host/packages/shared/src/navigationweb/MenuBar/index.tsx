@@ -1,15 +1,11 @@
-import AppBar from '@material-ui/core/AppBar';
-import Badge from '@material-ui/core/Badge';
-import IconButton from '@material-ui/core/IconButton';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MoreIcon from '@mui/icons-material/More';
+import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 import React from 'react';
 import { DrawerContent } from '../Drawer/DrawerContent';
 import useStyles from '../styles';
+
 
 export interface IOwnProps {
     handleMobileMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
@@ -17,7 +13,9 @@ export interface IOwnProps {
 }
 
 export const MenuBar: React.FC<IOwnProps> = (props) => {
-    const classes = useStyles();
+    const {
+        classes
+    } = useStyles();
 
     return (
         <AppBar position="static">
@@ -31,11 +29,11 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                     <DrawerContent />
                 </IconButton>
                 <Typography className={classes.title} variant="h6" noWrap>
-                    Beatrice
+                    MidPoint
                 </Typography>
                 <div className={classes.grow} />
                 <div className={classes.sectionDesktop}>
-                    <IconButton aria-label="show 4 new mails" color="inherit">
+                    {/* <IconButton aria-label="show 4 new mails" color="inherit">
                         <Badge badgeContent={4} color="secondary">
                             <MailIcon />
                         </Badge>
@@ -47,7 +45,7 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                         <Badge badgeContent={17} color="secondary">
                             <NotificationsIcon />
                         </Badge>
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton
                         edge="end"
                         aria-label="account of current user"

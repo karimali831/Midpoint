@@ -1,10 +1,7 @@
-import Badge from '@material-ui/core/Badge';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
 
 interface IOwnProps {
@@ -27,15 +24,15 @@ const MobileMenu = React.forwardRef((props: IOwnProps, ref: any) => {
             open={isMenuOpen}
             onClose={props.handleMenuClose}
         >
-            <MenuItem>
+            {/* <MenuItem>
                 <IconButton aria-label="show 4 new mails" color="inherit">
                     <Badge badgeContent={4} color="secondary">
                         <MailIcon />
                     </Badge>
                 </IconButton>
                 <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
+            </MenuItem> */}
+            {/* <MenuItem>
                 <IconButton
                     aria-label="show 11 new notifications"
                     color="inherit"
@@ -45,7 +42,7 @@ const MobileMenu = React.forwardRef((props: IOwnProps, ref: any) => {
                     </Badge>
                 </IconButton>
                 <p>Notifications?</p>
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={props.handleProfileMenuOpen}>
                 <IconButton
                     aria-label="account of current user"

@@ -13,6 +13,13 @@ export const createUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -31,6 +38,13 @@ export const updateUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -49,6 +63,13 @@ export const deleteUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -69,6 +90,9 @@ export const createUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -91,6 +115,9 @@ export const updateUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -113,6 +140,9 @@ export const deleteUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
       }

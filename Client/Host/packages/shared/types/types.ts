@@ -8,7 +8,7 @@ export type TopNavigatorParamsList = {
 };
 
 export type RootNavigatorParamsList = {
-    "Beatrice": NavigatorScreenParams<TopNavigatorParamsList>;
+    "MidPoint": NavigatorScreenParams<TopNavigatorParamsList>;
 };
 
 export type RouteParamList = {

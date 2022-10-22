@@ -67,6 +67,7 @@ namespace Beatrice.Web
                     builder.WithOrigins(
                         "*",
                         "http://localhost:3000",
+                        "https://localhost:3000",
                         "https://karimali-001-site5.itempurl.com",
                         "https://beattrice.netlify.app"
                     )

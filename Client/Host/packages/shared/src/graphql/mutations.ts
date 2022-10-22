@@ -13,6 +13,13 @@ export const createUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -31,6 +38,13 @@ export const updateUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -49,6 +63,13 @@ export const deleteUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -69,8 +90,21 @@ export const createUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      midiMessages {
+        items {
+          id
+          midiData
+          createdAt
+          updatedAt
+          userChannelMidiMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -91,8 +125,21 @@ export const updateUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      midiMessages {
+        items {
+          id
+          midiData
+          createdAt
+          updatedAt
+          userChannelMidiMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -113,12 +160,121 @@ export const deleteUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      midiMessages {
+        items {
+          id
+          midiData
+          createdAt
+          updatedAt
+          userChannelMidiMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
       userChannelsId
+    }
+  }
+`;
+export const createMidiMessage = /* GraphQL */ `
+  mutation CreateMidiMessage(
+    $input: CreateMidiMessageInput!
+    $condition: ModelMidiMessageConditionInput
+  ) {
+    createMidiMessage(input: $input, condition: $condition) {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
+    }
+  }
+`;
+export const updateMidiMessage = /* GraphQL */ `
+  mutation UpdateMidiMessage(
+    $input: UpdateMidiMessageInput!
+    $condition: ModelMidiMessageConditionInput
+  ) {
+    updateMidiMessage(input: $input, condition: $condition) {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
+    }
+  }
+`;
+export const deleteMidiMessage = /* GraphQL */ `
+  mutation DeleteMidiMessage(
+    $input: DeleteMidiMessageInput!
+    $condition: ModelMidiMessageConditionInput
+  ) {
+    deleteMidiMessage(input: $input, condition: $condition) {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
     }
   }
 `;

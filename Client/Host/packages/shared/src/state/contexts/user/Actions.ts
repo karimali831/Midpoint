@@ -3,22 +3,24 @@ import { IFirebaseUser } from '../../../../types/types';
 import { ICreateUserDTO } from '../../../api/userApi';
 import { IUser } from '../../../models/IUser';
 
-const SigninLoadingAction = createAction('@@user/signinLoading');
+const SigninLoadingAction = createAction('@@User/SigninLoading');
 const FirebaseAuthEmptyAction = createAction(
     '@@reactReduxFirebase/AUTH_EMPTY_CHANGE'
 );
 const FirebaseAuthenticatedAction = createAction<IFirebaseUser>(
     '@@reactReduxFirebase/LOGIN'
 );
-const UpdateUserInfoAction = createAction('@@user/updateuserinfo');
+const UpdateUserInfoAction = createAction('@@User/UpdateUserInfo');
 
 const UpdateUserInfoSuccessAction = createAction<{
     updatedKey: keyof IUser;
     updatedValue: any;
-}>('@@user/updateuserinfosuccess');
+}>('@@User/UpdateUserInfoSuccess');
 
-const LoginSuccessAction = createAction<IUser>('@@user/loginsuccess');
-const CreateUserAction = createAction<ICreateUserDTO>('@@user/createuser');
+const CamToggleAction = createAction('@@User/CamToggleAction');
+const DJReadyAction = createAction<boolean>('@@User/DJReady');
+const LoginSuccessAction = createAction<IUser>('@@User/LoginSuccess');
+const CreateUserAction = createAction<ICreateUserDTO>('@@User/CreateUser');
 
 export {
     SigninLoadingAction,
@@ -27,6 +29,8 @@ export {
     UpdateUserInfoAction,
     UpdateUserInfoSuccessAction,
     LoginSuccessAction,
-    CreateUserAction
+    CreateUserAction,
+    CamToggleAction,
+    DJReadyAction
 };
 

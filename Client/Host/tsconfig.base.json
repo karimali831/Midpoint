@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "jsx": "react",
-        "allowJs": false,
+        "allowJs": true,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,

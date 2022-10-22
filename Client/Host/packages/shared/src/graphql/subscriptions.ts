@@ -2,6 +2,35 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onMidiMessage = /* GraphQL */ `
+  subscription OnMidiMessage($channelId: ID!, $midiData: String!) {
+    onMidiMessage(channelId: $channelId, midiData: $midiData) {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
@@ -10,6 +39,13 @@ export const onCreateUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -25,6 +61,13 @@ export const onUpdateUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -40,6 +83,13 @@ export const onDeleteUser = /* GraphQL */ `
       email
       displayName
       channels {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          userChannelsId
+        }
         nextToken
       }
       createdAt
@@ -57,8 +107,21 @@ export const onCreateUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      midiMessages {
+        items {
+          id
+          midiData
+          createdAt
+          updatedAt
+          userChannelMidiMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -76,8 +139,21 @@ export const onUpdateUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      midiMessages {
+        items {
+          id
+          midiData
+          createdAt
+          updatedAt
+          userChannelMidiMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -95,12 +171,112 @@ export const onDeleteUserChannel = /* GraphQL */ `
         firebaseUid
         email
         displayName
+        channels {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      midiMessages {
+        items {
+          id
+          midiData
+          createdAt
+          updatedAt
+          userChannelMidiMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
       userChannelsId
+    }
+  }
+`;
+export const onCreateMidiMessage = /* GraphQL */ `
+  subscription OnCreateMidiMessage {
+    onCreateMidiMessage {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
+    }
+  }
+`;
+export const onUpdateMidiMessage = /* GraphQL */ `
+  subscription OnUpdateMidiMessage {
+    onUpdateMidiMessage {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
+    }
+  }
+`;
+export const onDeleteMidiMessage = /* GraphQL */ `
+  subscription OnDeleteMidiMessage {
+    onDeleteMidiMessage {
+      id
+      midiData
+      channel {
+        id
+        name
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userChannelsId
+      }
+      createdAt
+      updatedAt
+      userChannelMidiMessagesId
     }
   }
 `;

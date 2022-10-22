@@ -1,6 +1,6 @@
 projects:
-  beatrice:
-    schemaPath: amplify/backend/api/beatrice/build/schema.graphql
+  midpoint:
+    schemaPath: packages/shared/src/graphql/schema.json
     includes:
       - src/graphql/**/*.ts
     excludes:
@@ -8,11 +8,8 @@ projects:
     extensions:
       amplify:
         codeGenTarget: typescript
-        generatedFileName: src/API.ts
+        generatedFileName: 'src/graphql/types.ts'
         docsFilePath: src/graphql
-        region: us-west-1
-        apiId: null
-        maxDepth: 2
 extensions:
   amplify:
     version: 3
