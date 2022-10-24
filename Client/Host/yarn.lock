@@ -4051,11 +4051,6 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@hypersphere/omnibus@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@hypersphere/omnibus/-/omnibus-0.0.6.tgz#07a3c415e60d9597878d83595b9e26d54093e9cd"
-  integrity sha512-FoBtsV9mLHVqQWaqu/p+A26Y0nUEmK1wCuPjfNzey02fzdHOCbFNlaxX0mETql3I3G6xA3/u1H90OC2FdyOyVA==
-
 "@ide/backoff@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@ide/backoff/-/backoff-1.0.0.tgz#466842c25bd4a4833e0642fab41ccff064010176"
@@ -4513,13 +4508,6 @@
     fetch-cookie "^0.11.0"
     node-fetch "^2.6.7"
     ws "^7.4.5"
-
-"@midival/core@^0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@midival/core/-/core-0.0.17.tgz#68c8ed304731c109375be1ecbbf781d6c2741f43"
-  integrity sha512-MPujYtefqX9RfHBNfA5/nmnCvVTAi1nZTAYwuDTAafQj4ZNs3viH5eRgX/lH0ll70SJDZSjmn1My6oswBsO6Jw==
-  dependencies:
-    "@hypersphere/omnibus" "^0.0.6"
 
 "@mui/base@5.0.0-alpha.100":
   version "5.0.0-alpha.100"
