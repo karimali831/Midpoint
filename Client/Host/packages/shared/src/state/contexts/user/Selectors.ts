@@ -15,6 +15,3 @@ export const getUserId = (state: IStoreState): string | null => {
     return state.user.user?.id ?? null;
 };
 
-export const getUserPushToken = (state: IStoreState): string | null => {
-    return state.user.user?.pushToken ?? null;
-};

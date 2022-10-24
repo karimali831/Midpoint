@@ -1,4 +1,7 @@
 export enum AppScreen {
     Splash = 'Splash',
-    Host = 'Host'
+    Login = 'Login',
+    Host = 'Host',
+    GamepadDebugger = 'GamepadDebugger',
+    Sequencer = 'Sequencer'
 }

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor.Extensions.WebUSB" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.6" />
     <PackageReference Include="Sentry.AspNetCore" Version="3.19.0" />
   </ItemGroup>
@@ -18,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Api\" />
     <Folder Include="ViewModel\" />
   </ItemGroup>
 

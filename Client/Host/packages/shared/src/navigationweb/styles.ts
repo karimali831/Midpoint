@@ -1,12 +1,9 @@
-import {
-    alpha,
-    createStyles,
-    makeStyles,
-    Theme,
-} from '@material-ui/core/styles';
+import { alpha, Theme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+
+const useStyles = makeStyles()((theme: Theme) => {
+    return {
         grow: {
             flexGrow: 0,
         },
@@ -72,6 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'absolute',
             right: 25,
         },
-    })
-);
+    }
+})
+
 export default useStyles;

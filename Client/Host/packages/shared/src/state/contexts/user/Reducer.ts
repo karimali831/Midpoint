@@ -1,10 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
+    CamToggleAction,
+    DJReadyAction,
     FirebaseAuthEmptyAction,
     LoginSuccessAction,
     SigninLoadingAction,
-    UpdateUserInfoSuccessAction,
-    UpdateUserPushTokenAction,
+    UpdateUserInfoSuccessAction
 } from './Actions';
 import { userInitialState } from './IUserState';
 
@@ -27,9 +28,10 @@ export const userReducer = createReducer(userInitialState, (builder) => {
             state.user = null;
             state.authSuccess = false;
         })
-        .addCase(UpdateUserPushTokenAction, (state, action) => {
-            state.user = Object.assign({}, state.user, {
-                pushToken: action.payload,
-            });
-        });
+        .addCase(CamToggleAction, (state) => {
+            state.camOn = !state.camOn
+        })
+        .addCase(DJReadyAction, (state, action) => {
+            state.djReady = action.payload
+        })
 });

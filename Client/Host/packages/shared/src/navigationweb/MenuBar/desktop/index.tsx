@@ -1,5 +1,5 @@
-import Menu from '@material-ui/core/Menu';
-import Settings from '@material-ui/icons/Settings';
+import Settings from '@mui/icons-material/Settings';
+import Menu from '@mui/material/Menu';
 import React from 'react';
 import MenuItemLink from '../MenuItemLink';
 

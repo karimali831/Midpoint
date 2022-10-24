@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-midpoint-dev-225824-authRole",
+      "UnauthRoleArn": "arn:aws:iam::909425903137:role/amplify-midpoint-dev-225824-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::909425903137:role/amplify-midpoint-dev-225824-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-midpoint-dev-225824-deployment",
+      "UnauthRoleName": "amplify-midpoint-dev-225824-unauthRole",
+      "StackName": "amplify-midpoint-dev-225824",
+      "StackId": "arn:aws:cloudformation:eu-west-2:909425903137:stack/amplify-midpoint-dev-225824/552fe2e0-4754-11ed-82ac-0a212bd7a432",
+      "AmplifyAppId": "d3ma4kdlsmif5y"
+    }
+  }
+}

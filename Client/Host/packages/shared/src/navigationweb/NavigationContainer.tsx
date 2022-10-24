@@ -9,7 +9,7 @@ import MobileMenu from './MenuBar/mobile';
 import useStyles from './styles';
 
 const Navigation = () => {
-    const classes = useStyles();
+    const { classes } = useStyles();
     const location = useLocation();
     const { currentScreen } = useSelector(getAppState)
 

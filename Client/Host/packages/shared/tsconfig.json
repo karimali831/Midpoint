@@ -6,6 +6,6 @@
         "noEmit": true,
         "target": "ESNext"
     },
-    "include": ["**/*.ts", "**/*.tsx"],
+    "include": ["**/*.ts", "**/*.tsx", "src/aws-exports.js"],
     "exclude": ["node_modules"]
 }

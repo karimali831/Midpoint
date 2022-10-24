@@ -1,37 +1,36 @@
 import { createAction } from '@reduxjs/toolkit';
+import { IFirebaseUser } from '../../../../types/types';
 import { ICreateUserDTO } from '../../../api/userApi';
-import { IFirebaseUser } from '../../../models/IFirebaseUser';
 import { IUser } from '../../../models/IUser';
 
-const SigninLoadingAction = createAction('@@user/signinLoading');
+const SigninLoadingAction = createAction('@@User/SigninLoading');
 const FirebaseAuthEmptyAction = createAction(
     '@@reactReduxFirebase/AUTH_EMPTY_CHANGE'
 );
 const FirebaseAuthenticatedAction = createAction<IFirebaseUser>(
     '@@reactReduxFirebase/LOGIN'
 );
-const UpdateUserInfoAction = createAction('@@user/updateuserinfo');
+const UpdateUserInfoAction = createAction('@@User/UpdateUserInfo');
 
 const UpdateUserInfoSuccessAction = createAction<{
     updatedKey: keyof IUser;
     updatedValue: any;
-}>('@@user/updateuserinfosuccess');
+}>('@@User/UpdateUserInfoSuccess');
 
-const LoginSuccessAction = createAction<IUser>('@@user/loginsuccess');
-const UpdateUserPushTokenAction = createAction<string>(
-    '@@user/updateuserpushtoken'
-);
-const TestAction = createAction('@@user/test');
-const RegisterUserAction = createAction<ICreateUserDTO>('@@user/registeruser');
+const CamToggleAction = createAction('@@User/CamToggleAction');
+const DJReadyAction = createAction<boolean>('@@User/DJReady');
+const LoginSuccessAction = createAction<IUser>('@@User/LoginSuccess');
+const CreateUserAction = createAction<ICreateUserDTO>('@@User/CreateUser');
 
 export {
     SigninLoadingAction,
     FirebaseAuthEmptyAction,
     FirebaseAuthenticatedAction,
-    RegisterUserAction,
     UpdateUserInfoAction,
     UpdateUserInfoSuccessAction,
     LoginSuccessAction,
-    UpdateUserPushTokenAction,
-    TestAction,
+    CreateUserAction,
+    CamToggleAction,
+    DJReadyAction
 };
+

@@ -4,13 +4,8 @@ import {
     faUser
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -63,7 +58,7 @@ export const DrawerContent = () => {
                             <ListItemIcon>
                                 <FontAwesomeIcon icon={faUser} />
                             </ListItemIcon>
-                            <ListItemText primary={user?.name ?? 'Welcome'} />
+                            <ListItemText primary={user?.displayName ?? 'Welcome'} />
                         </ListItem>
                         <Divider />
                         {Routes.filter(
@@ -80,7 +75,7 @@ export const DrawerContent = () => {
                                     ? auth.signOut()
                                     : dispatch(
                                         ShowScreenAction({
-                                            screen: AppScreen.Host,
+                                            screen: AppScreen.Login,
                                         })
                                     )
                             }

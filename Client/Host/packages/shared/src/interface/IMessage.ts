@@ -4,4 +4,5 @@ export interface IMessage {
     name: string
     message: string
     date: Date
+    isBot: boolean
 }

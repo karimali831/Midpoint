@@ -10,7 +10,7 @@ export default function* appSaga() {
 export function* axiosErrorAlert(action: PayloadAction<IAxiosError>) {
     const error = action.payload
 
-    if (error.response.data) {
+    if (error.response?.data) {
         const { title, errors } = error.response.data
 
         console.error(JSON.stringify(errors, null, 2))

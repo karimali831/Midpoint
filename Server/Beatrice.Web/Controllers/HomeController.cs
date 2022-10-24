@@ -15,7 +15,7 @@ namespace Beatrice.Web.Controllers
 
         public IActionResult Index()
         {
-            return View("WebRTC");
+            return View();
         }
 
         public IActionResult WebRTC()
