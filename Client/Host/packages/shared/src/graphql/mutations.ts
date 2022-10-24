@@ -12,13 +12,45 @@ export const createUser = /* GraphQL */ `
       firebaseUid
       email
       displayName
-      channels {
+      rooms {
         items {
           id
           name
+          desc
+          imageUri
+          lastMessageId
+          lastMessageDate
+          createdUserId
           createdAt
           updatedAt
-          userChannelsId
+          userRoomsId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
         }
         nextToken
       }
@@ -37,13 +69,45 @@ export const updateUser = /* GraphQL */ `
       firebaseUid
       email
       displayName
-      channels {
+      rooms {
         items {
           id
           name
+          desc
+          imageUri
+          lastMessageId
+          lastMessageDate
+          createdUserId
           createdAt
           updatedAt
-          userChannelsId
+          userRoomsId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
         }
         nextToken
       }
@@ -62,137 +126,69 @@ export const deleteUser = /* GraphQL */ `
       firebaseUid
       email
       displayName
-      channels {
+      rooms {
         items {
           id
           name
+          desc
+          imageUri
+          lastMessageId
+          lastMessageDate
+          createdUserId
           createdAt
           updatedAt
-          userChannelsId
+          userRoomsId
         }
         nextToken
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createUserChannel = /* GraphQL */ `
-  mutation CreateUserChannel(
-    $input: CreateUserChannelInput!
-    $condition: ModelUserChannelConditionInput
-  ) {
-    createUserChannel(input: $input, condition: $condition) {
-      id
-      name
-      user {
-        id
-        firebaseUid
-        email
-        displayName
-        channels {
-          nextToken
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
         }
-        createdAt
-        updatedAt
+        nextToken
       }
       midiMessages {
         items {
           id
-          midiData
+          data
           createdAt
           updatedAt
-          userChannelMidiMessagesId
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
         }
         nextToken
       }
       createdAt
       updatedAt
-      userChannelsId
     }
   }
 `;
-export const updateUserChannel = /* GraphQL */ `
-  mutation UpdateUserChannel(
-    $input: UpdateUserChannelInput!
-    $condition: ModelUserChannelConditionInput
+export const createHostRoomMidiMessage = /* GraphQL */ `
+  mutation CreateHostRoomMidiMessage(
+    $input: CreateHostRoomMidiMessageInput!
+    $condition: ModelHostRoomMidiMessageConditionInput
   ) {
-    updateUserChannel(input: $input, condition: $condition) {
+    createHostRoomMidiMessage(input: $input, condition: $condition) {
       id
-      name
-      user {
-        id
-        firebaseUid
-        email
-        displayName
-        channels {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      midiMessages {
-        items {
-          id
-          midiData
-          createdAt
-          updatedAt
-          userChannelMidiMessagesId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      userChannelsId
-    }
-  }
-`;
-export const deleteUserChannel = /* GraphQL */ `
-  mutation DeleteUserChannel(
-    $input: DeleteUserChannelInput!
-    $condition: ModelUserChannelConditionInput
-  ) {
-    deleteUserChannel(input: $input, condition: $condition) {
-      id
-      name
-      user {
-        id
-        firebaseUid
-        email
-        displayName
-        channels {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      midiMessages {
-        items {
-          id
-          midiData
-          createdAt
-          updatedAt
-          userChannelMidiMessagesId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      userChannelsId
-    }
-  }
-`;
-export const createMidiMessage = /* GraphQL */ `
-  mutation CreateMidiMessage(
-    $input: CreateMidiMessageInput!
-    $condition: ModelMidiMessageConditionInput
-  ) {
-    createMidiMessage(input: $input, condition: $condition) {
-      id
-      midiData
-      channel {
+      data
+      room {
         id
         name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
         user {
           id
           firebaseUid
@@ -201,30 +197,43 @@ export const createMidiMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        roomUsers {
+          nextToken
+        }
         midiMessages {
+          nextToken
+        }
+        chatMessages {
           nextToken
         }
         createdAt
         updatedAt
-        userChannelsId
+        userRoomsId
       }
       createdAt
       updatedAt
-      userChannelMidiMessagesId
+      userMidiMessagesId
+      hostRoomMidiMessagesId
+      hostRoomUserMidiMessagesId
     }
   }
 `;
-export const updateMidiMessage = /* GraphQL */ `
-  mutation UpdateMidiMessage(
-    $input: UpdateMidiMessageInput!
-    $condition: ModelMidiMessageConditionInput
+export const updateHostRoomMidiMessage = /* GraphQL */ `
+  mutation UpdateHostRoomMidiMessage(
+    $input: UpdateHostRoomMidiMessageInput!
+    $condition: ModelHostRoomMidiMessageConditionInput
   ) {
-    updateMidiMessage(input: $input, condition: $condition) {
+    updateHostRoomMidiMessage(input: $input, condition: $condition) {
       id
-      midiData
-      channel {
+      data
+      room {
         id
         name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
         user {
           id
           firebaseUid
@@ -233,30 +242,43 @@ export const updateMidiMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        roomUsers {
+          nextToken
+        }
         midiMessages {
+          nextToken
+        }
+        chatMessages {
           nextToken
         }
         createdAt
         updatedAt
-        userChannelsId
+        userRoomsId
       }
       createdAt
       updatedAt
-      userChannelMidiMessagesId
+      userMidiMessagesId
+      hostRoomMidiMessagesId
+      hostRoomUserMidiMessagesId
     }
   }
 `;
-export const deleteMidiMessage = /* GraphQL */ `
-  mutation DeleteMidiMessage(
-    $input: DeleteMidiMessageInput!
-    $condition: ModelMidiMessageConditionInput
+export const deleteHostRoomMidiMessage = /* GraphQL */ `
+  mutation DeleteHostRoomMidiMessage(
+    $input: DeleteHostRoomMidiMessageInput!
+    $condition: ModelHostRoomMidiMessageConditionInput
   ) {
-    deleteMidiMessage(input: $input, condition: $condition) {
+    deleteHostRoomMidiMessage(input: $input, condition: $condition) {
       id
-      midiData
-      channel {
+      data
+      room {
         id
         name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
         user {
           id
           firebaseUid
@@ -265,16 +287,729 @@ export const deleteMidiMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userMidiMessagesId
+      hostRoomMidiMessagesId
+      hostRoomUserMidiMessagesId
+    }
+  }
+`;
+export const createHostRoom = /* GraphQL */ `
+  mutation CreateHostRoom(
+    $input: CreateHostRoomInput!
+    $condition: ModelHostRoomConditionInput
+  ) {
+    createHostRoom(input: $input, condition: $condition) {
+      id
+      name
+      desc
+      imageUri
+      lastMessageId
+      lastMessageDate
+      createdUserId
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
         midiMessages {
           nextToken
         }
         createdAt
         updatedAt
-        userChannelsId
+      }
+      roomUsers {
+        items {
+          id
+          userId
+          hostRoomId
+          lastSeen
+          archived
+          pinned
+          createdAt
+          updatedAt
+          hostRoomRoomUsersId
+          hostRoomUserUserId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
-      userChannelMidiMessagesId
+      userRoomsId
+    }
+  }
+`;
+export const updateHostRoom = /* GraphQL */ `
+  mutation UpdateHostRoom(
+    $input: UpdateHostRoomInput!
+    $condition: ModelHostRoomConditionInput
+  ) {
+    updateHostRoom(input: $input, condition: $condition) {
+      id
+      name
+      desc
+      imageUri
+      lastMessageId
+      lastMessageDate
+      createdUserId
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      roomUsers {
+        items {
+          id
+          userId
+          hostRoomId
+          lastSeen
+          archived
+          pinned
+          createdAt
+          updatedAt
+          hostRoomRoomUsersId
+          hostRoomUserUserId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      userRoomsId
+    }
+  }
+`;
+export const deleteHostRoom = /* GraphQL */ `
+  mutation DeleteHostRoom(
+    $input: DeleteHostRoomInput!
+    $condition: ModelHostRoomConditionInput
+  ) {
+    deleteHostRoom(input: $input, condition: $condition) {
+      id
+      name
+      desc
+      imageUri
+      lastMessageId
+      lastMessageDate
+      createdUserId
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      roomUsers {
+        items {
+          id
+          userId
+          hostRoomId
+          lastSeen
+          archived
+          pinned
+          createdAt
+          updatedAt
+          hostRoomRoomUsersId
+          hostRoomUserUserId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      userRoomsId
+    }
+  }
+`;
+export const createHostRoomUser = /* GraphQL */ `
+  mutation CreateHostRoomUser(
+    $input: CreateHostRoomUserInput!
+    $condition: ModelHostRoomUserConditionInput
+  ) {
+    createHostRoomUser(input: $input, condition: $condition) {
+      id
+      userId
+      hostRoomId
+      lastSeen
+      archived
+      pinned
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      hostRoomRoomUsersId
+      hostRoomUserUserId
+    }
+  }
+`;
+export const updateHostRoomUser = /* GraphQL */ `
+  mutation UpdateHostRoomUser(
+    $input: UpdateHostRoomUserInput!
+    $condition: ModelHostRoomUserConditionInput
+  ) {
+    updateHostRoomUser(input: $input, condition: $condition) {
+      id
+      userId
+      hostRoomId
+      lastSeen
+      archived
+      pinned
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      hostRoomRoomUsersId
+      hostRoomUserUserId
+    }
+  }
+`;
+export const deleteHostRoomUser = /* GraphQL */ `
+  mutation DeleteHostRoomUser(
+    $input: DeleteHostRoomUserInput!
+    $condition: ModelHostRoomUserConditionInput
+  ) {
+    deleteHostRoomUser(input: $input, condition: $condition) {
+      id
+      userId
+      hostRoomId
+      lastSeen
+      archived
+      pinned
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      hostRoomRoomUsersId
+      hostRoomUserUserId
+    }
+  }
+`;
+export const createHostRoomChatMessage = /* GraphQL */ `
+  mutation CreateHostRoomChatMessage(
+    $input: CreateHostRoomChatMessageInput!
+    $condition: ModelHostRoomChatMessageConditionInput
+  ) {
+    createHostRoomChatMessage(input: $input, condition: $condition) {
+      id
+      userId
+      roomId
+      message
+      read
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userChatMessagesId
+      hostRoomChatMessagesId
+      hostRoomUserChatMessagesId
+    }
+  }
+`;
+export const updateHostRoomChatMessage = /* GraphQL */ `
+  mutation UpdateHostRoomChatMessage(
+    $input: UpdateHostRoomChatMessageInput!
+    $condition: ModelHostRoomChatMessageConditionInput
+  ) {
+    updateHostRoomChatMessage(input: $input, condition: $condition) {
+      id
+      userId
+      roomId
+      message
+      read
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userChatMessagesId
+      hostRoomChatMessagesId
+      hostRoomUserChatMessagesId
+    }
+  }
+`;
+export const deleteHostRoomChatMessage = /* GraphQL */ `
+  mutation DeleteHostRoomChatMessage(
+    $input: DeleteHostRoomChatMessageInput!
+    $condition: ModelHostRoomChatMessageConditionInput
+  ) {
+    deleteHostRoomChatMessage(input: $input, condition: $condition) {
+      id
+      userId
+      roomId
+      message
+      read
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userChatMessagesId
+      hostRoomChatMessagesId
+      hostRoomUserChatMessagesId
     }
   }
 `;

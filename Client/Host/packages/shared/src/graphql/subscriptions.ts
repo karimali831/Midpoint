@@ -3,13 +3,18 @@
 // this is an auto generated file. This will be overwritten
 
 export const onMidiMessage = /* GraphQL */ `
-  subscription OnMidiMessage($channelId: ID!, $midiData: String!) {
-    onMidiMessage(channelId: $channelId, midiData: $midiData) {
+  subscription OnMidiMessage($roomId: ID!, $data: String!) {
+    onMidiMessage(roomId: $roomId, data: $data) {
       id
-      midiData
-      channel {
+      data
+      room {
         id
         name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
         user {
           id
           firebaseUid
@@ -18,16 +23,24 @@ export const onMidiMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        roomUsers {
+          nextToken
+        }
         midiMessages {
+          nextToken
+        }
+        chatMessages {
           nextToken
         }
         createdAt
         updatedAt
-        userChannelsId
+        userRoomsId
       }
       createdAt
       updatedAt
-      userChannelMidiMessagesId
+      userMidiMessagesId
+      hostRoomMidiMessagesId
+      hostRoomUserMidiMessagesId
     }
   }
 `;
@@ -38,13 +51,45 @@ export const onCreateUser = /* GraphQL */ `
       firebaseUid
       email
       displayName
-      channels {
+      rooms {
         items {
           id
           name
+          desc
+          imageUri
+          lastMessageId
+          lastMessageDate
+          createdUserId
           createdAt
           updatedAt
-          userChannelsId
+          userRoomsId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
         }
         nextToken
       }
@@ -60,13 +105,45 @@ export const onUpdateUser = /* GraphQL */ `
       firebaseUid
       email
       displayName
-      channels {
+      rooms {
         items {
           id
           name
+          desc
+          imageUri
+          lastMessageId
+          lastMessageDate
+          createdUserId
           createdAt
           updatedAt
-          userChannelsId
+          userRoomsId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
         }
         nextToken
       }
@@ -82,125 +159,66 @@ export const onDeleteUser = /* GraphQL */ `
       firebaseUid
       email
       displayName
-      channels {
+      rooms {
         items {
           id
           name
+          desc
+          imageUri
+          lastMessageId
+          lastMessageDate
+          createdUserId
           createdAt
           updatedAt
-          userChannelsId
+          userRoomsId
         }
         nextToken
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateUserChannel = /* GraphQL */ `
-  subscription OnCreateUserChannel {
-    onCreateUserChannel {
-      id
-      name
-      user {
-        id
-        firebaseUid
-        email
-        displayName
-        channels {
-          nextToken
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
         }
-        createdAt
-        updatedAt
+        nextToken
       }
       midiMessages {
         items {
           id
-          midiData
+          data
           createdAt
           updatedAt
-          userChannelMidiMessagesId
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
         }
         nextToken
       }
       createdAt
       updatedAt
-      userChannelsId
     }
   }
 `;
-export const onUpdateUserChannel = /* GraphQL */ `
-  subscription OnUpdateUserChannel {
-    onUpdateUserChannel {
+export const onCreateHostRoomMidiMessage = /* GraphQL */ `
+  subscription OnCreateHostRoomMidiMessage {
+    onCreateHostRoomMidiMessage {
       id
-      name
-      user {
-        id
-        firebaseUid
-        email
-        displayName
-        channels {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      midiMessages {
-        items {
-          id
-          midiData
-          createdAt
-          updatedAt
-          userChannelMidiMessagesId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      userChannelsId
-    }
-  }
-`;
-export const onDeleteUserChannel = /* GraphQL */ `
-  subscription OnDeleteUserChannel {
-    onDeleteUserChannel {
-      id
-      name
-      user {
-        id
-        firebaseUid
-        email
-        displayName
-        channels {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      midiMessages {
-        items {
-          id
-          midiData
-          createdAt
-          updatedAt
-          userChannelMidiMessagesId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      userChannelsId
-    }
-  }
-`;
-export const onCreateMidiMessage = /* GraphQL */ `
-  subscription OnCreateMidiMessage {
-    onCreateMidiMessage {
-      id
-      midiData
-      channel {
+      data
+      room {
         id
         name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
         user {
           id
           firebaseUid
@@ -209,27 +227,40 @@ export const onCreateMidiMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        roomUsers {
+          nextToken
+        }
         midiMessages {
+          nextToken
+        }
+        chatMessages {
           nextToken
         }
         createdAt
         updatedAt
-        userChannelsId
+        userRoomsId
       }
       createdAt
       updatedAt
-      userChannelMidiMessagesId
+      userMidiMessagesId
+      hostRoomMidiMessagesId
+      hostRoomUserMidiMessagesId
     }
   }
 `;
-export const onUpdateMidiMessage = /* GraphQL */ `
-  subscription OnUpdateMidiMessage {
-    onUpdateMidiMessage {
+export const onUpdateHostRoomMidiMessage = /* GraphQL */ `
+  subscription OnUpdateHostRoomMidiMessage {
+    onUpdateHostRoomMidiMessage {
       id
-      midiData
-      channel {
+      data
+      room {
         id
         name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
         user {
           id
           firebaseUid
@@ -238,27 +269,40 @@ export const onUpdateMidiMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        roomUsers {
+          nextToken
+        }
         midiMessages {
+          nextToken
+        }
+        chatMessages {
           nextToken
         }
         createdAt
         updatedAt
-        userChannelsId
+        userRoomsId
       }
       createdAt
       updatedAt
-      userChannelMidiMessagesId
+      userMidiMessagesId
+      hostRoomMidiMessagesId
+      hostRoomUserMidiMessagesId
     }
   }
 `;
-export const onDeleteMidiMessage = /* GraphQL */ `
-  subscription OnDeleteMidiMessage {
-    onDeleteMidiMessage {
+export const onDeleteHostRoomMidiMessage = /* GraphQL */ `
+  subscription OnDeleteHostRoomMidiMessage {
+    onDeleteHostRoomMidiMessage {
       id
-      midiData
-      channel {
+      data
+      room {
         id
         name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
         user {
           id
           firebaseUid
@@ -267,16 +311,702 @@ export const onDeleteMidiMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userMidiMessagesId
+      hostRoomMidiMessagesId
+      hostRoomUserMidiMessagesId
+    }
+  }
+`;
+export const onCreateHostRoom = /* GraphQL */ `
+  subscription OnCreateHostRoom {
+    onCreateHostRoom {
+      id
+      name
+      desc
+      imageUri
+      lastMessageId
+      lastMessageDate
+      createdUserId
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
         midiMessages {
           nextToken
         }
         createdAt
         updatedAt
-        userChannelsId
+      }
+      roomUsers {
+        items {
+          id
+          userId
+          hostRoomId
+          lastSeen
+          archived
+          pinned
+          createdAt
+          updatedAt
+          hostRoomRoomUsersId
+          hostRoomUserUserId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
       }
       createdAt
       updatedAt
-      userChannelMidiMessagesId
+      userRoomsId
+    }
+  }
+`;
+export const onUpdateHostRoom = /* GraphQL */ `
+  subscription OnUpdateHostRoom {
+    onUpdateHostRoom {
+      id
+      name
+      desc
+      imageUri
+      lastMessageId
+      lastMessageDate
+      createdUserId
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      roomUsers {
+        items {
+          id
+          userId
+          hostRoomId
+          lastSeen
+          archived
+          pinned
+          createdAt
+          updatedAt
+          hostRoomRoomUsersId
+          hostRoomUserUserId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      userRoomsId
+    }
+  }
+`;
+export const onDeleteHostRoom = /* GraphQL */ `
+  subscription OnDeleteHostRoom {
+    onDeleteHostRoom {
+      id
+      name
+      desc
+      imageUri
+      lastMessageId
+      lastMessageDate
+      createdUserId
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      roomUsers {
+        items {
+          id
+          userId
+          hostRoomId
+          lastSeen
+          archived
+          pinned
+          createdAt
+          updatedAt
+          hostRoomRoomUsersId
+          hostRoomUserUserId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      userRoomsId
+    }
+  }
+`;
+export const onCreateHostRoomUser = /* GraphQL */ `
+  subscription OnCreateHostRoomUser {
+    onCreateHostRoomUser {
+      id
+      userId
+      hostRoomId
+      lastSeen
+      archived
+      pinned
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      hostRoomRoomUsersId
+      hostRoomUserUserId
+    }
+  }
+`;
+export const onUpdateHostRoomUser = /* GraphQL */ `
+  subscription OnUpdateHostRoomUser {
+    onUpdateHostRoomUser {
+      id
+      userId
+      hostRoomId
+      lastSeen
+      archived
+      pinned
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      hostRoomRoomUsersId
+      hostRoomUserUserId
+    }
+  }
+`;
+export const onDeleteHostRoomUser = /* GraphQL */ `
+  subscription OnDeleteHostRoomUser {
+    onDeleteHostRoomUser {
+      id
+      userId
+      hostRoomId
+      lastSeen
+      archived
+      pinned
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          userChatMessagesId
+          hostRoomChatMessagesId
+          hostRoomUserChatMessagesId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          data
+          createdAt
+          updatedAt
+          userMidiMessagesId
+          hostRoomMidiMessagesId
+          hostRoomUserMidiMessagesId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      hostRoomRoomUsersId
+      hostRoomUserUserId
+    }
+  }
+`;
+export const onCreateHostRoomChatMessage = /* GraphQL */ `
+  subscription OnCreateHostRoomChatMessage {
+    onCreateHostRoomChatMessage {
+      id
+      userId
+      roomId
+      message
+      read
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userChatMessagesId
+      hostRoomChatMessagesId
+      hostRoomUserChatMessagesId
+    }
+  }
+`;
+export const onUpdateHostRoomChatMessage = /* GraphQL */ `
+  subscription OnUpdateHostRoomChatMessage {
+    onUpdateHostRoomChatMessage {
+      id
+      userId
+      roomId
+      message
+      read
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userChatMessagesId
+      hostRoomChatMessagesId
+      hostRoomUserChatMessagesId
+    }
+  }
+`;
+export const onDeleteHostRoomChatMessage = /* GraphQL */ `
+  subscription OnDeleteHostRoomChatMessage {
+    onDeleteHostRoomChatMessage {
+      id
+      userId
+      roomId
+      message
+      read
+      user {
+        id
+        firebaseUid
+        email
+        displayName
+        rooms {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        lastMessageId
+        lastMessageDate
+        createdUserId
+        user {
+          id
+          firebaseUid
+          email
+          displayName
+          createdAt
+          updatedAt
+        }
+        roomUsers {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        chatMessages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userRoomsId
+      }
+      createdAt
+      updatedAt
+      userChatMessagesId
+      hostRoomChatMessagesId
+      hostRoomUserChatMessagesId
     }
   }
 `;
