@@ -13,6 +13,7 @@ export type RootNavigatorParamsList = {
 
 export type RouteParamList = {
     [AppScreen.Splash]: undefined;
+    [AppScreen.Home]: undefined;
     [AppScreen.Login]: undefined;
     [AppScreen.Host]: undefined;
     [AppScreen.GamepadDebugger]: undefined
