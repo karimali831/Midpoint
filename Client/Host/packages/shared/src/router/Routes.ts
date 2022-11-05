@@ -29,7 +29,7 @@ export const Routes: IRoute[] = [
     {
         screen: AppScreen.Login,
         component: Login,
-        displayOnMenu: false,
+        displayOnMenu: true,
         memberOnly: false,
         headerShown: false,
         navigationShown: true,
@@ -49,7 +49,7 @@ export const Routes: IRoute[] = [
     {
         screen: AppScreen.GamepadDebugger,
         component: GamepadDebugger,
-        displayOnMenu: true,
+        displayOnMenu: false,
         memberOnly: false,
         headerShown: false,
         navigationShown: true,

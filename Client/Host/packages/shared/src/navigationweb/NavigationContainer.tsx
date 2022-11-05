@@ -5,7 +5,6 @@ import { Routes } from '../router/Routes';
 import { getAppState } from '../state/contexts/app/Selectors';
 import { MenuBar } from './MenuBar';
 import DesktopMenu from './MenuBar/desktop';
-import MobileMenu from './MenuBar/mobile';
 import useStyles from './styles';
 
 const Navigation = () => {
@@ -51,11 +50,11 @@ const Navigation = () => {
                 handleMobileMenuOpen={handleMobileMenuOpen}
                 handleProfileMenuOpen={handleProfileMenuOpen}
             />
-            <MobileMenu
+            {/* <MobileMenu
                 moreAnchorEl={mobileMoreAnchorEl}
                 handleMenuClose={handleMobileMenuClose}
                 handleProfileMenuOpen={handleProfileMenuOpen}
-            />
+            /> */}
             <DesktopMenu
                 anchorEl={anchorEl}
                 handleMenuClose={handleMenuClose}
