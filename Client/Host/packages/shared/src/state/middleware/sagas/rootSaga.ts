@@ -1,6 +1,6 @@
 import { all, fork } from 'redux-saga/effects';
+import chatApiSaga from './api/chatApiSaga';
 import userApiSaga from './api/userApiSaga';
-import webRTCApiSaga from './api/webRTCApiSaga';
 import appSaga from './appSaga';
 import navigationSaga from './navigationSaga.web';
 
@@ -13,6 +13,6 @@ export function* rootSaga() {
         fork(userApiSaga),
 
         // Business sagas
-        fork(webRTCApiSaga),
+        fork(chatApiSaga),
     ]);
 }
