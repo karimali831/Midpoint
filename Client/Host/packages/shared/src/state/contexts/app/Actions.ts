@@ -3,6 +3,7 @@ import { RouteParamList } from '../../../../types/types';
 import { AppScreen } from '../../../enum/AppScreen';
 import { LoadStartup } from '../../../enum/LoadStartup';
 import { IAlert } from '../../../interface/IAlert';
+import { IAwsError } from '../../../interface/IAwsError';
 import { IAxiosError } from '../../../interface/IAxiosError';
 import { INotificationMessage } from '../../../interface/INotificationMessage';
 
@@ -14,21 +15,22 @@ export type ShowScreenType = {
 };
 
 // ACTION CREATORS
-const SetAppFocusedAction = createAction<boolean>('@@app/setappfocused');
-const AxiosErrorAlertAction = createAction<IAxiosError>('@@app/axioserroralert');
-const ShowAlertAction = createAction<IAlert>('@@app/showalert');
-const LocationChangeAction = createAction('@@app/locationchange');
-const SetAppReadyAction = createAction<LoadStartup>('@@app/setappready');
-const HideAlertAction = createAction('@@app/hidealert');
-const ShowScreenAction = createAction<ShowScreenType>('@@app/showscreen');
+const SetAppFocusedAction = createAction<boolean>('@@App/SetAppFocused');
+const AxiosErrorAlertAction = createAction<IAxiosError>('@@App/AxiosErrorAlert');
+const AwsErrorAlertAction = createAction<IAwsError>('@@App/AwsErrorAlert');
+const ShowAlertAction = createAction<IAlert>('@@App/ShowAlert');
+const LocationChangeAction = createAction('@@App/LocationChange');
+const SetAppReadyAction = createAction<LoadStartup>('@@App/SetAppReady');
+const HideAlertAction = createAction('@@App/HideAlert');
+const ShowScreenAction = createAction<ShowScreenType>('@@App/ShowScreen');
 const SetOnConfirmLoadingAction = createAction<boolean>(
-    '@@app/setonconfirmloading'
+    '@@App/SetOnConfirmLoading'
 );
-const GoBackAction = createAction('@@app/goback');
+const GoBackAction = createAction('@@App/Goback');
 const SendNotificationAction = createAction<{
     message: INotificationMessage;
     delayInSeconds?: number;
-}>('@@app/sendnotification');
+}>('@@App/SendNotification');
 
 export {
     SetAppFocusedAction,
@@ -40,6 +42,7 @@ export {
     GoBackAction,
     SendNotificationAction,
     LocationChangeAction,
-    AxiosErrorAlertAction
+    AxiosErrorAlertAction,
+    AwsErrorAlertAction
 };
 

@@ -7,7 +7,7 @@ import { IUser } from '../models/IUser';
 
 class UserApi {
 
-    public getUserByFirebaseUid = async (userId: string): Promise<IUser | null> => {
+    public getUserByFirebaseUid = async (userId: string): Promise<IUser> => {
         console.log("[API] fetchUser" + userId)
 
         try {
@@ -20,16 +20,11 @@ class UserApi {
             })
 
             const user = response.data?.listUsers?.items
-
-            if (!!user) {
-                return user[0] as IUser
-            }
-
-            return null
+            return user![0] as IUser
         }
-        catch (error: any) {
+        catch (error) {
             console.error(UserApi.name, "fetchUser", JSON.stringify(error, null, 2))
-            return null
+            throw error
         }
     }
 

@@ -1,10 +1,20 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { put, takeLatest } from "redux-saga/effects";
+import { put, takeEvery, takeLatest } from "redux-saga/effects";
+import { IAwsError } from '../../../interface/IAwsError';
 import { IAxiosError } from '../../../interface/IAxiosError';
-import { AxiosErrorAlertAction, ShowAlertAction } from '../../contexts/app/Actions';
+import { AwsErrorAlertAction, AxiosErrorAlertAction, ShowAlertAction } from '../../contexts/app/Actions';
 
 export default function* appSaga() {
     yield takeLatest(AxiosErrorAlertAction.type, axiosErrorAlert);
+    yield takeEvery(AwsErrorAlertAction.type, awsErrorAlert);
+}
+
+export function* awsErrorAlert(action: PayloadAction<IAwsError>) {
+    const error = action.payload
+
+    yield put(ShowAlertAction({
+        title: error.errors[0].message
+    }))
 }
 
 export function* axiosErrorAlert(action: PayloadAction<IAxiosError>) {

@@ -46,7 +46,8 @@ const Splash = () => {
             setTimeout(() => {
                 dispatch(
                     ShowScreenAction({
-                        screen: user ? AppScreen.Host : AppScreen.Login,
+                        // screen: user ? AppScreen.Host : AppScreen.Login,
+                        screen: AppScreen.Home
                     })
                 );
             }, 1000);

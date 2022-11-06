@@ -1,0 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background: #121212;
+    position: relative;
+  }
+  
+  .App {
+    font-family: sans-serif;
+    text-align: center;
+  }
