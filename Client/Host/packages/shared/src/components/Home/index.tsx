@@ -113,7 +113,7 @@ export const Home: React.FC<IOwnProps> = () => {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ color: '#fff', fontSize: 32, marginRight: 15 }}>86</Text>
-                                    <View style={{ flexDirection: 'column' }}>
+                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                                         <Text style={{ color: '#fff', fontWeight: '500', fontSize: 15 }}>Registered users</Text>
                                         <Text style={{ color: '#fff', fontSize: 11 }}>+6 LAST WEEK</Text>
                                     </View>
@@ -126,7 +126,7 @@ export const Home: React.FC<IOwnProps> = () => {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ color: '#fff', fontSize: 32, marginRight: 15 }}>3</Text>
-                                    <View style={{ flexDirection: 'column' }}>
+                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                                         <Text style={{ color: '#fff', fontWeight: '500', fontSize: 15 }}>Cloud instances live now</Text>
                                         <Text style={{ color: '#fff', fontSize: 11 }}>Average of 16 a week</Text>
                                     </View>
@@ -139,7 +139,7 @@ export const Home: React.FC<IOwnProps> = () => {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ color: '#fff', fontSize: 32, marginRight: 15 }}>99%</Text>
-                                    <View style={{ flexDirection: 'column' }}>
+                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                                         <Text style={{ color: '#fff', fontWeight: '500', fontSize: 15 }}>Uptime</Text>
                                         <Text style={{ color: '#fff', fontSize: 11 }}></Text>
                                     </View>
@@ -149,7 +149,7 @@ export const Home: React.FC<IOwnProps> = () => {
                         </View>
                     </div>
 
-                    <View style={{ marginTop: 25, alignItems: 'center' }}>
+                    <View style={{ marginTop: 25, alignItems: 'flex-start' }}>
                         <Text style={{
                             color: '#fff',
                             fontSize: 32,
@@ -265,7 +265,7 @@ export const Home: React.FC<IOwnProps> = () => {
                     flexDirection: isMobile ? 'column' : 'row',
                     justifyContent: 'space-between'
                 }}>
-                    <View style={{ flexDirection: 'column' }}>
+                    <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                         <Text style={{
                             color: '#fff',
                             fontSize: 32,

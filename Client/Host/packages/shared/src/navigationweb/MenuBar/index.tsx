@@ -48,14 +48,14 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
 
 
     return (
-        <AppBar position="fixed" sx={{ bgcolor: '#000' }}>
-            <Container maxWidth="xl">
+        <AppBar position="fixed" sx={{ bgcolor: '#000', zIndex: 1 }}>
+            <Container maxWidth="xl" style={{ zIndex: 1 }}>
                 <Toolbar disableGutters>
 
                     <Typography className={classes.title} variant="h6" noWrap mr={5}>
                         MidPoint.
                     </Typography>
-                    {/* <div className={classes.grow} /> */}
+                    <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                         <IconButton
                             edge="end"

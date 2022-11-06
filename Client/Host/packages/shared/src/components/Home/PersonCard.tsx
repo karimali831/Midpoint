@@ -13,7 +13,7 @@ interface IOwnProps {
 
 export const PersonCard: React.FC<IOwnProps> = (props) => {
     return (
-        <View style={{ flexDirection: 'column', width: 220, marginRight: 20, borderRadius: 5 }}>
+        <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: 220, marginRight: 20, borderRadius: 5 }}>
 
             <img src={images.adamProfilePic} style={{
                 width: '100%',

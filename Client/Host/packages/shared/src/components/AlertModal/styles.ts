@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     topCenter: {
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        paddingTop: 60
     },
     topRight: {
         alignItems: 'flex-end',

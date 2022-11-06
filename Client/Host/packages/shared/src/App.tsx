@@ -14,6 +14,7 @@ import awsmobile from './aws-exports.js';
 import Alert from './components/AlertModal';
 import { Router } from './router/Router';
 import store from './state/InitialiseStore';
+import './styles.css';
 
 const persistor = persistStore(store);
 
@@ -45,8 +46,10 @@ export function App() {
             <PersistGate persistor={persistor}>
                 <ReactReduxFirebaseProvider {...rrfProps}>
                     <NativeBaseProvider>
-                        <Alert />
-                        <Router />
+                        <div className="App">
+                            <Alert />
+                            <Router />
+                        </div>
                     </NativeBaseProvider>
                 </ReactReduxFirebaseProvider>
             </PersistGate>

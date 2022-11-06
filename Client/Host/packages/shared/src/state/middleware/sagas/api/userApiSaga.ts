@@ -4,9 +4,11 @@ import { IFirebaseUser } from '../../../../../types/types';
 import { ICreateUserDTO, userApi } from '../../../../api/userApi';
 import { AppScreen } from '../../../../enum/AppScreen';
 import { LoadStartup } from '../../../../enum/LoadStartup';
+import { IAwsError } from '../../../../interface/IAwsError';
 import { IAxiosError } from '../../../../interface/IAxiosError';
 import { IUser } from '../../../../models/IUser';
 import {
+    AwsErrorAlertAction,
     AxiosErrorAlertAction,
     SetAppReadyAction,
     SetOnConfirmLoadingAction,
@@ -111,19 +113,9 @@ export function* firebaseAuthenticated(action: any) {
 
         if (user) {
             yield put(LoginSuccessAction(user));
-
-            // yield put(
-            //     ShowAlertAction({
-            //         title: `Logged in as ${user.displayName}`,
-            //         status: 'success',
-            //         duration: 4000,
-            //         position: 'topright',
-            //         blurBackground: false,
-            //     })
-            // );
         }
-    } catch (e: any) {
-        yield put(AxiosErrorAlertAction(e as IAxiosError))
+    } catch (e) {
+        yield put(AwsErrorAlertAction(e as IAwsError))
         yield call(authLoadDone);
     }
 }

@@ -132,6 +132,7 @@ const AlertModal = () => {
                     stylesByPosition(), {
                         backgroundColor: alertModal.blurBackground ?
                             'rgba(52, 52, 52, 0.7)' : 'transparent',
+                        zIndex: 999
                     }
                 ]}
             >
