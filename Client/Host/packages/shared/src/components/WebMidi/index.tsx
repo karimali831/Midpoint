@@ -92,15 +92,6 @@ const WebMIDI: React.FC<IOwnProps> = (props) => {
         setData(event.data)
     }
 
-    // const onMIDISuccess = (midiAccess: any) => {
-    //     for (var input of midiAccess.inputs.values())
-    //         input.onmidimessage = getMIDIMessage;
-    // }
-
-    // const getMIDIMessage = (msg: any) => {
-    //     console.log(msg.data);
-    // }
-
     return (
         <div>
             <div id='device_info'>

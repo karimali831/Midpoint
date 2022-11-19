@@ -13,8 +13,13 @@ interface IOwnProps {
 
 export const PersonCard: React.FC<IOwnProps> = (props) => {
     return (
-        <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: 220, marginRight: 20, borderRadius: 5 }}>
-
+        <View style={{
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            width: 220,
+            marginRight: 20,
+            borderRadius: 5
+        }}>
             <img src={images.adamProfilePic} style={{
                 width: '100%',
                 height: '100%',
@@ -27,10 +32,10 @@ export const PersonCard: React.FC<IOwnProps> = (props) => {
                 {props.title}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                <TwitterIcon style={{ color: '#fff', fontSize: 20, marginRight: 10 }} />
-                <FacebookIcon style={{ color: '#fff', fontSize: 20, marginRight: 10 }} />
-                <InstagramIcon style={{ color: '#fff', fontSize: 20, marginRight: 10 }} />
-                <YouTubeIcon style={{ color: '#fff', fontSize: 20, marginRight: 10 }} />
+                <TwitterIcon style={{ fontSize: 20, marginRight: 10 }} />
+                <FacebookIcon style={{ fontSize: 20, marginRight: 10 }} />
+                <InstagramIcon style={{ fontSize: 20, marginRight: 10 }} />
+                <YouTubeIcon style={{ fontSize: 20, marginRight: 10 }} />
             </View>
         </View>
     )

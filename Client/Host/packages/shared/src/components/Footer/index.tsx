@@ -20,7 +20,6 @@ export const Footer = () => {
             }}>
                 <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 30 }}>
                     <span style={{
-                        color: '#fff',
                         fontSize: 28,
                         marginBottom: 5,
                     }}>

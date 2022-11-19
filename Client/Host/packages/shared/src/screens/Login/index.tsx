@@ -19,6 +19,7 @@ import { isMobile } from '../../Platform';
 import { ShowScreenAction } from '../../state/contexts/app/Actions';
 import { CreateUserAction, SigninLoadingAction } from '../../state/contexts/user/Actions';
 import { getUserState } from '../../state/contexts/user/Selectors';
+import { LoginHighlight } from './Highlight';
 import './styles.css';
 
 export function Login() {
@@ -29,7 +30,6 @@ export function Login() {
     const [repeatPassword, setRepeatPassword] = useState<string>('')
     const [registering, setRegistering] = useState<boolean>(false)
     const [messages, setMessages] = useState<IFormMessage[]>([])
-    // const [server, set] = useState<IFormMessage[]>([])
 
     const {
         signingIn,
@@ -45,8 +45,6 @@ export function Login() {
         x.code !== IFormMessageCode.PasswowrdsMismatched &&
         x.code !== IFormMessageCode.EmailAlreadyInUse
     )
-
-    React.useEffect(() => { }, [])
 
     React.useEffect(() => {
         if (user) {
@@ -150,14 +148,10 @@ export function Login() {
     }
 
     return (
-
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            // initial={{ width: 0 }}
-            // animate={{ width: "100%" }}
-            // exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
             style={{
                 height: '100%',
                 marginTop: 100,
@@ -176,7 +170,7 @@ export function Login() {
                     textAlign: 'center',
                     boxShadow: '0px -2px 20px 2px rgba(0, 0, 0, 0.4)'
                 }}>
-                    <span style={{ color: '#fff', fontSize: 22 }}>
+                    <span style={{ fontSize: 22 }}>
                         The future of collaborative music industry projects is in the cloud.
                     </span>
                 </div>
@@ -188,30 +182,21 @@ export function Login() {
                     marginTop: 20,
                     height: 260
                 }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <AccessTimeIcon style={{ color: '#fff', fontSize: 32, marginRight: 20 }} />
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ color: '#fff', marginBottom: 5, fontWeight: 500, fontSize: 17 }}>Start within minutes</span>
-
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14 }}>No set up required, just login and start from a single click.</span>
-                        </div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <EastIcon style={{ color: '#fff', fontSize: 32, marginRight: 20 }} />
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ color: '#fff', marginBottom: 5, fontWeight: 500, fontSize: 17 }}>Fully accessible with convenience</span>
-
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14 }}>Use your cloud machine from the browser, no installation needed.</span>
-                        </div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <FileDownloadIcon style={{ color: '#fff', fontSize: 32, marginRight: 25 }} />
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ color: '#fff', marginBottom: 5, fontWeight: 500, fontSize: 17 }}>Download any app</span>
-
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14 }}>Install any app, software or game that you normally would on your machine.</span>
-                        </div>
-                    </div>
+                    <LoginHighlight
+                        icon={<AccessTimeIcon />}
+                        title="Start within minutes"
+                        desc="No set up required, just login and start from a single click."
+                    />
+                    <LoginHighlight
+                        icon={<EastIcon />}
+                        title="Fully accessible with convenience"
+                        desc="Use your cloud machine from the browser, no installation needed."
+                    />
+                    <LoginHighlight
+                        icon={<FileDownloadIcon />}
+                        title="Download any app"
+                        desc="Install any app, software or game that you normally would on your machine."
+                    />
                 </div>
             </div>
             <form
@@ -299,10 +284,8 @@ export function Login() {
                 </div>
 
                 <Button mt="2" colorScheme="indigo"
-                    // disabled={disabled}
                     style={{
                         borderRadius: 25,
-                        // backgroundColor: '#195DC4'
                         backgroundColor: (authSuccess ? '#4DD181' : '#195DC4')
 
                     }}

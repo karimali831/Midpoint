@@ -20,7 +20,6 @@ export const FeatureCard: React.FC<IOwnProps> = (props) => {
                 borderRadius: 5,
                 height: 45,
                 marginBottom: 10,
-                // boxShadow: '0px -2px 20px 2px rgba(0, 0, 0, 0.4)',
                 boxShadow: 'rgb(0 0 0) 0px 5px 15px'
             }}>
                 <View style={{ marginLeft: 10 }}>{props.icon}</View>

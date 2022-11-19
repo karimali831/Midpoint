@@ -14,7 +14,6 @@ export const Locations = () => {
             flexDirection: 'column'
         }}>
             <span style={{
-                color: '#fff',
                 fontSize: 32,
                 marginBottom: 30,
             }}>

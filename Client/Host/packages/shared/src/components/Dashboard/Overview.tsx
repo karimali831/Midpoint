@@ -6,7 +6,6 @@ import React from "react";
 import { DashboardCard } from './DashboardCard';
 
 export const DashboardOverview = () => {
-
     React.useEffect(() => { }, [])
 
     return (
@@ -27,10 +26,18 @@ export const DashboardOverview = () => {
                     outlined={false}
                 >
                     <div style={{
-                        display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%'
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        width: '100%'
                     }}>
                         <span style={{ fontSize: 24, marginRight: 15 }}>7</span>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}>
                             <span>Tokens</span>
                             <div style={{
                                 width: 100,

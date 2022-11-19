@@ -11,7 +11,7 @@ import { isMobile } from '../../Platform';
 import { Details } from '../Details';
 import { Locations } from '../Locations';
 import { FeatureCard } from './FeatureCard';
-import { PersonCard } from './PersonCard';
+import { MeetTheTeam } from './Team';
 
 export const Home = () => {
     React.useEffect(() => { })
@@ -21,11 +21,6 @@ export const Home = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-
-        // initial={{ width: 0 }}
-        // animate={{ width: "100%" }}
-        // exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
-
         >
             <div style={{
                 position: 'relative',
@@ -34,23 +29,14 @@ export const Home = () => {
                 marginBottom: 75
 
             }}>
-                {/* <div style={{
-                    // position: 'relative',
-                    backgroundImage: `url(${isMobile ? "/assets/images/bannermobile.png" : "../../../assets/images/banner.png"})`,
-                    backgroundSize: '100% 100%',
-                    width: '100%',
-                    height: '100%',
-                    // backgroundSize: "cover",
-                    // backgroundRepeat: "no-repeat"
-                }}> */}
-                <img src={isMobile ? images.bannerMobileImg : images.bannerImg} style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    boxShadow: 'rgb(25 93 196) 0px 4px 4px -2px'
-                }}
+                <img src={isMobile ? images.bannerMobileImg : images.bannerImg}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        boxShadow: 'rgb(25 93 196) 0px 4px 4px -2px'
+                    }}
                 />
-                {/* </div> */}
                 <div style={{
                     position: 'absolute',
                     height: 130,
@@ -61,8 +47,10 @@ export const Home = () => {
                     justifyContent: 'space-around',
                     textAlign: 'center'
                 }}>
-                    <span style={{ color: '#fff', fontSize: 36, fontWeight: '500' }}>MidPoint. Cloud Streaming</span>
-                    <span style={{ color: '#fff', marginBottom: 10, flexWrap: 'wrap', fontSize: 14 }}>The future of collaborative music industry projects is in the cloud</span>
+                    <span style={{ fontSize: 36, fontWeight: '500' }}>MidPoint. Cloud Streaming</span>
+                    <span style={{ marginBottom: 10, flexWrap: 'wrap', fontSize: 14 }}>
+                        The future of collaborative music industry projects is in the cloud
+                    </span>
                     <Button variant="contained" style={{ width: 170, borderRadius: 25 }}>
                         Join the Discord!
                     </Button>
@@ -83,10 +71,8 @@ export const Home = () => {
                     gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 0fr))',
                     justifyContent: 'center'
                 }}>
-
                     <div style={{ position: 'relative', flexDirection: 'column' }}>
                         <span style={{
-                            color: '#fff',
                             fontSize: 32,
                             position: 'absolute',
                             top: -60
@@ -94,30 +80,29 @@ export const Home = () => {
                             Main features
                         </span>
                         <FeatureCard
-                            icon={<WhereToVoteOutlinedIcon style={{ color: '#fff' }} />}
+                            icon={<WhereToVoteOutlinedIcon />}
                             text="Geo-balanced"
                             desc="Connect to the nearest server based on the average latency of your team"
                         />
 
                     </div>
                     <FeatureCard
-                        icon={<PeopleAltIcon style={{ color: '#fff' }} />}
+                        icon={<PeopleAltIcon />}
                         text="Collaborative"
                         desc="Accessible and ease of use to perform B2B DJ sets,  VJs and soon XR streaming via the cloud at the comfort of your own home"
                     />
                     <FeatureCard
-                        icon={<CloudDoneIcon style={{ color: '#fff' }} />}
+                        icon={<CloudDoneIcon />}
                         text="Low-Latency"
                         desc="Super low sub-second latency with a gigabit up-link, streamed locally via the cloud without the need / use of relay servers"
                     />
                     <FeatureCard
-                        icon={<MonetizationOnIcon style={{ color: '#fff' }} />}
+                        icon={<MonetizationOnIcon />}
                         text="Pay for what you use"
                         desc="No monthly commitment plans... Just hourl deductible tokens"
                     />
 
                 </div>
-
                 <div style={{
                     marginTop: 100,
                     display: 'grid',
@@ -129,7 +114,6 @@ export const Home = () => {
                     <div style={{ position: 'relative', flexDirection: 'column' }}>
 
                         <span style={{
-                            color: '#fff',
                             fontSize: 32,
                             position: 'absolute',
                             top: -60
@@ -145,9 +129,9 @@ export const Home = () => {
                 <Locations />
                 <div style={{ marginTop: 50, flexDirection: 'column', display: 'flex', alignItems: 'center' }}>
                     <Text style={{
-                        color: '#fff',
                         fontSize: 32,
                         marginBottom: 15,
+                        color: '#fff'
                     }}>
                         Start within minutes
                     </Text>
@@ -155,36 +139,7 @@ export const Home = () => {
                         Sign Up
                     </Button>
                 </div>
-
-                <div style={{
-                    marginTop: 100,
-                    display: 'grid',
-                    width: '100%',
-                    gridGap: 10,
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 0fr))',
-                    justifyContent: 'center'
-                }}>
-
-                    <div style={{ position: 'relative', flexDirection: 'column' }}>
-
-                        <span style={{
-                            color: '#fff',
-                            fontSize: 32,
-                            position: 'absolute',
-                            marginBottom: 30,
-                            top: -60
-                        }}>
-                            Meet the team
-                        </span>
-                        <PersonCard name='Adam' title='CEO' />
-
-                    </div>
-
-
-                    <PersonCard name='Karim' title='MidPoint. Developer' />
-                    <PersonCard name='Patrick van der Mark' title='UI/UX Designer' />
-                    <PersonCard name='Jeff' title='MetaVerse Venue Creator' />
-                </div>
+                <MeetTheTeam />
             </div>
 
 
@@ -194,7 +149,7 @@ export const Home = () => {
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
-                <span style={{ color: '#fff', fontSize: 18 }}>
+                <span style={{ fontSize: 18 }}>
                     We’d like to meet you too.
                 </span>
                 <span style={{ color: 'grey', marginTop: 5 }}>

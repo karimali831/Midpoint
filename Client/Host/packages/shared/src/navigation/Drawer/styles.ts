@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
     },
     menuIcon: {
-        color: '#fff',
         marginRight: 10,
     },
 });

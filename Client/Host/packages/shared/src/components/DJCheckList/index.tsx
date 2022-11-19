@@ -70,20 +70,6 @@ export default function SwitchListSecondary() {
                     }}
                 />
             </ListItem>
-            {/* <ListItem>
-                <ListItemIcon>
-                    <BluetoothIcon />
-                </ListItemIcon>
-                <ListItemText id="switch-list-label-bluetooth" primary="Bluetooth" />
-                <Switch
-                    edge="end"
-                    onChange={handleToggle('bluetooth')}
-                    checked={checked.indexOf('bluetooth') !== -1}
-                    inputProps={{
-                        'aria-labelledby': 'switch-list-label-bluetooth',
-                    }}
-                />
-            </ListItem> */}
             <ListItem>
                 <ListItemIcon>
                     <VideoCameraFrontIcon />
