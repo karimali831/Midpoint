@@ -6,8 +6,7 @@ export interface IUserConnection {
     connectionState: HubConnectionState
     showConnectionStatus: boolean
     userId: string
-    name: string
+    displayName: string
     roomId: string
-    isGroup: boolean
-    focused: boolean
+    roomName: string
 }

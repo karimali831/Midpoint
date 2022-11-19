@@ -1,44 +1,46 @@
 import { HubConnectionState } from '@microsoft/signalr';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import LinkIcon from '@mui/icons-material/Link';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import { List, ListItem, ListItemText } from '@mui/material';
 import Box from '@mui/material/Box';
+import { motion } from 'framer-motion';
 import {
-    Button,
-    FormControl,
-    Input, Text, View, VStack
+    Button, Text, View
 } from 'native-base';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { HostParams } from '../../../types/types';
 import { Chat } from '../../components/Chat';
 import DJCheckList from '../../components/DJCheckList';
+import { FormInput } from '../../components/Form/input';
 import { Peers } from '../../components/Peers';
 import WebMIDI from '../../components/WebMidi';
+import { AppScreen } from '../../enum/AppScreen';
 import useEffectSkipInitialRender from '../../hooks/useEffectSkipInitialRender';
 import { IMessage } from '../../interface/IMessage';
 import { IUserConnection } from '../../interface/IUserConnection';
-import { ShowAlertAction } from '../../state/contexts/app/Actions';
-import { getAppState } from '../../state/contexts/app/Selectors';
+import { ShowAlertAction, ShowScreenAction } from '../../state/contexts/app/Actions';
 import { getUser, getUserState } from '../../state/contexts/user/Selectors';
-import { AddUserConnectionAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, UpdateActiveUserConnectionAction, UsersInRoomAction } from '../../state/contexts/webrtc/Actions';
+import { MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetUserConnectionAction, UsersInRoomAction } from '../../state/contexts/webrtc/Actions';
 import { getWebRTCState } from '../../state/contexts/webrtc/Selectors';
 import { newHubConnection } from '../../utils/HubHelper';
+import { joinLink } from '../../utils/UrlHelper';
 import { uuidv4 } from '../../utils/Utils';
 import VideoStream from './stream.web';
 
 export function StartHost() {
     const user = useSelector(getUser)
-
-    const appState = useSelector(getAppState)
     const webRTCState = useSelector(getWebRTCState)
 
+    const { id } = useParams<HostParams>();
 
     const dispatch = useDispatch()
-    const {
-        appFocused
-    } = appState
 
     const {
-        userConnections,
+        userConnection,
         channelData
     } = webRTCState
 
@@ -47,13 +49,7 @@ export function StartHost() {
     } = useSelector(getUserState)
 
     const [channelName, setChannelName] = useState<string>('')
-    const [error, setError] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
-    const [isInitiator, setIsInitiator] = useState<boolean>(false)
-
-
-    // let localVideoRef = useRef<HTMLVideoElement>(null)
-    // let removeVideoRef = useRef<HTMLVideoElement>(null)
 
     const configuration = {
         'iceServers': [{
@@ -61,41 +57,23 @@ export function StartHost() {
         }]
     };
 
-    let localStream = null
     const peerConn = new RTCPeerConnection(configuration);
 
-    const activeUserConnection = userConnections.filter(x => x.focused)[0]
-
-
     React.useEffect(() => {
-        if (error !== '') {
-            if (channelName.length > 2) {
-                setError('')
-            }
+        if (!!id) {
+            join()
         }
-    }, [channelName])
+    }, [id])
 
     useEffectSkipInitialRender(() => {
-        if (activeUserConnection) {
-            userConnections.map(x => {
-                if (x.hubConnection && x.hubConnection.state === HubConnectionState.Connected) {
-                    if (activeUserConnection.roomId === x.roomId) {
-                        x.hubConnection.invoke("UserStatus", appFocused)
-                    }
-                    else {
-                        x.hubConnection.invoke("UserStatus", false)
-                    }
-                }
-            })
-
-            start(activeUserConnection)
+        if (!!userConnection?.hubConnection) {
+            start(userConnection)
         }
-    }, [userConnections])
+    }, [userConnection])
 
     if (user == null) {
         return null
     }
-
 
     const start = (userConnection: IUserConnection) => {
         const { hubConnection } = userConnection
@@ -116,13 +94,13 @@ export function StartHost() {
                         if (message.userId === user.id) {
                             dispatch(
                                 MessageReceivedAction({
-                                    message, roomId: activeUserConnection.roomId
+                                    message, roomId: userConnection.roomId
                                 })
                             )
                         }
                         else {
                             dispatch(
-                                SendMessageAction({ message, roomId: activeUserConnection.roomId })
+                                SendMessageAction({ message, roomId: userConnection.roomId })
                             )
                         }
 
@@ -179,20 +157,11 @@ export function StartHost() {
                 dispatch(SendMessageAction({ message, roomId: channelName }))
             }
         }
-
-        // peerConn.ontrack = (event) => {
-        //     let video = removeVideoRef.current
-        //     if (video) {
-        //         video.srcObject = event.streams[0]
-        //     }
-        // }
-
-
     }
 
     const closeConnection = async () => {
-        if (activeUserConnection.hubConnection) {
-            await activeUserConnection.hubConnection.stop()
+        if (!!userConnection?.hubConnection) {
+            await userConnection.hubConnection.stop()
                 .catch(err => {
                     console.error(err);
 
@@ -204,106 +173,74 @@ export function StartHost() {
         }
     }
 
-    // const grabWebCamVideo = () => {
-    //     navigator.mediaDevices.getUserMedia({
-    //         audio: true,
-    //         video: true
-    //     })
-    //         .then(gotStream)
-    //         .catch(err => {
-    //             console.error("error:", err)
-    //         })
-    // }
-
-    // const gotStream = (stream: MediaStream) => {
-    //     console.log('getUserMedia video stream URL:', stream);
-    //     localStream = stream;
-    //     // peerConn.addStream(localStream);
-
-    //     let video = localVideoRef.current
-    //     if (video) {
-    //         video.srcObject = stream
-    //         video.play();
-    //     }
-    // }
-
     const join = () => {
-        const existingConnection = userConnections.find(x => x.roomId === channelName)
-
-
-        if (existingConnection) {
-            dispatch(UpdateActiveUserConnectionAction({
-                roomId: existingConnection.roomId,
-                isActive: true
-            }))
-
-            setLoading(false)
+        const userConnection: IUserConnection = {
+            hubConnection: newHubConnection(),
+            connectionState: HubConnectionState.Disconnected,
+            showConnectionStatus: false,
+            userId: user.id,
+            displayName: user.displayName,
+            roomId: uuidv4(),
+            roomName: channelName
         }
-        else {
-            const userConnection: IUserConnection = {
-                hubConnection: newHubConnection(),
-                connectionState: HubConnectionState.Disconnected,
-                showConnectionStatus: false,
-                userId: user.id,
-                name: user.displayName,
-                roomId: channelName,
-                isGroup: false,
-                focused: true
-            }
 
-            setIsInitiator(true)
-            dispatch(AddUserConnectionAction(userConnection))
-        }
+        dispatch(SetUserConnectionAction(userConnection))
     }
 
     const onSubmit = () => {
-
-        if (channelName.length < 3) {
-            setError('Channel name must be at least 3 characters')
-        }
-        else {
-            setLoading(true)
-            join()
-        }
+        setLoading(true)
+        join()
     }
 
     const leaveHost = async () => {
-
         dispatch(SetConnectionStateAction(HubConnectionState.Disconnected))
-
     }
 
-    if (userConnections.some(x => x.connectionState === HubConnectionState.Connected)) {
+    if (userConnection) {
+        const copyJoinLink = () => {
+            navigator.clipboard.writeText(joinLink(userConnection.roomId))
+            dispatch(ShowAlertAction({ title: "Link join copied", status: "success", duration: 1500 }))
+        }
+
+        const data = channelData.filter(x => x.roomId === userConnection.roomId)[0]
+
         return (
-            <View style={{ alignItems: 'center', justifyContent: 'center', display: 'flex', marginTop: 50, marginBottom: 50 }}>
-                <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+            <View style={{
+                alignItems: 'center', justifyContent: 'center', display: 'flex', marginTop: 50, padding: 30, marginBottom: 50, backgroundColor: '#eee'
+            }}>
+                <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }
+                } >
                     <Box sx={{ boxShadow: 2, padding: 2, width: '28%', bgcolor: 'background.paper' }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                             Host Channel
                         </Text>
+                        <List style={{ height: 220, overflowX: 'auto' }}>
 
-                        {userConnections.map((uc, idx) => {
-                            const youCreated = uc.userId === user.id
-                            // youCreated && "(you created)"}
-                            const data = channelData.filter(x => x.roomId === uc.roomId)[0]
-
-                            return (
-                                <List key={idx} style={{ height: 220, overflowX: 'auto' }}>
-                                    <ListItem>
-                                        <ListItemText primary={uc.roomId} secondary={"CHANNEL NAME"} />
+                            <ListItem>
+                                <ListItemText primary={userConnection.roomName} secondary="CHANNEL NAME" />
+                                <ListItemText
+                                    primaryTypographyProps={{ fontSize: 13, textAlign: 'right', color: '#195DC4' }}
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => copyJoinLink()}
+                                >
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                        <LinkIcon />
+                                        <Text style={{ marginLeft: 3, color: '#195DC4' }}>Copy Join Link</Text>
+                                    </View>
+                                </ListItemText>
+                            </ListItem>
+                            <View style={{ alignSelf: "center", borderBottomColor: '#eee', borderBottomWidth: 1 }} />
+                            {data && data.messages.length > 0 && data.messages.filter(x => x.isBot).reverse().map(x => {
+                                return (
+                                    <ListItem key={x.id}>
+                                        <ListItemText primary={<>{x.message}</>} secondary={"System Message"}>
+                                        </ListItemText>
                                     </ListItem>
-                                    <View style={{ alignSelf: "center", borderBottomColor: '#eee', borderBottomWidth: 1 }} />
-                                    {data && data.messages.length > 0 && data.messages.filter(x => x.isBot).reverse().map(x => {
-                                        return (
-                                            <ListItem key={x.id}>
-                                                <ListItemText primary={<>{x.message}</>} secondary={"System Message"}>
-                                                </ListItemText>
-                                            </ListItem>
-                                        )
-                                    })}
-                                </List>
-                            )
-                        })}
+                                )
+                            })}
+
+
+                        </List>
                         <Button width={150} colorScheme="error" onPress={leaveHost} disabled={true}>
                             <div style={{
                                 display: 'flex',
@@ -320,7 +257,7 @@ export function StartHost() {
                         <Peers />
 
                     </Box>
-                    <Box sx={{ boxShadow: 2, padding: 2, height: 300, overflowX: 'auto', width: '28%' }}>
+                    <Box sx={{ boxShadow: 2, padding: 2, height: 300, overflowX: 'auto', width: '28%', bgcolor: 'background.paper' }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                             Setup
                         </Text>
@@ -339,7 +276,7 @@ export function StartHost() {
                             Start VM
                         </Button>
                     </Box>
-                </View>
+                </ View>
                 <View style={{ alignSelf: "center", borderBottomColor: '#ccc', borderBottomWidth: 2, marginTop: 30 }} />
                 <View style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-around' }}>
                     <Chat />
@@ -361,24 +298,60 @@ export function StartHost() {
         )
     }
 
-
     return (
-        <Box sx={{ alignSelf: "center", marginTop: 5, boxShadow: 2, padding: 2, width: 300, bgcolor: 'background.paper' }}>
-            <VStack width="90%" mx="3" maxW="300px">
-                <FormControl isRequired isInvalid={error !== ''}>
-                    <FormControl.Label
-                        _text={{
-                            bold: true
-                        }}>
-                        Channel Name
-                    </FormControl.Label>
-                    <Input placeholder="Enter channel name" onChangeText={setChannelName} />
-                    {error !== '' && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
-                </FormControl>
-                <Button onPress={onSubmit} mt="5" colorScheme="cyan" isLoading={loading} isLoadingText="Initialising...">
-                    Start Host Or Join Channel
+        <div style={{ height: '100%', marginTop: 70 }}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 10,
+                    cursor: 'pointer'
+                }}
+                onClick={() => dispatch(ShowScreenAction({ screen: AppScreen.Dashboard }))}
+            >
+                <ArrowBackIcon />
+                <span style={{ marginLeft: 10 }}>Dashboard</span>
+            </div>
+
+            <motion.form
+                initial={{ width: 0 }}
+                animate={{ width: 400 }}
+                exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
+                className='midpoint-form'
+                style={{
+                    margin: '0 auto',
+                    width: 380,
+                    marginTop: 140
+                }}>
+                <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <span style={{ fontSize: 40 }}>Connect MidPoint.</span>
+                    <span style={{ marginTop: 5, color: 'rgba(255, 255, 255, 0.6)' }}>
+                        Stream with your team. Set the standard.
+                    </span>
+                </div>
+
+                <FormInput
+                    onChange={setChannelName}
+                    placeholder="Enter MidPoint link"
+                    minCharsRequired={3}
+                />
+                <Button
+                    disabled={channelName === ""}
+                    onPress={onSubmit}
+                    mt="5"
+                    style={{
+                        borderRadius: 25,
+                        backgroundColor: (channelName === "" ? 'grey' : '#195DC4')
+                    }}
+                    colorScheme="cyan"
+                    isLoading={loading}
+                    isLoadingText="Initialising..."
+                    startIcon={<PeopleAltOutlinedIcon />}
+                >
+                    Join MidPoint.
                 </Button>
-            </VStack>
-        </Box>
-    );
+            </motion.form>
+        </div>
+    )
 };

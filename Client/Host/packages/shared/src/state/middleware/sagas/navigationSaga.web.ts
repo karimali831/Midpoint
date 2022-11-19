@@ -25,7 +25,7 @@ export function* locationChange() {
 
     const currentScreen: AppScreen = yield select(getCurrentScreen)
     const currentLocation = history.location.pathname;
-    const currentRoute = Routes.filter((x) => x.url.toLowerCase() === currentLocation.toLowerCase())[0];
+    const currentRoute = Routes.filter((x) => x.url === currentLocation.toLowerCase())[0];
 
     // user accessing app from non default screen for first time
     if (currentScreen !== currentRoute.screen) {

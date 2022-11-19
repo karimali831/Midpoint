@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { auth } from '../../../../../config/firebase';
 import { IFirebaseUser } from '../../../../../types/types';
 import { ICreateUserDTO, userApi } from '../../../../api/userApi';
 import { AppScreen } from '../../../../enum/AppScreen';
@@ -20,6 +21,7 @@ import {
     FirebaseAuthEmptyAction,
     FirebaseAuthenticatedAction,
     LoginSuccessAction,
+    SignOutAction,
     UpdateUserInfoAction,
     UpdateUserInfoSuccessAction
 } from '../../../contexts/user/Actions';
@@ -31,6 +33,7 @@ export default function* userApiSaga() {
     yield takeLatest(LoginSuccessAction.type, authLoadDone);
     yield takeLatest(UpdateUserInfoAction.type, updateUserInfo);
     yield takeLatest(CreateUserAction.type, createUser);
+    yield takeLatest(SignOutAction.type, signOut);
 }
 
 export function* createUser(action: PayloadAction<ICreateUserDTO>) {
@@ -52,7 +55,7 @@ export function* createUser(action: PayloadAction<ICreateUserDTO>) {
 export function* userLoggedOut() {
     yield put(
         ShowScreenAction({
-            screen: AppScreen.Login,
+            screen: AppScreen.Home,
         })
     );
 }
@@ -90,7 +93,7 @@ export function* updateUserInfo(
             );
         }
     } catch (e: any) {
-        yield put(AxiosErrorAlertAction(e as IAxiosError))
+        yield put(AwsErrorAlertAction(e as IAwsError))
     } finally {
         yield put(SetOnConfirmLoadingAction(false));
     }
@@ -117,5 +120,15 @@ export function* firebaseAuthenticated(action: any) {
     } catch (e) {
         yield put(AwsErrorAlertAction(e as IAwsError))
         yield call(authLoadDone);
+    }
+}
+
+export function* signOut() {
+
+    try {
+        auth.signOut()
+
+    } catch (e: any) {
+        yield put(AxiosErrorAlertAction(e as IAxiosError))
     }
 }

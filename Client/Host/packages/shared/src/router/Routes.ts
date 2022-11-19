@@ -1,30 +1,21 @@
-import { GamepadDebugger } from '../components/GamepadDebugger';
+import { Dashboard } from '../components/Dashboard';
 import { Home } from '../components/Home';
 import { AppScreen } from '../enum/AppScreen';
 import { StartHost } from '../screens/Host';
 import { Login } from '../screens/Login';
-import Splash from '../screens/Splash';
 import { IRoute } from './Route';
 
 export const Routes: IRoute[] = [
-    {
-        screen: AppScreen.Splash,
-        component: Splash,
-        displayOnMenu: false,
-        memberOnly: false,
-        headerShown: false,
-        navigationShown: false,
-        url: '/',
-    },
     {
         screen: AppScreen.Home,
         component: Home,
         displayOnMenu: true,
         memberOnly: false,
         headerShown: true,
-        navigationShown: true,
+        order: 1,
         menuName: "Home",
-        url: '/welcome',
+        path: '/',
+        url: '/',
     },
     {
         screen: AppScreen.Login,
@@ -32,28 +23,31 @@ export const Routes: IRoute[] = [
         displayOnMenu: true,
         memberOnly: false,
         headerShown: false,
-        navigationShown: true,
-        menuName: "Login",
+        order: 2,
+        menuName: "Sign In",
+        path: '/login',
         url: '/login',
+    },
+    {
+        screen: AppScreen.Dashboard,
+        component: Dashboard,
+        displayOnMenu: true,
+        memberOnly: true,
+        headerShown: true,
+        order: 3,
+        menuName: "Dashboard",
+        path: '/dashboard',
+        url: '/dashboard',
     },
     {
         screen: AppScreen.Host,
         component: StartHost,
-        displayOnMenu: true,
+        displayOnMenu: false,
         memberOnly: true,
         headerShown: false,
-        navigationShown: true,
-        menuName: "Start",
+        order: 4,
+        menuName: "Host",
+        path: '/host/:id*',
         url: '/host',
-    },
-    {
-        screen: AppScreen.GamepadDebugger,
-        component: GamepadDebugger,
-        displayOnMenu: false,
-        memberOnly: false,
-        headerShown: false,
-        navigationShown: true,
-        menuName: "Gamepad Debugger",
-        url: '/gamepaddebugger',
     }
 ];

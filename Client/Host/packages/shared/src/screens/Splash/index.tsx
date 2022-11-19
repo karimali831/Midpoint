@@ -57,10 +57,9 @@ const Splash = () => {
     return (
         <View style={styles.appLoadercontainer} onLayout={onLayoutRootView}>
             <ActivityIndicator size={'large'} />
-            <Text style={{
-                fontSize: 16,
-                color: 'white'
-            }}>Loading...</Text>
+            <Text style={{ color: 'white' }}>
+                Loading...
+            </Text>
         </View>
     );
 };

@@ -5,6 +5,7 @@ input AMPLIFY {
 } # FOR TESTING ONLY!
 type User @model {
     id: ID! @primaryKey
+    fullName: String
     firebaseUid: ID!
     email: String!
     displayName: String!

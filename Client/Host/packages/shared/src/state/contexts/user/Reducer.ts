@@ -11,8 +11,8 @@ import { userInitialState } from './IUserState';
 
 export const userReducer = createReducer(userInitialState, (builder) => {
     builder
-        .addCase(SigninLoadingAction, (state) => {
-            state.signingIn = !state.signingIn;
+        .addCase(SigninLoadingAction, (state, action) => {
+            state.signingIn = action.payload
         })
         .addCase(LoginSuccessAction, (state, action) => {
             state.user = action.payload;

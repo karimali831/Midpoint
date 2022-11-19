@@ -1,17 +1,18 @@
 import { HubConnectionState } from '@microsoft/signalr';
 import { createReducer } from '@reduxjs/toolkit';
 import { IChannelData } from '../../../interface/IChannelData';
-import { AddChannelAction, AddUserConnectionAction, SendMessageAction, SetConnectionStateAction, UpdateActiveUserConnectionAction, UsersInRoomAction } from './Actions';
+import { AddChannelAction, SendMessageAction, SetConnectionStateAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
 import { webRTCInitialState } from './IWebRTCState';
 
 export const webRTCReducer = createReducer(webRTCInitialState, (builder) => {
     builder
         .addCase(SetConnectionStateAction, (state, action) => {
+            const userConnection = state.userConnection
 
-            const userConnection = state.userConnections.filter(x => x.focused)[0]
+            if (!userConnection)
+                return
 
             const {
-                roomId,
                 connectionState,
                 showConnectionStatus
             } = userConnection
@@ -26,46 +27,14 @@ export const webRTCReducer = createReducer(webRTCInitialState, (builder) => {
                 }, 2000)
             }
 
-            const updateState = state.userConnections.map(g => {
-                return {
-                    ...g, ...{
-                        connectionState: g.roomId === roomId ? action.payload : g.connectionState,
-                        showConnectionStatus: showStatus
-                    }
-                }
-            })
+            let updatedState = Object.assign({}, userConnection)
+            updatedState.connectionState = action.payload
+            updatedState.showConnectionStatus = showStatus
 
-            state.userConnections = updateState
+            state.userConnection = updatedState
         })
-        .addCase(AddUserConnectionAction, (state, action) => {
-            const existing = state.userConnections.find(x => x.roomId == action.payload.roomId);
-
-            if (!existing) {
-                state.userConnections = [...state.userConnections.map(x => {
-                    x.focused = false
-                    return x
-                }), action.payload]
-            }
-            else {
-                state.userConnections = state.userConnections.map(g => {
-                    return {
-                        ...g, ...{
-                            focused: g.roomId === action.payload.roomId
-                        }
-                    }
-                })
-            }
-
-
-        })
-        .addCase(UpdateActiveUserConnectionAction, (state, action) => {
-            state.userConnections = state.userConnections.map(g => {
-                return {
-                    ...g, ...{
-                        focused: g.roomId === action.payload.roomId && action.payload.isActive
-                    }
-                }
-            })
+        .addCase(SetUserConnectionAction, (state, action) => {
+            state.userConnection = action.payload
         })
 
         .addCase(SendMessageAction, (state, action) => {

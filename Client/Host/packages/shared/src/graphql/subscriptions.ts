@@ -17,6 +17,7 @@ export const onMidiMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -48,6 +49,7 @@ export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
       id
+      fullName
       firebaseUid
       email
       displayName
@@ -102,6 +104,7 @@ export const onUpdateUser = /* GraphQL */ `
   subscription OnUpdateUser {
     onUpdateUser {
       id
+      fullName
       firebaseUid
       email
       displayName
@@ -156,6 +159,7 @@ export const onDeleteUser = /* GraphQL */ `
   subscription OnDeleteUser {
     onDeleteUser {
       id
+      fullName
       firebaseUid
       email
       displayName
@@ -221,6 +225,7 @@ export const onCreateHostRoomMidiMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -263,6 +268,7 @@ export const onUpdateHostRoomMidiMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -305,6 +311,7 @@ export const onDeleteHostRoomMidiMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -344,6 +351,7 @@ export const onCreateHostRoom = /* GraphQL */ `
       createdUserId
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -419,6 +427,7 @@ export const onUpdateHostRoom = /* GraphQL */ `
       createdUserId
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -494,6 +503,7 @@ export const onDeleteHostRoom = /* GraphQL */ `
       createdUserId
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -568,6 +578,7 @@ export const onCreateHostRoomUser = /* GraphQL */ `
       pinned
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -593,6 +604,7 @@ export const onCreateHostRoomUser = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -657,6 +669,7 @@ export const onUpdateHostRoomUser = /* GraphQL */ `
       pinned
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -682,6 +695,7 @@ export const onUpdateHostRoomUser = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -746,6 +760,7 @@ export const onDeleteHostRoomUser = /* GraphQL */ `
       pinned
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -771,6 +786,7 @@ export const onDeleteHostRoomUser = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -834,6 +850,7 @@ export const onCreateHostRoomChatMessage = /* GraphQL */ `
       read
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -859,6 +876,7 @@ export const onCreateHostRoomChatMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -896,6 +914,7 @@ export const onUpdateHostRoomChatMessage = /* GraphQL */ `
       read
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -921,6 +940,7 @@ export const onUpdateHostRoomChatMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -958,6 +978,7 @@ export const onDeleteHostRoomChatMessage = /* GraphQL */ `
       read
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -983,6 +1004,7 @@ export const onDeleteHostRoomChatMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName

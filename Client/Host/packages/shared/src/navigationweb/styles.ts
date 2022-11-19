@@ -11,7 +11,7 @@ const useStyles = makeStyles()((theme: Theme) => {
             marginRight: theme.spacing(2),
         },
         title: {
-            display: 'none',
+            // display: 'none',
             [theme.breakpoints.up('sm')]: {
                 display: 'block',
             },
@@ -69,6 +69,16 @@ const useStyles = makeStyles()((theme: Theme) => {
             position: 'absolute',
             right: 25,
         },
+        arrow: {
+            "&:before": {
+                border: "1px solid grey"
+            },
+            color: '#121212'
+        },
+        tooltip: {
+            backgroundColor: '#121212',
+            border: "1px solid grey"
+        }
     }
 })
 

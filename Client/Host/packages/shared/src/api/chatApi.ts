@@ -1,50 +1,25 @@
-import { graphQLQuery } from "../graphql/api"
-import { ListHostRoomsQuery } from "../graphql/types"
+import { graphQLQuery } from "../graphql/api";
+import { createHostRoomChatMessage } from "../graphql/mutations";
+import { CreateHostRoomChatMessageInput, CreateHostRoomChatMessageMutation } from "../graphql/types";
 
-export class SubscriptionApi {
+export class ChatApi {
 
-    public fetchAvailableDrivers = async (): Promise<ICar[]> => {
-        console.log("[API] fetchAvailableDrivers")
+    public sendChatMessage = async (input: CreateHostRoomChatMessageInput): Promise<boolean> => {
+        console.log("[API] sendChatMessage")
 
-        try{
-            const response = await graphQLQuery<ListHostRoomsQuery, ModelCarFilterInput>(listCars, {
-                filter: {
-                    isActive: { 
-                        eq: true 
-                    }
-                }
-            })
+        try {
+            await graphQLQuery<CreateHostRoomChatMessageMutation, CreateHostRoomChatMessageInput>(createHostRoomChatMessage, {
+                input
+            });
 
-            return response.data?.listCars?.items as ICar[]
+            return true
         }
         catch (error) {
-            console.error(DriverApi.name, "fetchAvailableDrivers", error.response.data)
-            throw error
+            console.error(ChatApi.name, "sendChatMessage", error);
+            throw error;
         }
     }
-
-
 }
 
-
-export interface IUpdateChatRoomRequest {
-    key: keyof IUserChatRoom,
-    value: string,
-    roomId: string
-}
-
-export interface IUpdateChatRoomUserRequest {
-    key: keyof IUserChatRoom,
-    value: string,
-    userId: string,
-    roomId: string,
-    isGroup: boolean
-}
-
-export interface IChatRoomResponse {
-    totalMessages: number,
-    participants: IParticipant[]
-    messages: IMessage[]
-}
 
 export const chatApi = new ChatApi();

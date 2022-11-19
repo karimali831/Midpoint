@@ -3,7 +3,7 @@ import { IFirebaseUser } from '../../../../types/types';
 import { ICreateUserDTO } from '../../../api/userApi';
 import { IUser } from '../../../models/IUser';
 
-const SigninLoadingAction = createAction('@@User/SigninLoading');
+const SigninLoadingAction = createAction<boolean>('@@User/SigninLoading');
 const FirebaseAuthEmptyAction = createAction(
     '@@reactReduxFirebase/AUTH_EMPTY_CHANGE'
 );
@@ -21,6 +21,7 @@ const CamToggleAction = createAction('@@User/CamToggleAction');
 const DJReadyAction = createAction<boolean>('@@User/DJReady');
 const LoginSuccessAction = createAction<IUser>('@@User/LoginSuccess');
 const CreateUserAction = createAction<ICreateUserDTO>('@@User/CreateUser');
+const SignOutAction = createAction('@@User/SignOutAction');
 
 export {
     SigninLoadingAction,
@@ -31,6 +32,7 @@ export {
     LoginSuccessAction,
     CreateUserAction,
     CamToggleAction,
-    DJReadyAction
+    DJReadyAction,
+    SignOutAction
 };
 

@@ -16,9 +16,7 @@ export const Peers: React.FC<IOwnProps> = (props: IOwnProps) => {
     const webRTCState = useSelector(getWebRTCState)
 
     const {
-        userConnections,
         onlineUsers,
-        channelData
     } = webRTCState
 
     return (
@@ -29,10 +27,10 @@ export const Peers: React.FC<IOwnProps> = (props: IOwnProps) => {
                         <React.Fragment key={uc.roomId}>
                             <ListItem alignItems="flex-start">
                                 <ListItemAvatar>
-                                    <Avatar alt={uc.name} src="/static/images/avatar/1.jpg" />
+                                    <Avatar alt={uc.displayName} src="/static/images/avatar/1.jpg" />
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary={uc.name}
+                                    primary={uc.displayName}
                                     secondary={
                                         <React.Fragment>
                                             <Typography

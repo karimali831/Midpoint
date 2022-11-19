@@ -6,6 +6,7 @@ export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
+      fullName
       firebaseUid
       email
       displayName
@@ -73,6 +74,7 @@ export const listUsers = /* GraphQL */ `
     ) {
       items {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -107,6 +109,7 @@ export const getHostRoomMidiMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -186,6 +189,7 @@ export const getHostRoom = /* GraphQL */ `
       createdUserId
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -274,6 +278,7 @@ export const listHostRooms = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -308,6 +313,7 @@ export const getHostRoomUser = /* GraphQL */ `
       pinned
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -333,6 +339,7 @@ export const getHostRoomUser = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -410,6 +417,7 @@ export const listHostRoomUsers = /* GraphQL */ `
         pinned
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -453,6 +461,7 @@ export const getHostRoomChatMessage = /* GraphQL */ `
       read
       user {
         id
+        fullName
         firebaseUid
         email
         displayName
@@ -478,6 +487,7 @@ export const getHostRoomChatMessage = /* GraphQL */ `
         createdUserId
         user {
           id
+          fullName
           firebaseUid
           email
           displayName
@@ -528,6 +538,7 @@ export const listHostRoomChatMessages = /* GraphQL */ `
         read
         user {
           id
+          fullName
           firebaseUid
           email
           displayName

@@ -9,6 +9,7 @@ export interface IRoute {
     menuName?: string
     icon?: IconDefinition
     headerShown?: boolean
-    navigationShown?: boolean
+    order: number
+    path: string
     url: string
 }

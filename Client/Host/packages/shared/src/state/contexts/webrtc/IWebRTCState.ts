@@ -4,14 +4,14 @@ import { IUserConnection } from "../../../interface/IUserConnection";
 
 
 export interface IWebRTCState {
-    userConnections: IUserConnection[]
+    userConnection: IUserConnection | null
     channels: IChannel[]
     channelData: IChannelData[]
     onlineUsers: IUserConnection[]
 }
 
 export const webRTCInitialState: IWebRTCState = {
-    userConnections: [],
+    userConnection: null,
     channels: [],
     channelData: [],
     onlineUsers: []

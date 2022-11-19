@@ -1,14 +1,11 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
-    DarkTheme,
-    DefaultTheme,
     NavigationContainer
 } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootNavigatorParamsList } from '../../types/types';
 import { AppScreen } from '../enum/AppScreen';
-import { Theme } from '../enum/Theme';
 import { Routes } from '../router/Routes';
 import { ShowScreenAction } from '../state/contexts/app/Actions';
 import { getAppState } from '../state/contexts/app/Selectors';
@@ -31,27 +28,27 @@ export function Navigation() {
     const dispatch = useDispatch();
 
     const showNavigation = Routes.some(
-        (x) => x.screen === currentScreen && x.navigationShown
+        (x) => x.screen === currentScreen
     );
 
-    const theme = () => {
-        switch (user?.theme) {
-            case Theme.Dark:
-                return DarkTheme;
-            case Theme.Light:
-                return DefaultTheme;
-            case Theme.Default:
-                return DefaultTheme;
-            default:
-                return DefaultTheme;
-        }
-    };
+    // const theme = () => {
+    //     switch (user?.theme) {
+    //         case Theme.Dark:
+    //             return DarkTheme;
+    //         case Theme.Light:
+    //             return DefaultTheme;
+    //         case Theme.Default:
+    //             return DefaultTheme;
+    //         default:
+    //             return DefaultTheme;
+    //     }
+    // };
 
     return (
         <NavigationContainer
             ref={navigationRef}
             onReady={RootNavigation.goToInitialRoute}
-            theme={theme()}
+        // theme={theme()}
         >
             <Drawer.Navigator
                 screenOptions={{
@@ -67,7 +64,7 @@ export function Navigation() {
                     />
                 )}
             >
-                <Drawer.Screen name="Beatrice" component={StackNavigator} />
+                <Drawer.Screen name="MidPoint" component={StackNavigator} />
             </Drawer.Navigator>
         </NavigationContainer>
     );

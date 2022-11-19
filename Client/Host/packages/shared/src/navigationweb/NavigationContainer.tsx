@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import { Routes } from '../router/Routes';
 import { getAppState } from '../state/contexts/app/Selectors';
 import { MenuBar } from './MenuBar';
@@ -9,7 +8,6 @@ import useStyles from './styles';
 
 const Navigation = () => {
     const { classes } = useStyles();
-    const location = useLocation();
     const { currentScreen } = useSelector(getAppState)
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -38,7 +36,7 @@ const Navigation = () => {
     };
 
     const showNavigation = Routes.some(
-        (x) => x.screen === currentScreen && x.navigationShown
+        (x) => x.screen === currentScreen
     );
 
     return (

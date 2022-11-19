@@ -7,7 +7,7 @@ import { AppScreen } from '../enum/AppScreen';
 
 export const navigationRef = createNavigationContainerRef<RouteParamList>();
 
-export const DefaultScreen = AppScreen.Splash;
+export const DefaultScreen = AppScreen.Dashboard;
 
 let initialRoute: keyof RouteParamList;
 

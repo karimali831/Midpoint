@@ -12,11 +12,14 @@ export type RootNavigatorParamsList = {
 };
 
 export type RouteParamList = {
-    [AppScreen.Splash]: undefined;
+    [AppScreen.Dashboard]: undefined;
     [AppScreen.Home]: undefined;
     [AppScreen.Login]: undefined;
     [AppScreen.Host]: undefined;
-    [AppScreen.GamepadDebugger]: undefined
 };
+
+export type HostParams = {
+    id: string
+}
 
 export type IFirebaseUser = firebase.User

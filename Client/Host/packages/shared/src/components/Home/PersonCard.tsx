@@ -23,7 +23,7 @@ export const PersonCard: React.FC<IOwnProps> = (props) => {
             }} />
 
             <Text style={{ color: '#fff', fontWeight: "700", marginTop: 15 }}>{props.name}</Text>
-            <Text style={{ color: 'darkgrey', fontSize: 12, marginTop: 5 }}>
+            <Text style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12, marginTop: 5 }}>
                 {props.title}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>

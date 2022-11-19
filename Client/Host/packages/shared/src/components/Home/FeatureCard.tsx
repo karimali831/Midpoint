@@ -15,20 +15,20 @@ export const FeatureCard: React.FC<IOwnProps> = (props) => {
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: '#fff',
+                backgroundColor: '#195DC4',
                 width: 230,
                 borderRadius: 5,
                 height: 45,
                 marginBottom: 10,
-                marginRight: 0,
-                boxShadow: '7px 8px #195DC4'
+                // boxShadow: '0px -2px 20px 2px rgba(0, 0, 0, 0.4)',
+                boxShadow: 'rgb(0 0 0) 0px 5px 15px'
             }}>
                 <View style={{ marginLeft: 10 }}>{props.icon}</View>
-                <Text style={{ fontWeight: "700", fontSize: 15, marginLeft: 5 }}>
+                <Text style={{ fontWeight: "600", fontSize: 15, marginLeft: 10, color: '#fff' }}>
                     {props.text}
                 </Text>
             </div>
-            <Text style={{ color: 'darkgrey', marginTop: 10, marginBottom: 25, fontSize: 12 }}>
+            <Text style={{ color: 'rgba(255, 255, 255, 0.6)', marginTop: 10, marginBottom: 25, fontSize: 12 }}>
                 {props.desc}
             </Text>
         </View>

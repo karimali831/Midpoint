@@ -6,18 +6,16 @@ import { IMessage } from '../../../interface/IMessage';
 import { IUserConnection } from '../../../interface/IUserConnection';
 
 // ACTION CREATORS
-const SetConnectionStateAction = createAction<HubConnectionState>('@@webrtc/setconnectionstate');
-const AddUserConnectionAction = createAction<IUserConnection>('@@webrtc/adduserconnection');
-const UpdateActiveUserConnectionAction = createAction<{ roomId: string, isActive: boolean }>("@@webrtc/updateactiveuserconnection")
-const UsersInRoomAction = createAction<IUserConnection[]>("@@webrtc/usersinroom")
-const AddChannelAction = createAction<IChannel>("@@webrtc/addchannel")
-const SendMessageAction = createAction<{ message: IMessage, roomId: string }>("@@webrtc/sendmessage")
-const MessageReceivedAction = createAction<{ message: IMessage, roomId: string }>("@@webrtc/messagereceived")
+const SetConnectionStateAction = createAction<HubConnectionState>('@@WebRTC/SetConnectionState');
+const SetUserConnectionAction = createAction<IUserConnection>('@@WebRTC/SetUserConnection');
+const UsersInRoomAction = createAction<IUserConnection[]>("@@WebRTC/UsersInRoom")
+const AddChannelAction = createAction<IChannel>("@@WebRTC/AddChannel")
+const SendMessageAction = createAction<{ message: IMessage, roomId: string }>("@@WebRTC/SendMessage")
+const MessageReceivedAction = createAction<{ message: IMessage, roomId: string }>("@@WebRTC/MessageReceived")
 
 export {
     SetConnectionStateAction,
-    AddUserConnectionAction,
-    UpdateActiveUserConnectionAction,
+    SetUserConnectionAction,
     UsersInRoomAction,
     AddChannelAction,
     SendMessageAction,

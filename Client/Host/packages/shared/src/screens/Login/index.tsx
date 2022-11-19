@@ -1,24 +1,35 @@
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { Box } from '@mui/material';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import EastIcon from '@mui/icons-material/East';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import firebase from 'firebase';
+import { motion } from 'framer-motion';
 import { Button, Link, Text } from 'native-base';
 import React, { useState } from 'react';
-import { ActivityIndicator, NativeSyntheticEvent, TextInputKeyPressEventData, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth } from '../../../config/firebase';
-import { FormInput } from '../../components/Forms/Input';
+import { FormInput } from '../../components/Form/input';
+import { FormMessage } from '../../components/Form/message';
+import { IFormMessage, IFormMessageCode } from '../../enum/IFormMessage';
+import { IMessage } from '../../interface/IMessage';
 import { DefaultScreen } from '../../navigation/RootNavigation';
-import { ShowAlertAction, ShowScreenAction } from '../../state/contexts/app/Actions';
+import { isMobile } from '../../Platform';
+import { ShowScreenAction } from '../../state/contexts/app/Actions';
 import { CreateUserAction, SigninLoadingAction } from '../../state/contexts/user/Actions';
 import { getUserState } from '../../state/contexts/user/Selectors';
 import './styles.css';
 
 export function Login() {
+    const [username, setUsername] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [name, setName] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const [repeatPassword, setRepeatPassword] = useState<string>('')
     const [registering, setRegistering] = useState<boolean>(false)
+    const [messages, setMessages] = useState<IFormMessage[]>([])
+    // const [server, set] = useState<IFormMessage[]>([])
 
     const {
         signingIn,
@@ -27,52 +38,47 @@ export function Login() {
     } = useSelector(getUserState)
 
     const dispatch = useDispatch()
+    const formMessage = messages.find(x =>
+        x.code !== IFormMessageCode.InvalidEmail &&
+        x.code !== IFormMessageCode.UserNotFound &&
+        x.code !== IFormMessageCode.WrongPassword &&
+        x.code !== IFormMessageCode.PasswowrdsMismatched &&
+        x.code !== IFormMessageCode.EmailAlreadyInUse
+    )
+
+    React.useEffect(() => { }, [])
 
     React.useEffect(() => {
         if (user) {
-            dispatch(ShowScreenAction({
-                screen: DefaultScreen
-            }))
+            setTimeout(() => {
+                dispatch(ShowScreenAction({
+                    screen: DefaultScreen
+                }))
+            }, 1000)
         }
     }, [user])
 
-    const handleKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
-        if (e.nativeEvent.key === "Enter") {
-            if (registering)
-                handleSignUp()
-            else
-                handleLogin()
-        }
-    }
-
     const handleLogin = () => {
-        dispatch(SigninLoadingAction())
+        dispatch(SigninLoadingAction(true))
 
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             .then(() => {
-
                 auth.signInWithEmailAndPassword(email, password)
-                    .catch((error: any) => {
-                        dispatch(ShowAlertAction({
-                            title: "Error",
-                            message: error.message,
-                        }))
-
-                        dispatch(SigninLoadingAction())
+                    .then(() => console.log("success"))
+                    .catch((message: IMessage) => {
+                        dispatch(SigninLoadingAction(false))
+                        setFormMessage(message)
                     })
 
             })
-            .catch(error => {
-                dispatch(ShowAlertAction({
-                    title: "Error",
-                    message: error.message,
-                }))
-                dispatch(SigninLoadingAction())
+            .catch((message: IMessage) => {
+                dispatch(SigninLoadingAction(false))
+                setFormMessage(message)
             })
     }
 
     const handleSignUp = () => {
-        dispatch(SigninLoadingAction())
+        dispatch(SigninLoadingAction(true))
 
         auth.createUserWithEmailAndPassword(email, password)
             .then(userCredentials => {
@@ -80,178 +86,257 @@ export function Login() {
 
                 if (user) {
                     dispatch(CreateUserAction({
-                        name,
+                        fullName: name,
                         email,
-                        FirebaseUid: user.uid
+                        firebaseUid: user.uid,
+                        displayName: username
                     }))
-                    dispatch(SigninLoadingAction())
                 }
+
+                dispatch(SigninLoadingAction(false))
             })
-            .catch(error => {
-                dispatch(ShowAlertAction({
-                    title: "Error",
-                    message: error.message,
-                }))
-                dispatch(SigninLoadingAction())
+            .catch((message: IMessage) => {
+                dispatch(SigninLoadingAction(false))
+                setFormMessage(message)
             })
     }
 
-    let disabled = false
+    const setFormMessage = (message: IFormMessage) => {
+        const errorExists = messages.some(x => x.code === message.code)
 
-    if (!email || !password || authSuccess) {
-        disabled = true
+        if (!errorExists) {
+            setMessages(messages => [...messages, message])
+        }
     }
 
-    if (registering && !name) {
-        disabled = true
+    const sendForgotPassword = () => {
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                setMessages([{
+                    message: "A link to reset your password has been sent to " + email,
+                    isSuccess: true
+                }])
+
+            })
+            .catch(setFormMessage)
+
+    }
+
+    const checkPasswordMismatch = (text: string) => {
+        const code = IFormMessageCode.PasswowrdsMismatched
+        const errorExists = messages.some(x => x.code === code)
+
+        if (password === "" || repeatPassword === "") {
+            if (errorExists) {
+                setMessages(messages.filter(x => x.code !== code))
+            }
+        }
+        else {
+            const mismatched = password !== repeatPassword
+
+            if (errorExists && !mismatched) {
+                setMessages(messages.filter(x => x.code !== code))
+            }
+            else {
+                if (mismatched) {
+                    setMessages(messages => [...messages, {
+                        code,
+                        message: "Passwords do no match.",
+                        isClient: true
+                    }])
+                }
+            }
+        }
     }
 
     return (
-        <View style={{ height: '100%', marginTop: 100 }}>
-            <Box sx={{ alignSelf: "center", marginTop: 5, boxShadow: 2, padding: 2, width: 300, bgcolor: 'background.paper', borderRadius: 2 }}>
 
-                <form className="form">
-                    <h2>{registering ? "Join Midpoint." : "Login to MidPoint."}</h2>
-                    {
-                        registering &&
-                        <FormInput
-                            labelText="Name"
-                            id="name"
-                            formControlProps={{
-                                fullWidth: false
-                            }}
-                            handleChange={e => setName(e.target.value)}
-                            type="text"
-                            inputRootCustomClasses={''}
-                        />
-                    }
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            // initial={{ width: 0 }}
+            // animate={{ width: "100%" }}
+            // exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
+            style={{
+                height: '100%',
+                marginTop: 100,
+                display: 'flex',
+                width: '100%',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-evenly'
+            }}>
+
+            <div style={{ width: isMobile ? '90%' : 380 }}>
+                <div style={{
+                    padding: '15px 0',
+                    backgroundColor: '#195DC4',
+                    borderRadius: 5,
+                    textAlign: 'center',
+                    boxShadow: '0px -2px 20px 2px rgba(0, 0, 0, 0.4)'
+                }}>
+                    <span style={{ color: '#fff', fontSize: 22 }}>
+                        The future of collaborative music industry projects is in the cloud.
+                    </span>
+                </div>
+
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    flexDirection: 'column',
+                    marginTop: 20,
+                    height: 260
+                }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <AccessTimeIcon style={{ color: '#fff', fontSize: 32, marginRight: 20 }} />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span style={{ color: '#fff', marginBottom: 5, fontWeight: 500, fontSize: 17 }}>Start within minutes</span>
+
+                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14 }}>No set up required, just login and start from a single click.</span>
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <EastIcon style={{ color: '#fff', fontSize: 32, marginRight: 20 }} />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span style={{ color: '#fff', marginBottom: 5, fontWeight: 500, fontSize: 17 }}>Fully accessible with convenience</span>
+
+                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14 }}>Use your cloud machine from the browser, no installation needed.</span>
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <FileDownloadIcon style={{ color: '#fff', fontSize: 32, marginRight: 25 }} />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span style={{ color: '#fff', marginBottom: 5, fontWeight: 500, fontSize: 17 }}>Download any app</span>
+
+                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 14 }}>Install any app, software or game that you normally would on your machine.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form
+                className='midpoint-form'
+                style={{
+                    width: isMobile ? '90%' : 380,
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                <span style={{ marginBottom: 15, fontWeight: 500, fontSize: 36 }}>
+                    {registering ? "Sign up" : "Sign In"}
+                </span>
+                {
+                    registering &&
                     <FormInput
-                        labelText="Email"
-                        id="email"
-                        formControlProps={{
-                            fullWidth: false
-                        }}
-                        handleChange={e => setEmail(e.target.value)}
-                        type="text"
-                        inputRootCustomClasses={''}
+                        placeholder="Full name"
+                        onChange={setName}
+                        minCharsRequired={3}
                     />
+                }
+                <FormInput
+                    placeholder="Email"
+                    onChange={setEmail}
+                    minCharsRequired={1}
+                    message={messages.find(x =>
+                        x.code === IFormMessageCode.InvalidEmail ||
+                        x.code === IFormMessageCode.UserNotFound ||
+                        x.code === IFormMessageCode.EmailAlreadyInUse
+                    )}
+                />
+                {
+                    registering &&
                     <FormInput
-                        labelText="Password"
-                        id="password"
-                        formControlProps={{
-                            fullWidth: true
-                        }}
-                        handleChange={e => setPassword(e.target.value)}
-                        inputRootCustomClasses={''}
-                        type="password"
+                        placeholder="Username"
+                        onChange={setUsername}
+                        minCharsRequired={3}
                     />
+                }
+                <FormInput
+                    placeholder="Password"
+                    onChange={setPassword}
+                    minCharsRequired={1}
+                    message={messages.find(x => x.code === IFormMessageCode.WrongPassword)}
+                    onBlur={checkPasswordMismatch}
+                    passwordToggleEnabled={true}
 
+                />
+                {
+                    registering &&
+                    <FormInput
+                        placeholder="Repeat password"
+                        onChange={setRepeatPassword}
+                        minCharsRequired={1}
+                        message={messages.find(x => x.code === IFormMessageCode.PasswowrdsMismatched)}
+                        onBlur={checkPasswordMismatch}
+                        passwordToggleEnabled={true}
+                    />
+                }
+                {!!formMessage && <FormMessage message={formMessage} />}
 
-
-
-                    <Button mt="2" colorScheme="indigo"
-                        disabled={disabled}
-                        style={{
-                            backgroundColor: (authSuccess ? '#4DD181' : !disabled ? '#09c' : 'grey')
-                        }}
-                        onPress={() => registering ? handleSignUp() : handleLogin()}
-                    >
-                        {authSuccess ?
-                            <FontAwesomeIcon icon={authSuccess ? faCheckCircle : faTimesCircle} color="white" /> :
-                            signingIn ?
-                                <ActivityIndicator color="white" /> :
-                                registering ? "Join" : "Login"
-                        }
-                    </Button>
-
-                    <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 15 }}>
-                        <Text fontSize="sm" color="coolGray.600" _dark={{
-                            color: "warmGray.200"
-                        }}>
-                            {registering ? "I've already registered" : "I'm a new user"}.{" "}
-                        </Text>
-                        <Link
-                            onPress={() => setRegistering(!registering)}
-                            _text={{
-                                color: "indigo.500",
-                                fontWeight: "medium",
-                                fontSize: "sm"
-                            }} href="#">
-                            {registering ? "Login" : "Join"}
-                        </Link>
-                    </View>
-                </form>
-
-                {/* <VStack space={3} mt="5">
+                <div style={{ alignSelf: 'flex-end', marginBottom: 15 }}>
                     {
-                        registering &&
-                        <FormControl>
-                            <FormControl.Label>
-                                Display Name
-                            </FormControl.Label>
-                            <Input
-                                value={name}
-                                onChangeText={text => setName(text)}
-                            />
-                        </FormControl>
+                        registering ?
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <input type="checkbox" style={{ marginRight: 10 }} />
+                                    <span style={{ marginTop: 15, fontSize: 14 }}>By creating an account you agree with the <a href="#" >Terms of Service</a> and the <a href="">Privacy Policy</a>.</span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <input type="checkbox" style={{ marginRight: 10 }} />
+                                    <span style={{ marginTop: 15, fontSize: 14 }}>Please verify yourself.</span>
+                                </div>
+                            </div>
+                            :
+                            <Link
+                                onPress={sendForgotPassword}
+                                _text={{
+                                    color: "warmGray.200",
+                                    fontSize: "sm",
+                                    textDecoration: 'underline'
+                                }} href="#">
+                                Forgot password?
+                            </Link>
                     }
-                    <FormControl>
-                        <FormControl.Label>
-                            Email
-                        </FormControl.Label>
-                        <Input
-                            value={email}
-                            onChangeText={text => setEmail(text)}
-                        />
-                    </FormControl>
-                    <FormControl>
-                        <FormControl.Label>
-                            Password
-                        </FormControl.Label>
-                        <Input type="password"
-                            onKeyPress={handleKeyPress}
-                            onChangeText={text => setPassword(text)}
-                        />
-                        <Link _text={{
-                            fontSize: "xs",
-                            fontWeight: "500",
-                            color: "indigo.500"
-                        }} alignSelf="flex-end" mt="1">
-                            Forgot Password?
-                        </Link>
-                    </FormControl>
-                    <Button mt="2" colorScheme="indigo"
-                        disabled={disabled}
-                        style={{
-                            backgroundColor: (authSuccess ? '#4DD181' : !disabled ? '#09c' : 'grey')
+                </div>
+
+                <Button mt="2" colorScheme="indigo"
+                    // disabled={disabled}
+                    style={{
+                        borderRadius: 25,
+                        // backgroundColor: '#195DC4'
+                        backgroundColor: (authSuccess ? '#4DD181' : '#195DC4')
+
+                    }}
+                    onPress={() => registering ? handleSignUp() : handleLogin()}
+                >
+                    {authSuccess ?
+                        <FontAwesomeIcon icon={authSuccess ? faCheckCircle : faTimesCircle} color="white" /> :
+                        signingIn ?
+                            <ActivityIndicator color="white" /> :
+                            registering ? "Create account" : "Login"
+                    }
+                </Button>
+
+                <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 15 }}>
+                    <Text fontSize="sm" color="coolGray.500" _dark={{
+                        color: "warmGray.200"
+                    }}>
+                        {registering ? "Already have an account?" : "Don't have an account?"} {" "}
+                    </Text>
+                    <Link
+                        onPress={() => {
+                            setMessages([])
+                            setRegistering(!registering)
                         }}
-                        onPress={() => registering ? handleSignUp() : handleLogin()}
-                    >
-                        {authSuccess ?
-                            <FontAwesomeIcon icon={authSuccess ? faCheckCircle : faTimesCircle} color="white" /> :
-                            signingIn ?
-                                <ActivityIndicator color="white" /> :
-                                registering ? "Join" : "Login"
-                        }
-                    </Button>
-                    <HStack mt="6" justifyContent="center">
-                        <Text fontSize="sm" color="coolGray.600" _dark={{
-                            color: "warmGray.200"
-                        }}>
-                            {registering ? "I've already registered" : "I'm a new user"}.{" "}
-                        </Text>
-                        <Link
-                            onPress={() => setRegistering(!registering)}
-                            _text={{
-                                color: "indigo.500",
-                                fontWeight: "medium",
-                                fontSize: "sm"
-                            }} href="#">
-                            {registering ? "Login" : "Join"}
-                        </Link>
-                    </HStack>
-                </VStack> */}
-            </Box>
-        </View>
+                        _text={{
+                            color: "#fff",
+                            fontWeight: "medium",
+                            fontSize: "sm",
+                            textDecoration: 'underline'
+                        }} href="#">
+                        {registering ? "Login" : "Sign up"}
+                    </Link>
+                </View>
+            </form>
+        </motion.div>
     )
 }

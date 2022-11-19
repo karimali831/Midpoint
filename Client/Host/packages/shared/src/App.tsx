@@ -46,7 +46,7 @@ export function App() {
             <PersistGate persistor={persistor}>
                 <ReactReduxFirebaseProvider {...rrfProps}>
                     <NativeBaseProvider>
-                        <div className="App">
+                        <div className="App wrapper">
                             <Alert />
                             <Router />
                         </div>

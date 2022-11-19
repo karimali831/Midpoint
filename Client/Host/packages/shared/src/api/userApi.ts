@@ -53,9 +53,10 @@ class UserApi {
         try {
             const response = await graphQLQuery<CreateUserMutation, CreateUserInput>(createUser, {
                 input: {
-                    firebaseUid: dto.FirebaseUid,
+                    firebaseUid: dto.firebaseUid,
                     email: dto.email,
-                    displayName: dto.name
+                    displayName: dto.displayName,
+                    fullName: dto.fullName
                 }
             })
 
@@ -70,9 +71,10 @@ class UserApi {
 }
 
 export interface ICreateUserDTO {
-    name: string;
     email: string;
-    FirebaseUid: string;
+    firebaseUid: string;
+    fullName: string
+    displayName: string
 }
 
 export const userApi = new UserApi();

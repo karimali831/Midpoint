@@ -17,7 +17,7 @@ export const Chat: React.FC = () => {
 
     const dispatch = useDispatch()
     const {
-        userConnections,
+        userConnection,
         channelData
     } = useSelector(getWebRTCState)
 
@@ -25,26 +25,24 @@ export const Chat: React.FC = () => {
         user
     } = useSelector(getUserState)
 
-    const activeUserConnection = userConnections.filter(x => x.focused)[0]
-
     const sendMessage = async () => {
-        if (!activeUserConnection.hubConnection || message === "") {
+        if (!userConnection?.hubConnection || message === "") {
             return
         }
         chatWindowRef.current?.scrollTo(0, 0)
         setMessage('')
         const messageDto: IMessage = {
             id: uuidv4(),
-            userId: activeUserConnection.userId,
-            name: activeUserConnection.name,
+            userId: userConnection.userId,
+            name: userConnection.displayName,
             message,
             date: new Date(),
             isBot: false
         }
 
-        dispatch(SendMessageAction({ message: messageDto, roomId: activeUserConnection.roomId }))
+        dispatch(SendMessageAction({ message: messageDto, roomId: userConnection.roomId }))
 
-        await activeUserConnection.hubConnection.invoke("SendMessage", messageDto)
+        await userConnection.hubConnection.invoke("SendMessage", messageDto)
             .catch(err => {
                 console.error(err);
                 dispatch(ShowAlertAction({
@@ -60,7 +58,7 @@ export const Chat: React.FC = () => {
         }
     }
 
-    const data = channelData.filter(x => x.roomId === activeUserConnection.roomId)[0]
+    const data = channelData.filter(x => x.roomId === userConnection?.roomId)[0]
 
     if (!user)
         return null
