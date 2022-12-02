@@ -34,10 +34,10 @@ export const Chat: React.FC = () => {
         const messageDto: IMessage = {
             id: uuidv4(),
             userId: userConnection.userId,
-            name: userConnection.displayName,
             message,
-            date: new Date(),
-            isBot: false
+            createdAt: new Date().toString(),
+            isBot: false,
+            roomId: ''
         }
 
         dispatch(SendMessageAction({ message: messageDto, roomId: userConnection.roomId }))

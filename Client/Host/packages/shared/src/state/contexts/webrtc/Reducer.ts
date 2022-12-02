@@ -1,7 +1,7 @@
 import { HubConnectionState } from '@microsoft/signalr';
 import { createReducer } from '@reduxjs/toolkit';
 import { IChannelData } from '../../../interface/IChannelData';
-import { AddChannelAction, SendMessageAction, SetConnectionStateAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
+import { AddChannelAction, GetHostRoomDataAction, GetHostRoomDataSuccessAction, SendMessageAction, SetConnectionStateAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
 import { webRTCInitialState } from './IWebRTCState';
 
 export const webRTCReducer = createReducer(webRTCInitialState, (builder) => {
@@ -36,7 +36,16 @@ export const webRTCReducer = createReducer(webRTCInitialState, (builder) => {
         .addCase(SetUserConnectionAction, (state, action) => {
             state.userConnection = action.payload
         })
+        .addCase(GetHostRoomDataAction, (state, action) => {
 
+            state.loadingMessages = !action.payload.loadMore
+            state.loadingMore = action.payload.loadMore ?? false
+            state.pageNumber = action.payload.pageNumber
+        })
+        .addCase(GetHostRoomDataSuccessAction, (state, action) => {
+
+            state.channelData = updateChatRoomMessages(state.channelData, action.payload)
+        })
         .addCase(SendMessageAction, (state, action) => {
             const { roomId, message } = action.payload
             const existing = state.channelData.find(x => x.roomId == roomId);

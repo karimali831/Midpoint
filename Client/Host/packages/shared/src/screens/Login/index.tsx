@@ -22,20 +22,74 @@ import { getUserState } from '../../state/contexts/user/Selectors';
 import { LoginHighlight } from './Highlight';
 import './styles.css';
 
+export type FormValidation = {
+    value: string
+    minCharsRequired?: number
+    emailValidator?: boolean
+    urlValidator?: boolean
+}
+
+type FormFields = {
+    username: FormValidation
+    email: FormValidation
+    name: FormValidation
+    password: FormValidation
+    repeatPassword: FormValidation
+
+}
+
 export function Login() {
-    const [username, setUsername] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    const [name, setName] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const [repeatPassword, setRepeatPassword] = useState<string>('')
+    const [formFields, setFormFields] = useState<FormFields>({
+        username: {
+            value: '',
+            minCharsRequired: 3
+        },
+        email: {
+            value: '',
+            emailValidator: true
+        },
+        name: {
+            value: '',
+            minCharsRequired: 3
+        },
+        password: {
+            value: '',
+            minCharsRequired: 6
+        },
+        repeatPassword: {
+            value: '',
+            minCharsRequired: 6
+        }
+    })
     const [registering, setRegistering] = useState<boolean>(false)
     const [messages, setMessages] = useState<IFormMessage[]>([])
+
+    const {
+        username,
+        email,
+        name,
+        password,
+        repeatPassword
+    } = formFields
 
     const {
         signingIn,
         user,
         authSuccess,
     } = useSelector(getUserState)
+
+    const onInputChange = (
+        name: keyof FormFields,
+        text: string
+    ) => {
+        setFormFields({
+            ...formFields,
+            [name]: {
+                ...formFields[name],
+                value: text
+            }
+        })
+    }
 
     const dispatch = useDispatch()
     const formMessage = messages.find(x =>
@@ -59,10 +113,11 @@ export function Login() {
     const handleLogin = () => {
         dispatch(SigninLoadingAction(true))
 
+        // var user = firebase.auth().currentUser;
+
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             .then(() => {
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => console.log("success"))
+                auth.signInWithEmailAndPassword(email.value, password.value)
                     .catch((message: IMessage) => {
                         dispatch(SigninLoadingAction(false))
                         setFormMessage(message)
@@ -76,18 +131,22 @@ export function Login() {
     }
 
     const handleSignUp = () => {
+
+        // so here if you try to submit the form the fields with required validation
+        // it doesn't show the errors
+
         dispatch(SigninLoadingAction(true))
 
-        auth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email.value, password.value)
             .then(userCredentials => {
                 const user = userCredentials.user;
 
                 if (user) {
                     dispatch(CreateUserAction({
-                        fullName: name,
-                        email,
+                        fullName: name.value,
+                        email: email.value,
                         firebaseUid: user.uid,
-                        displayName: username
+                        displayName: username.value
                     }))
                 }
 
@@ -108,10 +167,10 @@ export function Login() {
     }
 
     const sendForgotPassword = () => {
-        auth.sendPasswordResetEmail(email)
+        auth.sendPasswordResetEmail(email.value)
             .then(() => {
                 setMessages([{
-                    message: "A link to reset your password has been sent to " + email,
+                    message: "A link to reset your password has been sent to " + formFields.email.value,
                     isSuccess: true
                 }])
 
@@ -124,13 +183,13 @@ export function Login() {
         const code = IFormMessageCode.PasswowrdsMismatched
         const errorExists = messages.some(x => x.code === code)
 
-        if (password === "" || repeatPassword === "") {
+        if (password.value === "" || repeatPassword.value === "") {
             if (errorExists) {
                 setMessages(messages.filter(x => x.code !== code))
             }
         }
         else {
-            const mismatched = password !== repeatPassword
+            const mismatched = formFields.password !== formFields.repeatPassword
 
             if (errorExists && !mismatched) {
                 setMessages(messages.filter(x => x.code !== code))
@@ -213,14 +272,14 @@ export function Login() {
                     registering &&
                     <FormInput
                         placeholder="Full name"
-                        onChange={setName}
-                        minCharsRequired={3}
+                        validation={formFields.name}
+                        onChange={e => onInputChange("name", e)}
                     />
                 }
                 <FormInput
                     placeholder="Email"
-                    onChange={setEmail}
-                    minCharsRequired={1}
+                    validation={formFields.email}
+                    onChange={e => onInputChange("email", e)}
                     message={messages.find(x =>
                         x.code === IFormMessageCode.InvalidEmail ||
                         x.code === IFormMessageCode.UserNotFound ||
@@ -231,14 +290,14 @@ export function Login() {
                     registering &&
                     <FormInput
                         placeholder="Username"
-                        onChange={setUsername}
-                        minCharsRequired={3}
+                        validation={formFields.username}
+                        onChange={e => onInputChange("username", e)}
                     />
                 }
                 <FormInput
                     placeholder="Password"
-                    onChange={setPassword}
-                    minCharsRequired={1}
+                    validation={formFields.password}
+                    onChange={e => onInputChange("password", e)}
                     message={messages.find(x => x.code === IFormMessageCode.WrongPassword)}
                     onBlur={checkPasswordMismatch}
                     passwordToggleEnabled={true}
@@ -248,8 +307,8 @@ export function Login() {
                     registering &&
                     <FormInput
                         placeholder="Repeat password"
-                        onChange={setRepeatPassword}
-                        minCharsRequired={1}
+                        validation={formFields.repeatPassword}
+                        onChange={e => onInputChange("repeatPassword", e)}
                         message={messages.find(x => x.code === IFormMessageCode.PasswowrdsMismatched)}
                         onBlur={checkPasswordMismatch}
                         passwordToggleEnabled={true}

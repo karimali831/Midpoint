@@ -8,11 +8,19 @@ export interface IWebRTCState {
     channels: IChannel[]
     channelData: IChannelData[]
     onlineUsers: IUserConnection[]
+    loadingMessages: boolean
+    loadingMore: boolean
+    pageNumber: number
+    pageSize: number
 }
 
 export const webRTCInitialState: IWebRTCState = {
     userConnection: null,
     channels: [],
     channelData: [],
-    onlineUsers: []
+    onlineUsers: [],
+    loadingMessages: false,
+    loadingMore: false,
+    pageNumber: 0,
+    pageSize: 50,
 }

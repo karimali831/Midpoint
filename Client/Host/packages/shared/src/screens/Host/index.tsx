@@ -29,6 +29,7 @@ import { getWebRTCState } from '../../state/contexts/webrtc/Selectors';
 import { newHubConnection } from '../../utils/HubHelper';
 import { joinLink } from '../../utils/UrlHelper';
 import { uuidv4 } from '../../utils/Utils';
+import { FormValidation } from '../Login';
 import VideoStream from './stream.web';
 
 export function StartHost() {
@@ -48,7 +49,10 @@ export function StartHost() {
         camOn
     } = useSelector(getUserState)
 
-    const [channelName, setChannelName] = useState<string>('')
+    const [channelName, setChannelName] = useState<FormValidation>({
+        value: '',
+        urlValidator: true
+    })
     const [loading, setLoading] = useState<boolean>(false)
 
     const configuration = {
@@ -149,12 +153,12 @@ export function StartHost() {
                     isBot: true,
                     id: uuidv4(),
                     userId: user.id,
-                    name: user.displayName,
                     message: peerConn.localDescription?.toJSON(),
-                    date: new Date()
+                    createdAt: new Date().toDateString(),
+                    roomId: ''
                 }
 
-                dispatch(SendMessageAction({ message, roomId: channelName }))
+                dispatch(SendMessageAction({ message, roomId: channelName.value }))
             }
         }
     }
@@ -181,7 +185,7 @@ export function StartHost() {
             userId: user.id,
             displayName: user.displayName,
             roomId: uuidv4(),
-            roomName: channelName
+            roomName: channelName.value
         }
 
         dispatch(SetUserConnectionAction(userConnection))
@@ -332,17 +336,20 @@ export function StartHost() {
                 </div>
 
                 <FormInput
-                    onChange={setChannelName}
-                    placeholder="Enter MidPoint link"
-                    minCharsRequired={3}
+                    onChange={(text => setChannelName({
+                        ...channelName,
+                        value: text
+                    }))}
+                    validation={channelName}
+                    placeholder={`${joinLink("room-id")}`}
                 />
                 <Button
-                    disabled={channelName === ""}
+                    disabled={channelName.value === ""}
                     onPress={onSubmit}
                     mt="5"
                     style={{
                         borderRadius: 25,
-                        backgroundColor: (channelName === "" ? 'grey' : '#195DC4')
+                        backgroundColor: (channelName.value === "" ? 'grey' : '#195DC4')
                     }}
                     colorScheme="cyan"
                     isLoading={loading}

@@ -1,8 +1,9 @@
 export interface IMessage {
     id: string
     userId: string
-    name: string
+    roomId: string
     message: string
-    date: Date
-    isBot: boolean
+    createdAt: string
+    isBot?: boolean
+    read?: boolean
 }
