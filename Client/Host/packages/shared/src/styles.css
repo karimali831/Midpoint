@@ -25,7 +25,7 @@ a:hover {
     color: '#fff'
 }
 .App {
-    /* font-family: 'Roboto Flex', Roboto; */
+    font-family: 'Roboto Flex', Roboto;
     min-height: 100vh; 
     display:flex; 
     flex-direction:column;

@@ -1,21 +1,86 @@
+import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
+import LockOutlined from '@mui/icons-material/LockOutlined';
+import PaymentOutlined from '@mui/icons-material/PaymentOutlined';
+import TranslateOutlined from '@mui/icons-material/TranslateOutlined';
 import { motion } from 'framer-motion';
-import React from "react";
+import React from 'react';
 
 export const Settings = () => {
-    React.useEffect(() => { }, [])
+    React.useEffect(() => {}, []);
 
     return (
         <motion.div
             initial={{ width: 0 }}
-            animate={{ width: "100%" }}
+            animate={{ width: '100%' }}
             exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
         >
-            <div style={{ marginTop: 150, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                <span style={{ fontSize: 28 }}>Settings</span>
-                <span style={{ fontSize: 12, marginTop: 5, color: 'rgba(255, 255, 255, 0.6)' }}>
-                    Coming soon
+            <div
+                style={{
+                    width: 250,
+                    borderRadius: 10,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    padding: 5,
+                    margin: '20px 0',
+                }}
+            >
+                <AccountCircleOutlined />
+                <span style={{ marginLeft: 10, fontSize: 14 }}>Account</span>
+            </div>
+
+            <div
+                style={{
+                    width: 250,
+                    borderRadius: 10,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    padding: 5,
+                    margin: '20px 0',
+                }}
+            >
+                <LockOutlined />
+                <span style={{ marginLeft: 10, fontSize: 14 }}>
+                    Password & Security
                 </span>
             </div>
+
+            <div
+                style={{
+                    width: 250,
+                    borderRadius: 10,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    padding: 5,
+                    margin: '20px 0',
+                }}
+            >
+                <PaymentOutlined />
+                <span style={{ marginLeft: 10, fontSize: 14 }}>
+                    Payment Method
+                </span>
+            </div>
+
+            <div
+                style={{
+                    width: 250,
+                    borderRadius: 10,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    padding: 5,
+                    margin: '20px 0',
+                }}
+            >
+                <TranslateOutlined />
+                <span style={{ marginLeft: 10, fontSize: 14 }}>Language</span>
+            </div>
         </motion.div>
-    )
-}
+    );
+};

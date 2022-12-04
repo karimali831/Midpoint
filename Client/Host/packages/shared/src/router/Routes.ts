@@ -1,7 +1,6 @@
 import { Dashboard } from '../components/Dashboard';
 import { Home } from '../components/Home';
 import { AppScreen } from '../enum/AppScreen';
-import { StartHost } from '../screens/Host';
 import { Login } from '../screens/Login';
 import { IRoute } from './Route';
 
@@ -38,16 +37,5 @@ export const Routes: IRoute[] = [
         menuName: "Dashboard",
         path: '/dashboard',
         url: '/dashboard',
-    },
-    {
-        screen: AppScreen.Host,
-        component: StartHost,
-        displayOnMenu: false,
-        memberOnly: true,
-        headerShown: false,
-        order: 4,
-        menuName: "Host",
-        path: '/host/:id*',
-        url: '/host',
     }
 ];

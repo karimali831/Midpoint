@@ -15,7 +15,6 @@ export type RouteParamList = {
     [AppScreen.Dashboard]: undefined;
     [AppScreen.Home]: undefined;
     [AppScreen.Login]: undefined;
-    [AppScreen.Host]: undefined;
 };
 
 export type HostParams = {

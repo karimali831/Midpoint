@@ -1,16 +1,15 @@
-import React, { ReactElement } from "react"
+import React, { ReactElement } from 'react';
 
 interface IOwnProps {
-    text: string
-    icon?: ReactElement
-    width?: number
-    outline?: boolean
-    onClick?: () => void
+    text: string;
+    icon?: ReactElement;
+    width?: number;
+    outline?: boolean;
+    onClick?: () => void;
 }
 
 export const MainButton: React.FC<IOwnProps> = (props) => {
-
-    React.useEffect(() => { }, [])
+    React.useEffect(() => {}, []);
 
     return (
         <div
@@ -19,16 +18,18 @@ export const MainButton: React.FC<IOwnProps> = (props) => {
                 borderRadius: 25,
                 width: props.width ?? '100%',
                 background: props.outline ? 'transparent' : '#195DC4',
-                padding: '5px 5px',
+                padding: '5px 10px',
                 alignItems: 'center',
                 display: 'flex',
                 justifyContent: 'center',
                 border: props.outline ? '1px solid #eee' : 'none',
-                cursor: props.onClick ? 'pointer' : 'default'
+                cursor: props.onClick ? 'pointer' : 'default',
             }}
         >
-            {props.icon && <span style={{ marginRight: 10 }}>{props.icon}</span>}
-            <span>{props.text}</span>
+            {props.icon && (
+                <span style={{ marginRight: 10 }}>{props.icon}</span>
+            )}
+            <span style={{ fontSize: 14 }}>{props.text}</span>
         </div>
-    )
-}
+    );
+};
