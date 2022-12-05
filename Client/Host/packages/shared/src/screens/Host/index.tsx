@@ -379,7 +379,7 @@ export const StartHost = (props: IOwnProps) => {
                         </Text>
                         <DJCheckList />
 
-                        <Button
+                        {/* <Button
                             onPress={onSubmit}
                             mt="5"
                             width={150}
@@ -394,7 +394,7 @@ export const StartHost = (props: IOwnProps) => {
                             }}
                         >
                             Start VM
-                        </Button>
+                        </Button> */}
                     </Box>
                 </View>
                 <View

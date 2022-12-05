@@ -21,7 +21,9 @@ export const Stream: React.FC<IOwnProps> = () => {
             initial={{ width: 0 }}
             animate={{ width: '100%' }}
             exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
+            style={{ marginLeft: 15 }}
         >
+            
             <div
                 style={{
                     display: 'flex',

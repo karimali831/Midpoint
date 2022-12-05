@@ -18,20 +18,31 @@ export const midiReducer = createReducer(midiInitialState, (builder) => {
             const current = [...state.inputs]
             let newState: IMidiDevice[] = []
 
+    
             if (!getInput) {
                 newState = [...state.inputs, action.payload]
             }
             else {
 
+          
                 newState = current.map(input => {
                     if (input.id === action.payload.id) {
                         return {
-                            ...input,
-                            ...action.payload
+                            connection: action.payload.connection,
+                            id: action.payload.id,
+                            manufacturer: action.payload.manufacturer,
+                            name: action.payload.name,
+                            type: action.payload.type,
+                            state: action.payload.state,
+                            version: action.payload.version
                         }
                     }
                     return { ...input }
                 })
+            }
+
+            if (!!state.activeInput && state.activeInput.id === action.payload.id && action.payload.state !== "connected") {
+                state.activeInput = null
             }
 
             state.inputs = newState

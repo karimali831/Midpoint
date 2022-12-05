@@ -9,30 +9,8 @@ type User @model {
     firebaseUid: ID!
     email: String!
     displayName: String!
-    rooms: [HostRoom] @hasMany
-    chatMessages: [HostRoomChatMessage] @hasMany
-    midiMessages: [HostRoomMidiMessage] @hasMany
-}
-
-type HostRoomMidiMessage @model {
-    id: ID! @primaryKey
-    data: String!
-    room: HostRoom @belongsTo
-}
-
-type HostRoom @model {
-    id: ID! @primaryKey
-    name: String!
-    desc: String
     imageUri: String
-    lastMessageId: ID
-    lastMessageDate: String
-    createdUserId: ID! @index(name: "byUser")
-
-    user: User @belongsTo
-    roomUsers: [HostRoomUser] @hasMany
-    midiMessages: [HostRoomMidiMessage] @hasMany
-    chatMessages: [HostRoomChatMessage] @hasMany
+    hostRoomUser: [HostRoomUser] @hasMany
 }
 
 type HostRoomUser @model {
@@ -44,23 +22,41 @@ type HostRoomUser @model {
     pinned: Boolean!
 
     user: User @hasOne
+    hostRoom: HostRoom @belongsTo
+}
+
+
+type HostRoomMidiMessage @model {
+    id: ID! @primaryKey
+    userId: ID! @index(name: "byUser")
+    roomId: ID! @index(name: "byHostRoom")
+    data: String!
+    user: User @hasOne
     room: HostRoom @belongsTo
+}
+
+type HostRoom @model {
+    id: ID! @primaryKey
+    name: String!
+    desc: String
+    imageUri: String
+    createdUserId: ID! @index(name: "byUser")
+    lastMessageId: ID
+    lastMessage: HostRoomChatMessage @hasOne
     chatMessages: [HostRoomChatMessage] @hasMany
     midiMessages: [HostRoomMidiMessage] @hasMany
+    hostRoomUsers: [HostRoomUser] @hasMany
 }
+
 
 type HostRoomChatMessage @model {
     id: ID! @primaryKey
     userId: ID! @index(name: "byUser")
     roomId: ID! @index(name: "byHostRoom")
+
     message: String!
     read: Boolean!
 
-    user: User @belongsTo
-    room: HostRoom @belongsTo
-}
-
-type Subscription {
-    onMidiMessage(roomId: ID!, data: String!): HostRoomMidiMessage
-        @aws_subscribe(mutations: ["updateHostRoomMidiMessage"])
+    user: User @hasOne
+    hostRoom: HostRoom @belongsTo
 }

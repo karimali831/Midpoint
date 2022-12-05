@@ -10,45 +10,20 @@ export const getUser = /* GraphQL */ `
       firebaseUid
       email
       displayName
-      rooms {
-        items {
-          id
-          name
-          desc
-          imageUri
-          lastMessageId
-          lastMessageDate
-          createdUserId
-          createdAt
-          updatedAt
-          userRoomsId
-        }
-        nextToken
-      }
-      chatMessages {
+      imageUri
+      hostRoomUser {
         items {
           id
           userId
-          roomId
-          message
-          read
+          hostRoomId
+          lastSeen
+          archived
+          pinned
           createdAt
           updatedAt
-          userChatMessagesId
-          hostRoomChatMessagesId
-          hostRoomUserChatMessagesId
-        }
-        nextToken
-      }
-      midiMessages {
-        items {
-          id
-          data
-          createdAt
-          updatedAt
-          userMidiMessagesId
-          hostRoomMidiMessagesId
-          hostRoomUserMidiMessagesId
+          userHostRoomUserId
+          hostRoomHostRoomUsersId
+          hostRoomUserUserId
         }
         nextToken
       }
@@ -78,225 +53,12 @@ export const listUsers = /* GraphQL */ `
         firebaseUid
         email
         displayName
-        rooms {
-          nextToken
-        }
-        chatMessages {
-          nextToken
-        }
-        midiMessages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getHostRoomMidiMessage = /* GraphQL */ `
-  query GetHostRoomMidiMessage($id: ID!) {
-    getHostRoomMidiMessage(id: $id) {
-      id
-      data
-      room {
-        id
-        name
-        desc
         imageUri
-        lastMessageId
-        lastMessageDate
-        createdUserId
-        user {
-          id
-          fullName
-          firebaseUid
-          email
-          displayName
-          createdAt
-          updatedAt
-        }
-        roomUsers {
-          nextToken
-        }
-        midiMessages {
-          nextToken
-        }
-        chatMessages {
+        hostRoomUser {
           nextToken
         }
         createdAt
         updatedAt
-        userRoomsId
-      }
-      createdAt
-      updatedAt
-      userMidiMessagesId
-      hostRoomMidiMessagesId
-      hostRoomUserMidiMessagesId
-    }
-  }
-`;
-export const listHostRoomMidiMessages = /* GraphQL */ `
-  query ListHostRoomMidiMessages(
-    $id: ID
-    $filter: ModelHostRoomMidiMessageFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listHostRoomMidiMessages(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        data
-        room {
-          id
-          name
-          desc
-          imageUri
-          lastMessageId
-          lastMessageDate
-          createdUserId
-          createdAt
-          updatedAt
-          userRoomsId
-        }
-        createdAt
-        updatedAt
-        userMidiMessagesId
-        hostRoomMidiMessagesId
-        hostRoomUserMidiMessagesId
-      }
-      nextToken
-    }
-  }
-`;
-export const getHostRoom = /* GraphQL */ `
-  query GetHostRoom($id: ID!) {
-    getHostRoom(id: $id) {
-      id
-      name
-      desc
-      imageUri
-      lastMessageId
-      lastMessageDate
-      createdUserId
-      user {
-        id
-        fullName
-        firebaseUid
-        email
-        displayName
-        rooms {
-          nextToken
-        }
-        chatMessages {
-          nextToken
-        }
-        midiMessages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      roomUsers {
-        items {
-          id
-          userId
-          hostRoomId
-          lastSeen
-          archived
-          pinned
-          createdAt
-          updatedAt
-          hostRoomRoomUsersId
-          hostRoomUserUserId
-        }
-        nextToken
-      }
-      midiMessages {
-        items {
-          id
-          data
-          createdAt
-          updatedAt
-          userMidiMessagesId
-          hostRoomMidiMessagesId
-          hostRoomUserMidiMessagesId
-        }
-        nextToken
-      }
-      chatMessages {
-        items {
-          id
-          userId
-          roomId
-          message
-          read
-          createdAt
-          updatedAt
-          userChatMessagesId
-          hostRoomChatMessagesId
-          hostRoomUserChatMessagesId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      userRoomsId
-    }
-  }
-`;
-export const listHostRooms = /* GraphQL */ `
-  query ListHostRooms(
-    $id: ID
-    $filter: ModelHostRoomFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listHostRooms(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        name
-        desc
-        imageUri
-        lastMessageId
-        lastMessageDate
-        createdUserId
-        user {
-          id
-          fullName
-          firebaseUid
-          email
-          displayName
-          createdAt
-          updatedAt
-        }
-        roomUsers {
-          nextToken
-        }
-        midiMessages {
-          nextToken
-        }
-        chatMessages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        userRoomsId
       }
       nextToken
     }
@@ -317,50 +79,21 @@ export const getHostRoomUser = /* GraphQL */ `
         firebaseUid
         email
         displayName
-        rooms {
-          nextToken
-        }
-        chatMessages {
-          nextToken
-        }
-        midiMessages {
+        imageUri
+        hostRoomUser {
           nextToken
         }
         createdAt
         updatedAt
       }
-      room {
+      hostRoom {
         id
         name
         desc
         imageUri
-        lastMessageId
-        lastMessageDate
         createdUserId
-        user {
-          id
-          fullName
-          firebaseUid
-          email
-          displayName
-          createdAt
-          updatedAt
-        }
-        roomUsers {
-          nextToken
-        }
-        midiMessages {
-          nextToken
-        }
-        chatMessages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        userRoomsId
-      }
-      chatMessages {
-        items {
+        lastMessageId
+        lastMessage {
           id
           userId
           roomId
@@ -368,27 +101,27 @@ export const getHostRoomUser = /* GraphQL */ `
           read
           createdAt
           updatedAt
-          userChatMessagesId
           hostRoomChatMessagesId
-          hostRoomUserChatMessagesId
+          hostRoomChatMessageUserId
+          hostRoomChatMessageHostRoomId
         }
-        nextToken
-      }
-      midiMessages {
-        items {
-          id
-          data
-          createdAt
-          updatedAt
-          userMidiMessagesId
-          hostRoomMidiMessagesId
-          hostRoomUserMidiMessagesId
+        chatMessages {
+          nextToken
         }
-        nextToken
+        midiMessages {
+          nextToken
+        }
+        hostRoomUsers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        hostRoomLastMessageId
       }
       createdAt
       updatedAt
-      hostRoomRoomUsersId
+      userHostRoomUserId
+      hostRoomHostRoomUsersId
       hostRoomUserUserId
     }
   }
@@ -421,6 +154,117 @@ export const listHostRoomUsers = /* GraphQL */ `
           firebaseUid
           email
           displayName
+          imageUri
+          createdAt
+          updatedAt
+        }
+        hostRoom {
+          id
+          name
+          desc
+          imageUri
+          createdUserId
+          lastMessageId
+          createdAt
+          updatedAt
+          hostRoomLastMessageId
+        }
+        createdAt
+        updatedAt
+        userHostRoomUserId
+        hostRoomHostRoomUsersId
+        hostRoomUserUserId
+      }
+      nextToken
+    }
+  }
+`;
+export const getHostRoomMidiMessage = /* GraphQL */ `
+  query GetHostRoomMidiMessage($id: ID!) {
+    getHostRoomMidiMessage(id: $id) {
+      id
+      userId
+      roomId
+      data
+      user {
+        id
+        fullName
+        firebaseUid
+        email
+        displayName
+        imageUri
+        hostRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        name
+        desc
+        imageUri
+        createdUserId
+        lastMessageId
+        lastMessage {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          hostRoomChatMessagesId
+          hostRoomChatMessageUserId
+          hostRoomChatMessageHostRoomId
+        }
+        chatMessages {
+          nextToken
+        }
+        midiMessages {
+          nextToken
+        }
+        hostRoomUsers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        hostRoomLastMessageId
+      }
+      createdAt
+      updatedAt
+      hostRoomMidiMessagesId
+      hostRoomMidiMessageUserId
+    }
+  }
+`;
+export const listHostRoomMidiMessages = /* GraphQL */ `
+  query ListHostRoomMidiMessages(
+    $id: ID
+    $filter: ModelHostRoomMidiMessageFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listHostRoomMidiMessages(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        userId
+        roomId
+        data
+        user {
+          id
+          fullName
+          firebaseUid
+          email
+          displayName
+          imageUri
           createdAt
           updatedAt
         }
@@ -429,12 +273,146 @@ export const listHostRoomUsers = /* GraphQL */ `
           name
           desc
           imageUri
-          lastMessageId
-          lastMessageDate
           createdUserId
+          lastMessageId
           createdAt
           updatedAt
-          userRoomsId
+          hostRoomLastMessageId
+        }
+        createdAt
+        updatedAt
+        hostRoomMidiMessagesId
+        hostRoomMidiMessageUserId
+      }
+      nextToken
+    }
+  }
+`;
+export const getHostRoom = /* GraphQL */ `
+  query GetHostRoom($id: ID!) {
+    getHostRoom(id: $id) {
+      id
+      name
+      desc
+      imageUri
+      createdUserId
+      lastMessageId
+      lastMessage {
+        id
+        userId
+        roomId
+        message
+        read
+        user {
+          id
+          fullName
+          firebaseUid
+          email
+          displayName
+          imageUri
+          createdAt
+          updatedAt
+        }
+        hostRoom {
+          id
+          name
+          desc
+          imageUri
+          createdUserId
+          lastMessageId
+          createdAt
+          updatedAt
+          hostRoomLastMessageId
+        }
+        createdAt
+        updatedAt
+        hostRoomChatMessagesId
+        hostRoomChatMessageUserId
+        hostRoomChatMessageHostRoomId
+      }
+      chatMessages {
+        items {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          hostRoomChatMessagesId
+          hostRoomChatMessageUserId
+          hostRoomChatMessageHostRoomId
+        }
+        nextToken
+      }
+      midiMessages {
+        items {
+          id
+          userId
+          roomId
+          data
+          createdAt
+          updatedAt
+          hostRoomMidiMessagesId
+          hostRoomMidiMessageUserId
+        }
+        nextToken
+      }
+      hostRoomUsers {
+        items {
+          id
+          userId
+          hostRoomId
+          lastSeen
+          archived
+          pinned
+          createdAt
+          updatedAt
+          userHostRoomUserId
+          hostRoomHostRoomUsersId
+          hostRoomUserUserId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      hostRoomLastMessageId
+    }
+  }
+`;
+export const listHostRooms = /* GraphQL */ `
+  query ListHostRooms(
+    $id: ID
+    $filter: ModelHostRoomFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listHostRooms(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        desc
+        imageUri
+        createdUserId
+        lastMessageId
+        lastMessage {
+          id
+          userId
+          roomId
+          message
+          read
+          createdAt
+          updatedAt
+          hostRoomChatMessagesId
+          hostRoomChatMessageUserId
+          hostRoomChatMessageHostRoomId
         }
         chatMessages {
           nextToken
@@ -442,10 +420,12 @@ export const listHostRoomUsers = /* GraphQL */ `
         midiMessages {
           nextToken
         }
+        hostRoomUsers {
+          nextToken
+        }
         createdAt
         updatedAt
-        hostRoomRoomUsersId
-        hostRoomUserUserId
+        hostRoomLastMessageId
       }
       nextToken
     }
@@ -465,53 +445,50 @@ export const getHostRoomChatMessage = /* GraphQL */ `
         firebaseUid
         email
         displayName
-        rooms {
-          nextToken
-        }
-        chatMessages {
-          nextToken
-        }
-        midiMessages {
+        imageUri
+        hostRoomUser {
           nextToken
         }
         createdAt
         updatedAt
       }
-      room {
+      hostRoom {
         id
         name
         desc
         imageUri
-        lastMessageId
-        lastMessageDate
         createdUserId
-        user {
+        lastMessageId
+        lastMessage {
           id
-          fullName
-          firebaseUid
-          email
-          displayName
+          userId
+          roomId
+          message
+          read
           createdAt
           updatedAt
+          hostRoomChatMessagesId
+          hostRoomChatMessageUserId
+          hostRoomChatMessageHostRoomId
         }
-        roomUsers {
+        chatMessages {
           nextToken
         }
         midiMessages {
           nextToken
         }
-        chatMessages {
+        hostRoomUsers {
           nextToken
         }
         createdAt
         updatedAt
-        userRoomsId
+        hostRoomLastMessageId
       }
       createdAt
       updatedAt
-      userChatMessagesId
       hostRoomChatMessagesId
-      hostRoomUserChatMessagesId
+      hostRoomChatMessageUserId
+      hostRoomChatMessageHostRoomId
     }
   }
 `;
@@ -542,26 +519,26 @@ export const listHostRoomChatMessages = /* GraphQL */ `
           firebaseUid
           email
           displayName
+          imageUri
           createdAt
           updatedAt
         }
-        room {
+        hostRoom {
           id
           name
           desc
           imageUri
-          lastMessageId
-          lastMessageDate
           createdUserId
+          lastMessageId
           createdAt
           updatedAt
-          userRoomsId
+          hostRoomLastMessageId
         }
         createdAt
         updatedAt
-        userChatMessagesId
         hostRoomChatMessagesId
-        hostRoomUserChatMessagesId
+        hostRoomChatMessageUserId
+        hostRoomChatMessageHostRoomId
       }
       nextToken
     }

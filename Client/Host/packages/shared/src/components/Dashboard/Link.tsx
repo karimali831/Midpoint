@@ -25,12 +25,12 @@ export const DashboardLink: React.FC<IOwnProps> = (props) => {
             {
                 props.section === props.activeSection &&
                 <div style={{
-                    width: 6,
-                    height: 6,
-                    margin: '0 5px',
-                    borderRadius: 50,
-                    background: '#195DC4'
-                }}
+                        width: 6,
+                        height: 6,
+                        margin: '0 5px',
+                        borderRadius: 50,
+                        background: '#195DC4'
+                    }}
                 />
             }
             {props.icon}

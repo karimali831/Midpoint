@@ -1,5 +1,6 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import React, { ReactElement } from 'react';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
 interface IOwnProps {
     title: string;
@@ -17,7 +18,7 @@ export const StreamCard: React.FC<IOwnProps> = (props) => {
                 width: props.size == 'large' ? '65%' : '35%',
                 marginRight: 30,
                 marginBottom: 20,
-                borderRadius: 10,
+                borderRadius: '10px 0'
             }}
         >
             <div
@@ -41,17 +42,19 @@ export const StreamCard: React.FC<IOwnProps> = (props) => {
                     }}
                 >
                     <span style={{ marginLeft: 10 }}>{props.title}</span>
-                    <InfoOutlinedIcon style={{ fontSize: 16 }} />
+                    <div>
+                        <InfoOutlinedIcon style={{ fontSize: 16, marginRight: 10 }} />
+                        <OpenInFullIcon style={{ fontSize: 16 }} />
+                    </div>
                 </div>
             </div>
             <div
                 style={{
                     background: 'rgba(25, 93, 196, 0.15)',
-                    border: '1px solid #195DC4',
                     display: 'flex',
                     padding: 15,
                     maxHeight: 350,
-                    minHeight: 150,
+                    minHeight: 200,
                     borderBottomLeftRadius: 10,
                     borderBottomRightRadius: 10,
                 }}
