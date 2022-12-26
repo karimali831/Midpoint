@@ -11,9 +11,12 @@ export const Settings = () => {
     return (
         <motion.div
             initial={{ width: 0 }}
-            animate={{ width: '100%' }}
+            animate={{ width: "100%" }}
             exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
         >
+            <span style={{ fontSize: 28 }}>
+                Settings
+            </span>
             <div
                 style={{
                     width: 250,
@@ -23,7 +26,7 @@ export const Settings = () => {
                     alignItems: 'center',
                     border: '1px solid rgba(255, 255, 255, 0.25)',
                     padding: 5,
-                    margin: '20px 0',
+                    marginTop: 20
                 }}
             >
                 <AccountCircleOutlined />
@@ -82,5 +85,5 @@ export const Settings = () => {
                 <span style={{ marginLeft: 10, fontSize: 14 }}>Language</span>
             </div>
         </motion.div>
-    );
+    )
 };

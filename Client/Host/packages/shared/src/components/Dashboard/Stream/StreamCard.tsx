@@ -14,11 +14,9 @@ export const StreamCard: React.FC<IOwnProps> = (props) => {
 
     return (
         <div
+            className='stream-card'
             style={{
-                width: props.size == 'large' ? '65%' : '35%',
-                marginRight: 30,
-                marginBottom: 20,
-                borderRadius: '10px 0'
+                width: props.size == 'large' ? '65%' : '35%'
             }}
         >
             <div
@@ -53,8 +51,8 @@ export const StreamCard: React.FC<IOwnProps> = (props) => {
                     background: 'rgba(25, 93, 196, 0.15)',
                     display: 'flex',
                     padding: 15,
-                    maxHeight: 350,
-                    minHeight: 200,
+                    maxHeight: 550,
+                    minHeight: 280,
                     borderBottomLeftRadius: 10,
                     borderBottomRightRadius: 10,
                 }}

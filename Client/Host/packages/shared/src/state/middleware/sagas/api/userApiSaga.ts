@@ -16,6 +16,7 @@ import {
     ShowAlertAction,
     ShowScreenAction
 } from '../../../contexts/app/Actions';
+import { SetActiveMidiInputAction } from '../../../contexts/midi/Actions';
 import {
     CreateUserAction,
     FirebaseAuthEmptyAction,
@@ -86,9 +87,10 @@ export function* updateUserInfo(
 
             yield put(
                 ShowAlertAction({
-                    title: 'User info updated',
+                    title: `Controller successfully ${action.payload.updatedValue === null ? "unset" : "set"}`,
                     status: 'success',
                     duration: 1500,
+                    position: 'center'
                 })
             );
         }
@@ -100,6 +102,9 @@ export function* updateUserInfo(
 }
 
 export function* authLoadDone() {
+
+
+
     yield put(SetAppReadyAction(LoadStartup.Auth));
 }
 

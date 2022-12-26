@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IMessage } from '../../interface/IMessage';
 import { ShowAlertAction } from '../../state/contexts/app/Actions';
 import { getUserState } from '../../state/contexts/user/Selectors';
-import { SendMessageAction } from '../../state/contexts/webrtc/Actions';
-import { getWebRTCState } from '../../state/contexts/webrtc/Selectors';
+import { SendMessageAction } from '../../state/contexts/stream/Actions';
+import { getStreamState } from '../../state/contexts/stream/Selectors';
 import { uuidv4 } from '../../utils/Utils';
 
 
@@ -19,7 +19,7 @@ export const Chat: React.FC = () => {
     const {
         userConnection,
         channelData
-    } = useSelector(getWebRTCState)
+    } = useSelector(getStreamState)
 
     const {
         user
@@ -29,15 +29,19 @@ export const Chat: React.FC = () => {
         if (!userConnection?.hubConnection || message === "") {
             return
         }
+
+        const date = new Date();
+
         chatWindowRef.current?.scrollTo(0, 0)
         setMessage('')
         const messageDto: IMessage = {
             id: uuidv4(),
             userId: userConnection.userId,
             message,
-            createdAt: new Date().toString(),
+            createdAt: `${date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`,
             isBot: false,
-            roomId: ''
+            roomId: userConnection.roomId,
+            name: userConnection.displayName
         }
 
         dispatch(SendMessageAction({ message: messageDto, roomId: userConnection.roomId }))
@@ -69,7 +73,7 @@ export const Chat: React.FC = () => {
             <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                 Chat
             </Text>
-            <Box ref={chatWindowRef} style={{ overflowY: 'auto', maxHeight: 350 }}>
+            <Box ref={chatWindowRef} style={{ overflowY: 'auto', maxHeight: 180 }}>
                 {data && data.messages.length > 0 && data.messages.filter(x => !x.isBot).reverse().map(x => {
 
                     return (

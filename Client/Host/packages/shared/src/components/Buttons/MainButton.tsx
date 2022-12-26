@@ -5,6 +5,7 @@ interface IOwnProps {
     icon?: ReactElement;
     width?: number;
     outline?: boolean;
+    disabled?: boolean
     onClick?: () => void;
 }
 
@@ -18,8 +19,10 @@ export const MainButton: React.FC<IOwnProps> = (props) => {
                 borderRadius: 25,
                 width: props.width ?? '100%',
                 background: props.outline ? 'transparent' : '#195DC4',
+                opacity: props.disabled ? 0.25 : 1,
                 padding: '5px 10px',
                 alignItems: 'center',
+                height: 25,
                 display: 'flex',
                 justifyContent: 'center',
                 border: props.outline ? '1px solid #eee' : 'none',

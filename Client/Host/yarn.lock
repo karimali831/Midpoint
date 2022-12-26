@@ -6802,6 +6802,11 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
 
+"@types/howler@^2.2.7":
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/@types/howler/-/howler-2.2.7.tgz#5acfbed57f9e1d99b8dabe1b824729e1c1ea1fae"
+  integrity sha512-PEZldwZqJJw1PWRTpupyC7ajVTZA8aHd8nB/Y0n6zRZi5u8ktYDntsHj13ltEiBRqWwF06pASxBEvCTxniG8eA==
+
 "@types/html-minifier-terser@^6.0.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@types/html-minifier-terser/-/html-minifier-terser-6.1.0.tgz#4fc33a00c1d0c16987b1a20cf92d20614c55ac35"
@@ -11545,6 +11550,11 @@ hosted-git-info@^3.0.2:
   dependencies:
     lru-cache "^6.0.0"
 
+howler@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/howler/-/howler-2.2.3.tgz#a2eff9b08b586798e7a2ee17a602a90df28715da"
+  integrity sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==
+
 hpack.js@^2.1.6:
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/hpack.js/-/hpack.js-2.1.6.tgz#87774c0949e513f42e84575b3c45681fade2a0b2"
@@ -15991,6 +16001,11 @@ react-is@^18.2.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-lifecycles-compat@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+  integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
 react-map-gl@7.0.15:
   version "7.0.15"
   resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-7.0.15.tgz#ded08ccff49012099a9945b6c2ef7f266dfbde49"
@@ -16151,6 +16166,14 @@ react-redux-firebase@^3.11.0:
     hoist-non-react-statics "^3.3.2"
     lodash "^4.17.21"
     prop-types "^15.7.2"
+
+react-redux-loading-bar@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/react-redux-loading-bar/-/react-redux-loading-bar-5.0.4.tgz#06dffcc53a447828dec1a26903e6b22807dd4254"
+  integrity sha512-ttLFYETh9zfyxJdTa5a1+KTWquxX3UN7F/XYslNTeCE8cpnWNpBbUOg8TcaZmOoWEWjCe/i5sV/Mvvr0xsGBBw==
+  dependencies:
+    prop-types "^15.7.2"
+    react-lifecycles-compat "^3.0.4"
 
 react-redux@^8.0.2:
   version "8.0.2"

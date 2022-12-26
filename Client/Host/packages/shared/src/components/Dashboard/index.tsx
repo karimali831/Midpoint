@@ -3,38 +3,44 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AddLinkIcon from '@mui/icons-material/AddLink';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import WindowIcon from '@mui/icons-material/Window';
 import { motion } from 'framer-motion';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import images from '../../assets/images';
+import { DashboardSection, MidPointStep } from '../../enum/DashboardSection';
 import { StartHost } from '../../screens/Host';
+import { SetDashboardSection } from '../../state/contexts/app/Actions';
+import { getAppState } from '../../state/contexts/app/Selectors';
 import { MainButton } from '../Buttons/MainButton';
+import { ConnectedMidi } from './ConnectedMidi';
 import { DashboardLink } from './Link';
 import { DashboardOverview } from './Overview';
 import { Settings } from './Settings';
-import { Software } from './Software';
+import { SoftwareSelect } from './Software/SoftwareSelect';
+import { SoftwareInstall } from './Software/SoftwreInstall';
 import { Statistics } from './Statistics';
 import { Stream } from './Stream';
+import { StartStream } from './Stream/Start';
 import './styles.css';
-
-export enum DashboardSection {
-    Overview,
-    Statistics,
-    Settings,
-    Software,
-    Connect,
-    Stream,
-}
+import { Welcome } from './Welcome';
+import { SetHostRoomAction, SetUserConnectionAction } from '../../state/contexts/stream/Actions';
 
 export const Dashboard = () => {
-    const [activeSection, setActiveSection] = React.useState<DashboardSection>(
-        DashboardSection.Overview
-    );
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
+    const { dashboardSection, midpointStep } = useSelector(getAppState)
+
+    const closeMidpoint = () => {
+        dispatch(SetUserConnectionAction(null))
+        dispatch(SetHostRoomAction(null))
+        dispatch(SetDashboardSection(DashboardSection.Overview))
+    }
 
     return (
         <motion.div
@@ -84,40 +90,49 @@ export const Dashboard = () => {
                         </span>
 
                         <div style={{ marginTop: 30 }}>
-                            <MainButton
-                                onClick={() =>
-                                    setActiveSection(DashboardSection.Software)
-                                }
-                                icon={<PowerSettingsNewIcon />}
-                                text="Start MidPoint."
-                            />
-                            <div style={{ marginTop: 10 }} />
-                            <MainButton
-                                icon={<PeopleAltOutlinedIcon />}
-                                outline={true}
-                                text="Connect MidPoint."
-                                onClick={() =>
-                                    setActiveSection(DashboardSection.Connect)
-                                }
-                            />
+                            {!!midpointStep ?
+                                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <MainButton
+                                        icon={<AddLinkIcon />}
+                                        text="Generate invite link"
+                                        disabled={midpointStep !== MidPointStep.Stream}
+                                    />
+                                    <div style={{ marginTop: 10 }} />
+                                    <MainButton
+                                        onClick={closeMidpoint}
+                                        icon={<CloseIcon />}
+                                        outline={true}
+                                        text="Close MidPoint"
+                                    />
+                                </div>
+                            :
+                                <>
+                                    <MainButton
+                                        onClick={() => dispatch(SetDashboardSection(DashboardSection.Start))}
+                                        icon={<PowerSettingsNewIcon />}
+                                        text="Start MidPoint."
+                                    />
+                                    <div style={{ marginTop: 10 }} />
+                                    <MainButton
+                                        icon={<PeopleAltOutlinedIcon />}
+                                        outline={true}
+                                        text="Connect MidPoint."
+                                        onClick={() => dispatch(SetDashboardSection(DashboardSection.Connect)) }
+                                    />
+                                </>
+                            }
 
                             <div style={{ marginTop: 30 }}>
                                 <DashboardLink
-                                    activeSection={activeSection}
                                     section={DashboardSection.Overview}
-                                    onClick={setActiveSection}
                                     icon={<WindowIcon />}
                                 />
                                 <DashboardLink
-                                    activeSection={activeSection}
                                     section={DashboardSection.Statistics}
-                                    onClick={setActiveSection}
                                     icon={<InsightsIcon />}
                                 />
                                 <DashboardLink
-                                    activeSection={activeSection}
                                     section={DashboardSection.Settings}
-                                    onClick={setActiveSection}
                                     icon={<SettingsIcon />}
                                 />
                             </div>
@@ -152,31 +167,26 @@ export const Dashboard = () => {
                         </div>
                     </div>
                     <div className="right-col">
-                        {activeSection !== DashboardSection.Connect && (
-                            <span style={{ fontSize: 28 }}>
-                                {DashboardSection[activeSection]}
-                            </span>
-                        )}
-                        {activeSection === DashboardSection.Overview ? (
-                            <DashboardOverview />
-                        ) : activeSection === DashboardSection.Statistics ? (
-                            <Statistics />
-                        ) : activeSection === DashboardSection.Settings ? (
-                            <Settings />
-                        ) : activeSection === DashboardSection.Connect ? (
-                            <StartHost
-                                goBack={() =>
-                                    setActiveSection(DashboardSection.Overview)
-                                }
-                            />
-                        ) : activeSection === DashboardSection.Software ? (
-                            <Software
-                                goToStream={() =>
-                                    setActiveSection(DashboardSection.Stream)
-                                }
-                            />
-                        ) : activeSection === DashboardSection.Stream ? (
+                        {midpointStep === MidPointStep.SoftwareSelect ? (
+                            <SoftwareSelect />
+                        ) : midpointStep === MidPointStep.Stream ? (
                             <Stream />
+                        ) : midpointStep === MidPointStep.SoftwareInstall ? (
+                            <SoftwareInstall />
+                        ) : midpointStep === MidPointStep.ConnectedMidi ? (
+                            <ConnectedMidi />
+                        ) : midpointStep === MidPointStep.Welcome ? (
+                            <Welcome />
+                        ) : dashboardSection === DashboardSection.Overview ? (
+                            <DashboardOverview />
+                        ) : dashboardSection === DashboardSection.Statistics ? (
+                            <Statistics />
+                        ) : dashboardSection === DashboardSection.Settings ? (
+                            <Settings />
+                        ) : dashboardSection === DashboardSection.Connect ? (
+                            <StartHost />
+                        ) : dashboardSection === DashboardSection.Start ? (
+                            <StartStream />
                         ) : null}
                     </div>
                 </div>

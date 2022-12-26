@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { loadingBarMiddleware, showLoading } from 'react-redux-loading-bar';
 import { persistReducer } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import { LocationChangeAction } from './contexts/app/Actions';
@@ -20,7 +21,11 @@ const persistConfig = {
 
 const store = configureStore({
     reducer: persistReducer(persistConfig, rootReducer),
-    middleware: [actionToPlainObject, sagaMiddleware],
+    middleware: [
+        actionToPlainObject, 
+        sagaMiddleware,
+        loadingBarMiddleware()
+    ],
 });
 
 sagaMiddleware.run(rootSaga);

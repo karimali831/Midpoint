@@ -1,5 +1,6 @@
 import { all, fork } from 'redux-saga/effects';
 import chatApiSaga from './api/chatApiSaga';
+import hostApiSaga from './api/hostApiSaga';
 import userApiSaga from './api/userApiSaga';
 import appSaga from './appSaga';
 import navigationSaga from './navigationSaga.web';
@@ -14,5 +15,6 @@ export function* rootSaga() {
 
         // Business sagas
         fork(chatApiSaga),
+        fork(hostApiSaga)
     ]);
 }

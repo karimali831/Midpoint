@@ -10,6 +10,9 @@ export const Statistics = () => {
             animate={{ width: "100%" }}
             exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
         >
+            {/* <span style={{ fontSize: 28 }}>
+                Statistics
+            </span> */}
             <div style={{ marginTop: 150, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                 <span style={{ fontSize: 28 }}>Statistics</span>
                 <span style={{ fontSize: 12, marginTop: 5, color: 'rgba(255, 255, 255, 0.6)' }}>

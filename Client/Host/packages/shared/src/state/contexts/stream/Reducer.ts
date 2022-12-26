@@ -1,10 +1,10 @@
 import { HubConnectionState } from '@microsoft/signalr';
 import { createReducer } from '@reduxjs/toolkit';
 import { IChannelData } from '../../../interface/IChannelData';
-import { AddChannelAction, GetHostRoomDataAction, GetHostRoomDataSuccessAction, SendMessageAction, SetConnectionStateAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
-import { webRTCInitialState } from './IWebRTCState';
+import { AddChannelAction, GetHostRoomDataAction, GetHostRoomDataSuccessAction, GetHostRoomsSuccessAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
+import { streamInitialState } from './IStreamState';
 
-export const webRTCReducer = createReducer(webRTCInitialState, (builder) => {
+export const streamReducer = createReducer(streamInitialState, (builder) => {
     builder
         .addCase(SetConnectionStateAction, (state, action) => {
             const userConnection = state.userConnection
@@ -50,7 +50,7 @@ export const webRTCReducer = createReducer(webRTCInitialState, (builder) => {
             const { roomId, message } = action.payload
             const existing = state.channelData.find(x => x.roomId == roomId);
             let data: IChannelData
-
+            
             if (!existing) {
                 data = {
                     roomId,
@@ -102,6 +102,12 @@ export const webRTCReducer = createReducer(webRTCInitialState, (builder) => {
 
             })
 
+        })
+        .addCase(GetHostRoomsSuccessAction, (state, action) => {
+            state.userCreatedHostRooms = action.payload
+        })
+        .addCase(SetHostRoomAction, (state, action) => {
+            state.selectedHostRoom = action.payload
         })
 });
 

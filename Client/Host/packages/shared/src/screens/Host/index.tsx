@@ -19,7 +19,7 @@ import WebMIDI from '../../components/WebMidi';
 import useEffectSkipInitialRender from '../../hooks/useEffectSkipInitialRender';
 import { IMessage } from '../../interface/IMessage';
 import { IUserConnection } from '../../interface/IUserConnection';
-import { ShowAlertAction } from '../../state/contexts/app/Actions';
+import { SetDashboardSection, ShowAlertAction } from '../../state/contexts/app/Actions';
 import { getUser, getUserState } from '../../state/contexts/user/Selectors';
 import {
     MessageReceivedAction,
@@ -27,27 +27,29 @@ import {
     SetConnectionStateAction,
     SetUserConnectionAction,
     UsersInRoomAction,
-} from '../../state/contexts/webrtc/Actions';
-import { getWebRTCState } from '../../state/contexts/webrtc/Selectors';
+} from '../../state/contexts/stream/Actions';
+import { getStreamState } from '../../state/contexts/stream/Selectors';
 import { newHubConnection } from '../../utils/HubHelper';
 import { joinLink } from '../../utils/UrlHelper';
 import { uuidv4 } from '../../utils/Utils';
 import { FormValidation } from '../Login';
 import VideoStream from './stream.web';
+import { DashboardSection } from '../../enum/DashboardSection';
 
-interface IOwnProps {
-    goBack: () => void;
-}
 
-export const StartHost = (props: IOwnProps) => {
+export const StartHost = () => {
     const user = useSelector(getUser);
-    const webRTCState = useSelector(getWebRTCState);
+    const StreamState = useSelector(getStreamState);
 
     const { id } = useParams<HostParams>();
 
     const dispatch = useDispatch();
 
-    const { userConnection, channelData } = webRTCState;
+    const { 
+        userConnection, 
+        channelData, 
+        onlineUsers 
+    } = StreamState;
 
     const { camOn } = useSelector(getUserState);
 
@@ -178,6 +180,7 @@ export const StartHost = (props: IOwnProps) => {
                     message: peerConn.localDescription?.toJSON(),
                     createdAt: new Date().toDateString(),
                     roomId: '',
+                    name: ''
                 };
 
                 dispatch(
@@ -491,7 +494,7 @@ export const StartHost = (props: IOwnProps) => {
                     }}
                 >
                     <div
-                        onClick={props.goBack}
+                        onClick={() => dispatch(SetDashboardSection(DashboardSection.Overview))}
                         style={{
                             display: 'flex',
                             flexDirection: 'row',

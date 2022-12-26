@@ -5,6 +5,9 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { motion } from 'framer-motion';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import VideoStream from '../../../screens/Host/stream.web';
+import { getUserState } from '../../../state/contexts/user/Selectors';
 import { StreamChat } from './Chat';
 import { StreamHostInfo } from './HostInfo';
 import { StreamMidiInfo } from './MidiInfo';
@@ -14,26 +17,23 @@ import { StreamCard } from './StreamCard';
 interface IOwnProps {}
 
 export const Stream: React.FC<IOwnProps> = () => {
-    React.useEffect(() => {}, []);
+    React.useEffect(() => {
+
+    }, []);
+
+    const { camOn } = useSelector(getUserState);
 
     return (
         <motion.div
             initial={{ width: 0 }}
             animate={{ width: '100%' }}
             exit={{ x: window.innerWidth, transition: { duration: 0.3 } }}
-            style={{ marginLeft: 15 }}
         >
-            
+            <span style={{ fontSize: 28 }} className="lobby-txt">
+                The Lobby
+            </span>
             <div
-                style={{
-                    display: 'flex',
-                    alignItems: 'ceter',
-                    flexDirection: 'row',
-                    margin: '30px 0',
-                    width: 270,
-                    justifyContent: 'space-between',
-                }}
-            >
+                className='lobby-header'>
                 <div
                     style={{
                         display: 'flex',
@@ -61,15 +61,10 @@ export const Stream: React.FC<IOwnProps> = () => {
                     </span>
                 </div>
             </div>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                }}
-            >
+            <div className='stream-row'>
                 <StreamCard
                     size="small"
-                    title="Host information"
+                    title="Users"
                     icon={<SettingsOutlinedIcon />}
                 >
                     <StreamHostInfo />
@@ -78,12 +73,7 @@ export const Stream: React.FC<IOwnProps> = () => {
                     <StreamChat />
                 </StreamCard>
             </div>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                }}
-            >
+            <div className='stream-row'>
                 <StreamCard
                     size="small"
                     title="Setup"
@@ -96,7 +86,11 @@ export const Stream: React.FC<IOwnProps> = () => {
                     title="Connected MIDI Devices"
                     icon={<CableIcon />}
                 >
-                    <StreamMidiInfo />
+                    {
+                        camOn ? 
+                        <VideoStream /> :
+                        <StreamMidiInfo />
+                    }
                 </StreamCard>
             </div>
         </motion.div>

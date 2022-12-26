@@ -1,19 +1,24 @@
 import React, { ReactElement } from "react";
-import { DashboardSection } from ".";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { DashboardSection } from "../../enum/DashboardSection";
+import { SetDashboardSection } from "../../state/contexts/app/Actions";
+import { getAppState } from "../../state/contexts/app/Selectors";
 
 interface IOwnProps {
-    activeSection: DashboardSection
     section: DashboardSection
     icon: ReactElement
-    onClick: (section: DashboardSection) => void
 }
 
 export const DashboardLink: React.FC<IOwnProps> = (props) => {
     React.useEffect(() => { }, [])
 
+    const dispatch = useDispatch()
+    const { dashboardSection } = useSelector(getAppState)
+
     return (
         <div
-            onClick={() => props.onClick(props.section)}
+            onClick={() => dispatch(SetDashboardSection(props.section))}
             style={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -23,7 +28,7 @@ export const DashboardLink: React.FC<IOwnProps> = (props) => {
             }}
         >
             {
-                props.section === props.activeSection &&
+                props.section === dashboardSection &&
                 <div style={{
                         width: 6,
                         height: 6,
@@ -37,7 +42,7 @@ export const DashboardLink: React.FC<IOwnProps> = (props) => {
             <span style={{
                 marginLeft: 10,
                 fontSize: 20,
-                fontWeight: props.section === props.activeSection ? 500 : 400
+                fontWeight: props.section === dashboardSection ? 500 : 400
             }}>
                 {DashboardSection[props.section]}
             </span>

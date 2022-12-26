@@ -28,9 +28,6 @@ export const StreamMidiInfo = () => {
     } = useSelector(getMidiState)
 
     useEffect(() => {
-        // MidiScript2()
-        // navigator.requestMIDIAccess().then(onMIDISuccess);
-
         navigator.requestMIDIAccess({
             sysex: false
         }).then(onMIDISuccess);
@@ -74,8 +71,6 @@ export const StreamMidiInfo = () => {
         const port = event.port
 
         if (port.type === 'input') {
-
-    
             dispatch(MidiInputStateChangeAction(port))
         }
     }
@@ -181,50 +176,46 @@ export const StreamMidiInfo = () => {
                 <span>Midi Outputs</span>
                 <hr style={{ border: '1px solid rgba(255, 255, 255, 0.6)',  margin: '10px 0 20px 0'  }} />
                 {
-                            outputs.length === 0 ?
-                                <>Please connect your MIDI Controller (USB / Midi Cable)</>
-                                :
-                                outputs.map((input, idx) => {
-                                    const devExpanded = outputExpanded.some(x => x === idx)
+                    outputs.length > 0 &&
+                        outputs.map((input, idx) => {
+                            const devExpanded = outputExpanded.some(x => x === idx)
 
-                                    return (
-                                        <React.Fragment key={idx}>
-                                            <span>{input.name} </span>
-                                            <div 
-                                                onClick={() => expandOutputInfo(idx)}
-                                                style={{  
-                                                    display: 'flex', 
-                                                    flexDirection: 'row', 
-                                                    alignItems: 'center',
-                                                    cursor: 'pointer',
-                                                    margin: '5px 0'
-                                                }}
-                                            >
-                                                <span style={{ color: 'rgba(255, 255, 255, 0.6)', marginRight: 5 }}>Details</span>
-                                                {devExpanded ? <ExpandLessIcon  /> : <ExpandMoreIcon  />}
+                            return (
+                                <React.Fragment key={idx}>
+                                    <span>{input.name} </span>
+                                    <div 
+                                        onClick={() => expandOutputInfo(idx)}
+                                        style={{  
+                                            display: 'flex', 
+                                            flexDirection: 'row', 
+                                            alignItems: 'center',
+                                            cursor: 'pointer',
+                                            margin: '5px 0'
+                                        }}
+                                    >
+                                        <span style={{ color: 'rgba(255, 255, 255, 0.6)', marginRight: 5 }}>Details</span>
+                                        {devExpanded ? <ExpandLessIcon  /> : <ExpandMoreIcon  />}
+                                    </div>
+                            
+                                    <Collapse in={devExpanded} style={{ color: 'rgba(255, 255, 255, 0.6)'}}>
+                                        
+                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', width: 180  }}>
+                                                <span style={{ padding: 5 }}>Manufacturer:</span> 
+                                                {input.version && <span style={{ padding: 5 }}>Version:</span>}
                                             </div>
-                                    
-                                            <Collapse in={devExpanded} style={{ color: 'rgba(255, 255, 255, 0.6)'}}>
-                                                
-                                                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                                    <div style={{ display: 'flex', flexDirection: 'column', width: 180  }}>
-                                                        <span style={{ padding: 5 }}>Manufacturer:</span> 
-                                                        {input.version && <span style={{ padding: 5 }}>Version:</span>}
-                                                    </div>
-                                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                        <span style={{ padding: 5 }}>{input.manufacturer}</span>
-                                                        {input.version && <span style={{ padding: 5 }}>{input.version}</span>}
-                                                    </div>
-                                                </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                <span style={{ padding: 5 }}>{input.manufacturer}</span>
+                                                {input.version && <span style={{ padding: 5 }}>{input.version}</span>}
+                                            </div>
+                                        </div>
 
-                                
-                                            </Collapse>
-                                        </React.Fragment>
-                                    )
-                                }
-
-                                )
-                        }
+                        
+                                    </Collapse>
+                                </React.Fragment>
+                            )
+                        })
+                }
             </div>
         </div>
     );

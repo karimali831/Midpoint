@@ -10,7 +10,10 @@ const FirebaseAuthEmptyAction = createAction(
 const FirebaseAuthenticatedAction = createAction<IFirebaseUser>(
     '@@reactReduxFirebase/LOGIN'
 );
-const UpdateUserInfoAction = createAction('@@User/UpdateUserInfo');
+const UpdateUserInfoAction = createAction<{
+    updatedKey: keyof IUser;
+    updatedValue: any;
+}>('@@User/UpdateUserInfo');
 
 const UpdateUserInfoSuccessAction = createAction<{
     updatedKey: keyof IUser;

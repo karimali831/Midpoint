@@ -42,7 +42,6 @@ export default function SwitchListSecondary() {
     };
 
     const onSelectedInputChange = (e: SelectChangeEvent) => {
-
         const activeDevice = inputs.find(x => x.id === e.target.value)
 
         if (!activeDevice) {

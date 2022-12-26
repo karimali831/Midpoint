@@ -1,6 +1,8 @@
 import { createAction } from '@reduxjs/toolkit';
 import { RouteParamList } from '../../../../types/types';
+import { SoftwareType } from '../../../components/Dashboard/Software/SoftwareSelect';
 import { AppScreen } from '../../../enum/AppScreen';
+import { DashboardSection, MidPointStep } from '../../../enum/DashboardSection';
 import { LoadStartup } from '../../../enum/LoadStartup';
 import { IAlert } from '../../../interface/IAlert';
 import { IAwsError } from '../../../interface/IAwsError';
@@ -31,6 +33,10 @@ const SendNotificationAction = createAction<{
     message: INotificationMessage;
     delayInSeconds?: number;
 }>('@@App/SendNotification');
+const SetSoftwareAction = createAction<SoftwareType | null>('@@App/SetSoftware');
+const SetDashboardSection = createAction<DashboardSection>('@@App/SetDashboardSection')
+const SetMidPointStep = createAction<MidPointStep>('@@App/SetMidPointStep')
+const SetRegisteringAction = createAction<boolean>('@App/SetRegistering')
 
 export {
     SetAppFocusedAction,
@@ -43,6 +49,10 @@ export {
     SendNotificationAction,
     LocationChangeAction,
     AxiosErrorAlertAction,
-    AwsErrorAlertAction
+    AwsErrorAlertAction,
+    SetSoftwareAction,
+    SetDashboardSection,
+    SetMidPointStep,
+    SetRegisteringAction
 };
 

@@ -6,6 +6,7 @@ export interface IUserState {
     authSuccess: boolean;
     camOn: boolean;
     djReady: boolean;
+    defaultController: string | null
 }
 
 export const userInitialState: IUserState = {
@@ -13,5 +14,6 @@ export const userInitialState: IUserState = {
     signingIn: false,
     authSuccess: false,
     camOn: false,
-    djReady: false
+    djReady: false,
+    defaultController: null
 };

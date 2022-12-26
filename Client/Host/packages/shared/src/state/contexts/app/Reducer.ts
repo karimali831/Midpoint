@@ -4,7 +4,11 @@ import {
     HideAlertAction,
     SetAppFocusedAction,
     SetAppReadyAction,
+    SetDashboardSection,
+    SetMidPointStep,
     SetOnConfirmLoadingAction,
+    SetRegisteringAction,
+    SetSoftwareAction,
     ShowAlertAction,
     ShowScreenAction
 } from './Actions';
@@ -63,5 +67,19 @@ export const appReducer = createReducer(appInitialState, (builder) => {
         .addCase(SetOnConfirmLoadingAction, (state, action) => {
             state.modalOnConfirmLoading = action.payload;
             state.showModal = action.payload;
-        });
+        })
+        .addCase(SetSoftwareAction, (state, action) => {
+            state.selectedSoftware = action.payload
+        })
+        .addCase(SetDashboardSection, (state, action) => {
+            state.dashboardSection = action.payload
+            state.midpointStep = null
+        })
+        .addCase(SetMidPointStep, (state, action) => {
+            state.midpointStep = action.payload
+        })
+        .addCase(SetRegisteringAction, (state, action) => {
+            state.registering = action.payload
+        })
 });
+

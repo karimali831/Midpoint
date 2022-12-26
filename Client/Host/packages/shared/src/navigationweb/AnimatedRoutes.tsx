@@ -4,7 +4,6 @@ import { Route, Switch, useLocation } from "react-router-dom"
 import { Routes } from "../router/Routes"
 
 export const AnimatedRoutes = () => {
-
     React.useEffect(() => { }, [])
 
     const location = useLocation()

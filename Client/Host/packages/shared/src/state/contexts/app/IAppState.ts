@@ -1,4 +1,6 @@
+import { SoftwareType } from '../../../components/Dashboard/Software/SoftwareSelect';
 import { AppScreen } from '../../../enum/AppScreen';
+import { DashboardSection, MidPointStep } from '../../../enum/DashboardSection';
 import { LoadStartup } from '../../../enum/LoadStartup';
 import { IAlert } from '../../../interface/IAlert';
 import { ILoadStartup } from '../../../interface/ILoadStartup';
@@ -14,6 +16,11 @@ export interface IAppState {
     showModal: boolean;
     modalOnConfirmLoading: boolean;
     notificationOptions: INotificationOptions;
+    selectedSoftware: SoftwareType | null
+    dashboardSection: DashboardSection
+    midpointStep: MidPointStep | null
+    started: boolean
+    registering: boolean
 }
 
 export const appInitialState: IAppState = {
@@ -25,6 +32,11 @@ export const appInitialState: IAppState = {
     showAlert: false,
     modalOnConfirmLoading: false,
     notificationOptions: InitialNotificationOptions(),
+    selectedSoftware: null,
+    dashboardSection: DashboardSection.Overview,
+    midpointStep: null,
+    started: false,
+    registering: false
 };
 
 // Resources and data to load on splash screen before opening app

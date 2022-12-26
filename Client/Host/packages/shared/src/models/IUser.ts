@@ -4,5 +4,6 @@ export interface IUser {
     firebaseUid: string
     email: string
     displayName: string
+    defaultMidiDevice: string
 }
 

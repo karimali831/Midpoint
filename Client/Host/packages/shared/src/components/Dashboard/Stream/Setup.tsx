@@ -6,13 +6,14 @@ import { getMidiState } from '../../../state/contexts/midi/Selectors';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import  './styles.css'
+import { IMidiDevice } from '../../../models/IMidiDevice';
+import { UpdateUserInfoAction } from '../../../state/contexts/user/Actions';
+import { getUserState } from '../../../state/contexts/user/Selectors';
+import {Howl, Howler} from 'howler'
+import sounds from '../../../assets/sounds';
 
 export const StreamSetup = () => {
-    React.useEffect(() => {}, []);
-
-    const [expand, setExpand] = useState<boolean>(true)
-
-    const dispatch = useDispatch()
     const { 
         activeInput, 
         inputs, 
@@ -20,75 +21,108 @@ export const StreamSetup = () => {
     } = useSelector(getMidiState);
 
     const connectedDevices = inputs.filter(x => x.connection === "open" && x.state === "connected")
+    const [expand, setExpand] = useState<boolean>(true)
+
+    const dispatch = useDispatch()
+    const { user } = useSelector(getUserState)
+  
+    React.useEffect(() => {
+        if (connectedDevices.length > 0) {
+            const input = connectedDevices.find(x => x.name === user?.defaultMidiDevice)
+
+            if (user?.defaultMidiDevice !== null) {
+                dispatch(SetActiveMidiInputAction(input ?? null)) 
+                setExpand(false)
+            }
+            else{
+                if (!!activeInput) {
+                    dispatch(SetActiveMidiInputAction(null))
+                }
+            }
+        }
+        else{
+            if (!expand) {
+                setExpand(true)
+            }
+        }
+
+    }, [JSON.stringify(connectedDevices)]);
+
+    const setDefaultDevice = (input: IMidiDevice) => {
+        if (activeInput?.name === input.name) {
+            dispatch(SetActiveMidiInputAction(null))
+        }
+        else{
+            dispatch(SetActiveMidiInputAction(input)) 
+            setExpand(false)
+
+            SoundPlay(sounds.confirmSound)
+        }
+
+        dispatch(UpdateUserInfoAction({ 
+            updatedKey: "defaultMidiDevice", 
+            updatedValue: activeInput === input ? null : input.name 
+        }))
+    }
+
+    const SoundPlay = (src: any) => {
+        const sound = new Howl({
+            src
+        })
+        sound.play()
+    }
+
+    Howler.volume(1.0)
 
     return (
-        <div>
+        <div style={{ }}>
             <span style={{ fontSize: 14 }}>Set Controller</span>
-            <div
-                style={{
-                    borderRadius: 10,
-                    margin: '10px 0',
-                    padding: '5px 25px',
-                    background: '#253856',
-                    display: 'flex',
-                    overflow: 'auto',
-                    flexDirection: 'column',
-                    position: 'relative',
-                    width: 200
-                }}
-            >
+            <div className='controller-set-container' style={{ background: expand ? '#253856' : 'transparent' }}>
 
-                <div onClick={() => setExpand(!expand)} style={{ cursor: 'pointer', margin: '5px 0' }}>
+                <div onClick={() => setExpand(!expand)} className='controller-set-expand'>
                     {expand ? 
-                        <ExpandLessIcon style={{ position: 'absolute', top: 8, left: 3 }} />
+                        <ExpandLessIcon className='controller-set-expandicon' />
                     :
-                        <ExpandMoreIcon style={{ position: 'absolute', top: 8, left: 3 }} />
+                        <ExpandMoreIcon className='controller-set-expandicon' />
                     }
                             
-                    <span style={{ fontSize: 14, padding: 5  }}>
+                    <span className='controller-set-select-txt'>
                         {!!activeInput ?
                             activeInput.name : 'Select device'
                         }
                     </span>
                 </div>
-                <hr style={{ border: '1px solid rgba(255, 255, 255, 0.6)', margin: '5px 0' }} />
                 <Collapse in={expand}>
+                    <hr className='controllet-set-divider' />
                     {
                         connectedDevices.length == 0 ?
-                        <span style={{ fontSize: 14, padding: 5, color: 'rgb(196, 25, 25)'  }}>
-                            {/* No inputs found, please connect your USB Midi device. */}
+                        <span className='controllet-set-status'>
                             No connected inputs found, check your Midi device is in a connected state.
                         </span>
 
                     :
-                        connectedDevices.map(input =>
-                            <React.Fragment key={input.id}>
-                        
-                                <div 
-                                    onClick={() => dispatch(SetActiveMidiInputAction(activeInput === input ? null : input))}
-                                    style={{ 
-                                        padding: 5,
-                                        cursor: 'pointer',
-                                        position: 'relative'
-                                    }}
-                                >
+                        connectedDevices.map(input => {
+                            return ( 
+                                <React.Fragment key={input.id}>
+                            
+                                    <div 
+                                        onClick={() => setDefaultDevice(input)}
+                                        className='controllet-set-select'
+                                    >
 
-                                    <div style={{
-                                            width: 6,
-                                            height: 6,
-                                            borderRadius: 50,
-                                            position: 'absolute',
-                                            top: 12,
-                                            left: -12,
-                                            background: activeInput?.id == input.id ? '#45C419' : 'rgb(196, 25, 25)'
-                                        }}
-                                    />
-                                    <span style={{ fontSize: 14, color: 'rgba(255, 255, 255, 0.6)' }}>
-                                        {input.name}
-                                    </span>
-                                </div>
-                            </React.Fragment>
-                    )}
+                                        <div 
+                                            className='controllet-set-input'
+                                            style={{
+                                                background: activeInput?.id == input.id ? '#45C419' : 'rgb(196, 25, 25)'
+                                            }}
+                                        />
+                                        <span className='controllet-set-input-text'>
+                                            {input.name}
+                                        </span>
+                                    </div>
+                                </React.Fragment>
+                            )
+                    })}
                 </Collapse>
             </div>
         </div>

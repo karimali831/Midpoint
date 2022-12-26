@@ -6,8 +6,8 @@ import { IChannelData } from '../../../../interface/IChannelData';
 import { IMessage } from '../../../../interface/IMessage';
 import { AwsErrorAlertAction } from '../../../contexts/app/Actions';
 import { getUserId } from '../../../contexts/user/Selectors';
-import { GetHostRoomDataAction, GetHostRoomDataSuccessAction, SendMessageAction } from '../../../contexts/webrtc/Actions';
-import { getPageNumber, getPageSize } from '../../../contexts/webrtc/Selectors';
+import { GetHostRoomDataAction, GetHostRoomDataSuccessAction, SendMessageAction } from '../../../contexts/stream/Actions';
+import { getPageNumber, getPageSize } from '../../../contexts/stream/Selectors';
 
 export default function* chatApiSaga() {
     yield takeLatest(SendMessageAction.type, sendMessage);

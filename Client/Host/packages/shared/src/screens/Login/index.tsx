@@ -16,7 +16,8 @@ import { IFormMessage, IFormMessageCode } from '../../enum/IFormMessage';
 import { IMessage } from '../../interface/IMessage';
 import { DefaultScreen } from '../../navigation/RootNavigation';
 import { isMobile } from '../../Platform';
-import { ShowScreenAction } from '../../state/contexts/app/Actions';
+import { SetRegisteringAction, ShowScreenAction } from '../../state/contexts/app/Actions';
+import { getAppState } from '../../state/contexts/app/Selectors';
 import { CreateUserAction, SigninLoadingAction } from '../../state/contexts/user/Actions';
 import { getUserState } from '../../state/contexts/user/Selectors';
 import { LoginHighlight } from './Highlight';
@@ -39,6 +40,8 @@ type FormFields = {
 }
 
 export function Login() {
+    const { registering } = useSelector(getAppState)
+
     const [formFields, setFormFields] = useState<FormFields>({
         username: {
             value: '',
@@ -61,7 +64,6 @@ export function Login() {
             minCharsRequired: 6
         }
     })
-    const [registering, setRegistering] = useState<boolean>(false)
     const [messages, setMessages] = useState<IFormMessage[]>([])
 
     const {
@@ -367,7 +369,7 @@ export function Login() {
                     <Link
                         onPress={() => {
                             setMessages([])
-                            setRegistering(!registering)
+                            dispatch(SetRegisteringAction(!registering))
                         }}
                         _text={{
                             color: "#fff",

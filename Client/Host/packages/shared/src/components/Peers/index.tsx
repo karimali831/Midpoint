@@ -7,17 +7,17 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { getWebRTCState } from '../../state/contexts/webrtc/Selectors';
+import { getStreamState } from '../../state/contexts/stream/Selectors';
 
 interface IOwnProps {
 }
 
 export const Peers: React.FC<IOwnProps> = (props: IOwnProps) => {
-    const webRTCState = useSelector(getWebRTCState)
+    const StreamState = useSelector(getStreamState)
 
     const {
         onlineUsers,
-    } = webRTCState
+    } = StreamState
 
     return (
         <List>

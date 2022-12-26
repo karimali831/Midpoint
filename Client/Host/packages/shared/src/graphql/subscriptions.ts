@@ -2,65 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onMidiMessage = /* GraphQL */ `
-  subscription OnMidiMessage($roomId: ID!, $data: String!) {
-    onMidiMessage(roomId: $roomId, data: $data) {
-      id
-      userId
-      roomId
-      data
-      user {
-        id
-        fullName
-        firebaseUid
-        email
-        displayName
-        imageUri
-        hostRoomUser {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        name
-        desc
-        imageUri
-        createdUserId
-        lastMessageId
-        lastMessage {
-          id
-          userId
-          roomId
-          message
-          read
-          createdAt
-          updatedAt
-          hostRoomChatMessagesId
-          hostRoomChatMessageUserId
-          hostRoomChatMessageHostRoomId
-        }
-        chatMessages {
-          nextToken
-        }
-        midiMessages {
-          nextToken
-        }
-        hostRoomUsers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        hostRoomLastMessageId
-      }
-      createdAt
-      updatedAt
-      hostRoomMidiMessagesId
-      hostRoomMidiMessageUserId
-    }
-  }
-`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
     onCreateUser(filter: $filter) {
@@ -70,6 +11,7 @@ export const onCreateUser = /* GraphQL */ `
       email
       displayName
       imageUri
+      defaultMidiDevice
       hostRoomUser {
         items {
           id
@@ -100,6 +42,7 @@ export const onUpdateUser = /* GraphQL */ `
       email
       displayName
       imageUri
+      defaultMidiDevice
       hostRoomUser {
         items {
           id
@@ -130,6 +73,7 @@ export const onDeleteUser = /* GraphQL */ `
       email
       displayName
       imageUri
+      defaultMidiDevice
       hostRoomUser {
         items {
           id
@@ -169,6 +113,7 @@ export const onCreateHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -233,6 +178,7 @@ export const onUpdateHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -297,6 +243,7 @@ export const onDeleteHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -359,6 +306,7 @@ export const onCreateHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -420,6 +368,7 @@ export const onUpdateHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -481,6 +430,7 @@ export const onDeleteHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -548,6 +498,7 @@ export const onCreateHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
+          defaultMidiDevice
           createdAt
           updatedAt
         }
@@ -640,6 +591,7 @@ export const onUpdateHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
+          defaultMidiDevice
           createdAt
           updatedAt
         }
@@ -732,6 +684,7 @@ export const onDeleteHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
+          defaultMidiDevice
           createdAt
           updatedAt
         }
@@ -819,6 +772,7 @@ export const onCreateHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -882,6 +836,7 @@ export const onUpdateHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -945,6 +900,7 @@ export const onDeleteHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }

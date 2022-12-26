@@ -10,9 +10,12 @@ export const DashboardOverview = () => {
 
     return (
         <>
+            <span style={{ fontSize: 28 }}>
+                Overview
+            </span>
             <div
                 style={{
-                    marginTop: 10,
+                    marginTop: 20,
                     display: 'flex',
                     flexDirection: 'row',
                     flexWrap: 'wrap',

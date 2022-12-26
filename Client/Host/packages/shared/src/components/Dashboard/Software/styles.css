@@ -1,0 +1,14 @@
+.software-select {
+    margin-top: 20px;
+    display: grid;
+    width: 100%;
+    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 0fr));
+}
+
+
+@media only screen and (max-width: 1140px)  {
+    .software-select {
+        justify-content: center;
+    }
+ }

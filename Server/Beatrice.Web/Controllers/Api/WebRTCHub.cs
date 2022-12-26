@@ -17,7 +17,7 @@ namespace Beatrice.Web.Controllers.Api
             IDictionary<string, UserConnection> connections)
         {
             _botUserId = Guid.NewGuid();
-            _botUserName = "Bot";
+            _botUserName = "System";
 
             _connections = connections ?? throw new ArgumentNullException(nameof(connections));
         }
@@ -39,8 +39,8 @@ namespace Beatrice.Web.Controllers.Api
                     {
                         UserId = _botUserId,
                         Name = _botUserName,
-                        Message = $"{userConnection.Name} left",
-                        Date = DateTime.UtcNow,
+                        Message = $"{userConnection.DisplayName} left",
+                        CreatedAt = DateTime.UtcNow.ToString("h:mm tt"),
                         IsBot = true
                     });
 
@@ -53,10 +53,10 @@ namespace Beatrice.Web.Controllers.Api
         public string ChatUserName(UserConnection uc)
         {
             var indexName = new Dictionary<string, IList<UserConnection>> {
-                    { uc.Name, _connections.Values.ToList() }
+                    { uc.DisplayName, _connections.Values.ToList() }
                 };
 
-            return Utils.IndexedName(uc.Name, indexName);
+            return Utils.IndexedName(uc.DisplayName, indexName);
         }
 
         public async Task UserStatus(bool isFocused)
@@ -79,8 +79,8 @@ namespace Beatrice.Web.Controllers.Api
                 {
                     UserId = _botUserId,
                     Name = _botUserName,
-                    Message = $"{userConnection.Name} joined",
-                    Date = DateTime.UtcNow,
+                    Message = $"{userConnection.DisplayName} joined",
+                    CreatedAt = DateTime.UtcNow.ToString("h:mm tt"),
                     IsBot = true
                 });
 

@@ -1,9 +1,10 @@
+import { HostRoom } from "../../../graphql/types";
 import { IChannel } from "../../../interface/IChannel";
 import { IChannelData } from "../../../interface/IChannelData";
 import { IUserConnection } from "../../../interface/IUserConnection";
 
 
-export interface IWebRTCState {
+export interface IStreamState {
     userConnection: IUserConnection | null
     channels: IChannel[]
     channelData: IChannelData[]
@@ -12,9 +13,13 @@ export interface IWebRTCState {
     loadingMore: boolean
     pageNumber: number
     pageSize: number
+
+    selectedHostRoom: HostRoom | null
+    userCreatedHostRooms: HostRoom[]
+
 }
 
-export const webRTCInitialState: IWebRTCState = {
+export const streamInitialState: IStreamState = {
     userConnection: null,
     channels: [],
     channelData: [],
@@ -23,4 +28,7 @@ export const webRTCInitialState: IWebRTCState = {
     loadingMore: false,
     pageNumber: 0,
     pageSize: 50,
+
+    selectedHostRoom: null,
+    userCreatedHostRooms: []
 }

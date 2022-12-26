@@ -11,6 +11,7 @@ export const getUser = /* GraphQL */ `
       email
       displayName
       imageUri
+      defaultMidiDevice
       hostRoomUser {
         items {
           id
@@ -54,6 +55,7 @@ export const listUsers = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -80,6 +82,7 @@ export const getHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -155,6 +158,7 @@ export const listHostRoomUsers = /* GraphQL */ `
           email
           displayName
           imageUri
+          defaultMidiDevice
           createdAt
           updatedAt
         }
@@ -193,6 +197,7 @@ export const getHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -265,6 +270,7 @@ export const listHostRoomMidiMessages = /* GraphQL */ `
           email
           displayName
           imageUri
+          defaultMidiDevice
           createdAt
           updatedAt
         }
@@ -310,6 +316,7 @@ export const getHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
+          defaultMidiDevice
           createdAt
           updatedAt
         }
@@ -446,6 +453,7 @@ export const getHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
+        defaultMidiDevice
         hostRoomUser {
           nextToken
         }
@@ -520,6 +528,7 @@ export const listHostRoomChatMessages = /* GraphQL */ `
           email
           displayName
           imageUri
+          defaultMidiDevice
           createdAt
           updatedAt
         }

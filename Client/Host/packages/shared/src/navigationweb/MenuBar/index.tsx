@@ -9,7 +9,7 @@ import images from '../../assets/images/index.web';
 import { MainButton } from '../../components/Buttons/MainButton';
 import { AppScreen } from '../../enum/AppScreen';
 import { Routes } from '../../router/Routes';
-import { ShowScreenAction } from '../../state/contexts/app/Actions';
+import { SetRegisteringAction, ShowScreenAction } from '../../state/contexts/app/Actions';
 import { getAppState } from '../../state/contexts/app/Selectors';
 import { getUserState } from '../../state/contexts/user/Selectors';
 import useStyles from '../styles';
@@ -85,7 +85,7 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                             xs: 'none',
                             md: 'flex',
                             justifyContent: 'space-evenly',
-                            maxWidth: 500,
+                            maxWidth: 550,
                             alignItems: 'center',
                             flexDirection: 'row'
                         }
@@ -110,23 +110,27 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                                         />
                                         :
                                         <>
-                                            <Button
-                                                variant="contained"
-                                                style={{ borderRadius: 25 }}
-                                                onClick={() => dispatch(ShowScreenAction({
-                                                    screen: AppScreen.Login
-                                                }))}
-                                            >
-                                                Sign up
-                                            </Button>
-                                            <Button
-                                                variant="outlined"
-                                                style={{ borderRadius: 25, color: '#fff' }}
-                                                onClick={() => dispatch(ShowScreenAction({
-                                                    screen: AppScreen.Login
-                                                }))}>
-                                                Sign In
-                                            </Button>
+                                            <MainButton
+                                                width={60}
+                                                text="Sign up"
+                                                onClick={() => {
+                                                    dispatch(SetRegisteringAction(true))
+                                                    dispatch(ShowScreenAction({
+                                                        screen: AppScreen.Login
+                                                    }))
+                                                }}
+                                            />
+                                            <MainButton
+                                                width={60}
+                                                outline={true}
+                                                text="Sign In"
+                                                onClick={() => {
+                                                    dispatch(SetRegisteringAction(false))
+                                                    dispatch(ShowScreenAction({
+                                                        screen: AppScreen.Login
+                                                    }))
+                                                }}
+                                            />
                                         </>
                                 }
 

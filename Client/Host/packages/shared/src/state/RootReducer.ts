@@ -1,17 +1,21 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { firebaseReducer } from 'react-redux-firebase';
 import { appReducer } from './contexts/app/Reducer';
+import { chatReducer } from './contexts/chat/Reducer';
 import { midiReducer } from './contexts/midi/Reducer';
 import { userReducer } from './contexts/user/Reducer';
-import { webRTCReducer } from './contexts/webrtc/Reducer';
+import { loadingBarReducer } from 'react-redux-loading-bar';
+import { streamReducer } from './contexts/stream/Reducer';
 import { IStoreState } from './IStoreState';
 
 const rootReducer = combineReducers<IStoreState>({
     app: appReducer,
-    user: userReducer,
+    loadingBar: loadingBarReducer,
     firebase: firebaseReducer,
-    webRTC: webRTCReducer,
-    midi: midiReducer
+    user: userReducer,
+    stream: streamReducer,
+    midi: midiReducer,
+    chat: chatReducer
 });
 
 export default rootReducer;

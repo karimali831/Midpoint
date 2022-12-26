@@ -1,20 +1,40 @@
 import { graphQLQuery } from "../graphql/api";
 import { createHostRoom } from "../graphql/mutations";
 import { listHostRooms } from "../graphql/queries";
-import { CreateHostRoomInput, CreateHostRoomMutation, HostRoom, ListHostRoomsQuery, ModelHostRoomChatMessageFilterInput } from "../graphql/types";
+import { CreateHostRoomInput, CreateHostRoomMutation, HostRoom, ListHostRoomsQuery, ModelHostRoomChatMessageFilterInput, ModelHostRoomFilterInput } from "../graphql/types";
 
 export class HostApi {
 
-    public createHostRoom = async (input: CreateHostRoomInput) => {
+    public createHostRoom = async (input: CreateHostRoomInput): Promise<HostRoom> => {
         console.log("[API] createHostRoom")
 
         try {
-            await graphQLQuery<CreateHostRoomMutation, CreateHostRoomInput>(createHostRoom, {
+            const response = await graphQLQuery<CreateHostRoomMutation, CreateHostRoomInput>(createHostRoom, {
                 input
             });
+
+            return response.data as HostRoom
         }
         catch (error) {
             console.error(HostApi.name, "createHostRoom", error);
+            throw error;
+        }
+    }
+
+    public getUserCreatedHostRooms = async (userId: string): Promise<HostRoom[]> => {
+        console.log("[API] getChatMessages")
+
+        try {
+            const response = await graphQLQuery<ListHostRoomsQuery, ModelHostRoomFilterInput>(listHostRooms, {
+                filter: {
+                    createdUserId: { eq: userId }
+                }
+            });
+
+            return response.data?.listHostRooms?.items as HostRoom[]
+        }
+        catch (error) {
+            console.error(HostApi.name, "getUserCreatedHostRooms", error);
             throw error;
         }
     }
@@ -23,9 +43,9 @@ export class HostApi {
         console.log("[API] getChatMessages")
 
         try {
-            const response = await graphQLQuery<ListHostRoomsQuery, ModelHostRoomChatMessageFilterInput>(listHostRooms, {
+            const response = await graphQLQuery<ListHostRoomsQuery, ModelHostRoomFilterInput>(listHostRooms, {
                 filter: {
-                    roomId: { eq: roomId }
+                    id: { eq: roomId }
                 }
             });
 
