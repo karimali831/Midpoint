@@ -49,6 +49,9 @@ export function* setHostRoom(action: PayloadAction<HostRoom>) {
             roomName: action.payload.name
         };
 
+        console.log("here")
+        console.log(userConnection)
+
         yield put(SetUserConnectionAction(userConnection))
     }
     catch (e) {

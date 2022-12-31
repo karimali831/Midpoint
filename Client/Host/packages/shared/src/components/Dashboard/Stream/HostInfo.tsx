@@ -88,7 +88,7 @@ export const StreamHostInfo = () => {
                             .reverse()
                             .map(message => 
                                 
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                <div key={message.id} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                     <PermIdentityIcon style={{  marginRight: 15 }} />
                                     <span style={{ marginRight: 15 }}>{message.message}</span>
                                     <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>

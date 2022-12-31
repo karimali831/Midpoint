@@ -37,7 +37,7 @@ export const Dashboard = () => {
     const { dashboardSection, midpointStep } = useSelector(getAppState)
 
     const closeMidpoint = () => {
-        dispatch(SetUserConnectionAction(null))
+        // dispatch(SetUserConnectionAction(null))
         dispatch(SetHostRoomAction(null))
         dispatch(SetDashboardSection(DashboardSection.Overview))
     }

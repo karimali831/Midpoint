@@ -76,8 +76,6 @@ export const StreamChat = () => {
                     console.log('*[Channel] Connected Id: ' + hubConnection.connectionId);
 
                     hubConnection.on('ReceiveMessage', (message: IMessage) => {
-                        console.log(message);
-
                         if (message.userId === user.id) {
                             dispatch(
                                 MessageReceivedAction({

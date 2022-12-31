@@ -1,4 +1,5 @@
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CableIcon from '@mui/icons-material/Cable';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
@@ -65,7 +66,7 @@ export const Stream: React.FC<IOwnProps> = () => {
                 <StreamCard
                     size="small"
                     title="Users"
-                    icon={<SettingsOutlinedIcon />}
+                    icon={<PeopleAltIcon />}
                 >
                     <StreamHostInfo />
                 </StreamCard>
