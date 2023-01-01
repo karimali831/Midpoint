@@ -6,6 +6,7 @@ interface IOwnProps {
     width?: number;
     outline?: boolean;
     disabled?: boolean
+    danger?: boolean
     onClick?: () => void;
 }
 
@@ -18,7 +19,7 @@ export const MainButton: React.FC<IOwnProps> = (props) => {
             style={{
                 borderRadius: 25,
                 width: props.width ?? '100%',
-                background: props.outline ? 'transparent' : '#195DC4',
+                background: props.danger ? 'rgb(196, 25, 25)' : props.outline ? 'transparent' : '#195DC4',
                 opacity: props.disabled ? 0.25 : 1,
                 padding: '5px 10px',
                 alignItems: 'center',

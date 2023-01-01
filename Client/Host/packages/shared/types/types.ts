@@ -18,7 +18,7 @@ export type RouteParamList = {
 };
 
 export type HostParams = {
-    id: string
+    midPointJoinId: string
 }
 
 export type IFirebaseUser = firebase.User

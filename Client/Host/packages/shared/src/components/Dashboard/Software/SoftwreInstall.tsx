@@ -18,7 +18,7 @@ export const SoftwareInstall = () => {
 
     const { selectedSoftware } = useSelector(getAppState)
     
-    if (!selectedSoftware)
+    if (selectedSoftware == null)
         return null
 
 

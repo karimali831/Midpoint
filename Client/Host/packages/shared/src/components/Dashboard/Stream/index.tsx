@@ -14,13 +14,49 @@ import { StreamHostInfo } from './HostInfo';
 import { StreamMidiInfo } from './MidiInfo';
 import { StreamSetup } from './Setup';
 import { StreamCard } from './StreamCard';
+import { getStreamState } from '../../../state/contexts/stream/Selectors';
+import { SetMidPointJoinIdAction, SetUserConnectionAction } from '../../../state/contexts/stream/Actions';
+import { useDispatch } from 'react-redux';
+import { HubConnectionState } from '@microsoft/signalr';
+import { ShowAlertAction } from '../../../state/contexts/app/Actions';
 
 interface IOwnProps {}
 
 export const Stream: React.FC<IOwnProps> = () => {
+    
+    const { midPointJoinId, userConnection } = useSelector(getStreamState)
+    const dispatch = useDispatch()
+    
     React.useEffect(() => {
+        return () => {
+            closeConnection()
+        }
 
-    }, []);
+    }, [])
+
+    React.useEffect(() => {
+        if (midPointJoinId !== null && userConnection?.connectionState == HubConnectionState.Connected) {
+            dispatch(SetMidPointJoinIdAction(null))
+        }
+    }, [midPointJoinId, userConnection]);
+
+    const closeConnection = async () => {
+        if (!!userConnection?.hubConnection) {
+            await userConnection.hubConnection
+                .stop()
+                // .then(() => dispatch(SetUserConnectionAction(null)))
+                .catch((err) => {
+                    console.error(err);
+
+                    dispatch(
+                        ShowAlertAction({
+                            title: 'Close connection error',
+                            message: err.message,
+                        })
+                    );
+                });
+        }
+    };
 
     const { camOn } = useSelector(getUserState);
 

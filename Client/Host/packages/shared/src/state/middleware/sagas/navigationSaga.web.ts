@@ -1,6 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { goBack } from 'react-router-redux';
+import { useParams } from 'react-router-dom';
+import { createMatchSelector, goBack } from 'react-router-redux';
 import { put, select, takeLatest } from 'redux-saga/effects';
+import { HostParams } from '../../../../types/types';
 import { AppScreen } from '../../../enum/AppScreen';
 import { DefaultScreen } from '../../../navigation/RootNavigation';
 import { Routes } from '../../../router/Routes';
@@ -28,7 +30,7 @@ export function* locationChange() {
     const currentRoute = Routes.filter((x) => x.url === currentLocation.toLowerCase())[0];
 
     // user accessing app from non default screen for first time
-    if (currentScreen !== currentRoute.screen) {
+    if (currentRoute != null && currentScreen !== currentRoute.screen) {
         yield put(ShowScreenAction({
             screen: currentRoute.screen,
             replace: true

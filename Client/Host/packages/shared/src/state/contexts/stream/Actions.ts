@@ -22,12 +22,12 @@ const GetHostRoomDataAction = createAction<{
 
 
 const GetHostRoomDataSuccessAction = createAction<IChannelData>("@@Stream/GetHostRoomDataSuccess")
-
+const SetMidPointJoinIdAction = createAction<string | null>('@@Stream/SetMidPointJoinId')
 const SetHostRoomAction = createAction<HostRoom | null>('@@Stream/SetHostRoom')
 const CreateHostRoomAction = createAction('@@Stream/CreateHostRoom')
 const GetHostRoomsAction= createAction('@@Stream/GetHostRooms')
-const GetHostRoomAction= createAction<string>('@@Stream/GetHostRooms')
-const GetHostRoomsSuccessAction= createAction<HostRoom[]>('@@Stream/GetHostRoomsSuccess')
+const GetHostRoomsSuccessAction = createAction<HostRoom[]>('@@Stream/GetHostRoomsSuccess')
+const DeleteHostRoomAction = createAction<string>('@@Stream/DeleteHostRoom')
 
 export {
     SetConnectionStateAction,
@@ -42,6 +42,7 @@ export {
     GetHostRoomsAction,
     GetHostRoomsSuccessAction,
     SetHostRoomAction,
-    GetHostRoomAction // when joining a stream from ext link
+    SetMidPointJoinIdAction,
+    DeleteHostRoomAction
 };
 

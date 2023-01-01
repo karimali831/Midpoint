@@ -71,6 +71,9 @@ export const SoftwareCard: React.FC<IOwnProps> = (props) => {
 
     const onSelectedSoftware = () => {
         if (props.set) {
+
+            console.log(props.software)
+
             dispatch(SetSoftwareAction(props.software))
             dispatch(SetMidPointStep(MidPointStep.SoftwareInstall))
         }

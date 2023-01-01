@@ -1,14 +1,20 @@
-import React from "react"
+import React, { useState } from "react"
 import { useDispatch } from "react-redux"
-import LoadingBar, { showLoading } from 'react-redux-loading-bar'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { showLoading } from 'react-redux-loading-bar'
 import { useSelector } from "react-redux";
 import { getLoadingBar, getStreamState } from "../../../state/contexts/stream/Selectors";
-import { SetDashboardSection, SetMidPointStep } from "../../../state/contexts/app/Actions";
-import { DashboardSection, MidPointStep } from "../../../enum/DashboardSection";
-import { CreateHostRoomAction, GetHostRoomsAction, SetHostRoomAction } from "../../../state/contexts/stream/Actions";
+import { SetMidPointStep, ShowAlertAction } from "../../../state/contexts/app/Actions";
+import { MidPointStep } from "../../../enum/DashboardSection";
+import { CreateHostRoomAction, GetHostRoomDataAction, GetHostRoomsAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from "../../../state/contexts/stream/Actions";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { HostRoom } from "../../../graphql/types";
+import { HubConnectionState } from "@microsoft/signalr";
+import { IMessage } from "../../../interface/IMessage";
+import { IUserConnection } from "../../../interface/IUserConnection";
+import { getUserState } from "../../../state/contexts/user/Selectors";
+import { newHubConnection } from "../../../utils/HubHelper";
+import { uuidv4 } from "../../../utils/Utils";
+import { Starting } from "./Starting";
 
 /* 
     Before the next screen appears we should load:
@@ -16,130 +22,252 @@ import { HostRoom } from "../../../graphql/types";
     2. Create host room  
 
 */
-
 export const StartStream = () => {
 
-    const percentage = useSelector(getLoadingBar)
-    const { userCreatedHostRooms } = useSelector(getStreamState)
+    const [loading, setLoading] = useState<boolean>(false)
+    const { user } = useSelector(getUserState)
 
+    if (!user)
+        return null;
+
+    const percentage = useSelector(getLoadingBar)
+    const { userConnection } = useSelector(getStreamState)
+    const { 
+        userCreatedHostRooms, 
+        selectedHostRoom, 
+        midPointJoinId 
+    } = useSelector(getStreamState)
 
     const dispatch = useDispatch()
 
+    const configuration = {
+        iceServers: [
+            {
+                urls: 'stun:stun.l.google.com:19302',
+            },
+        ],
+    };
+
+    const peerConn = new RTCPeerConnection(configuration);
+
     React.useEffect(() => {
         dispatch(GetHostRoomsAction())
-
-        // let timer = setTimeout(() => {
-        //     dispatch(SetMidPointStep(MidPointStep.Welcome))
-        // }, 2200)
-
-  
-        // return () => {
-        //     clearTimeout(timer);
-        //   };
     }, [])
+
+    React.useEffect(() => {
+        dispatch(showLoading())
+    }, [loading])
 
     React.useEffect(() => {
        console.log(percentage)
     }, [percentage, userCreatedHostRooms])
+    
+    // React.useEffect(() => {
+    //     if (!!userConnection?.hubConnection) {
+    //         start(userConnection);
+    //     }
+    // }, [userConnection]);
+
+    React.useEffect(() => {
+        if (!!midPointJoinId && !!selectedHostRoom) {
+            set(selectedHostRoom)
+        }
+    }, [midPointJoinId, selectedHostRoom]);
 
     const set = (hostRoom: HostRoom) => {
+    
+        if (hostRoom.id == selectedHostRoom?.id && userConnection?.connectionState === HubConnectionState.Connected) {
+            alert("go stright in")
+            dispatch(SetMidPointStep(MidPointStep.Stream))
+            return
+        }
+
+        setLoading(true)
+
+        const uc: IUserConnection = {
+            hubConnection: newHubConnection(),
+            connectionState: HubConnectionState.Disconnected,
+            showConnectionStatus: false,
+            userId: user.id,
+            displayName: user.displayName,
+            roomId: hostRoom.id,
+            roomName: hostRoom.name
+        }
+
+        dispatch(GetHostRoomDataAction({ roomId: hostRoom.id, pageNumber: 1 }))
         dispatch(SetHostRoomAction(hostRoom))
-        dispatch(SetMidPointStep(MidPointStep.Welcome))
+        dispatch(SetUserConnectionAction(uc))
+
+        start(uc)
     }
 
-    if (userCreatedHostRooms.length > 0) {
-        const limit = 5;
-        const maxReached = userCreatedHostRooms.length === limit
+    const start = (userConnection: IUserConnection) => {
+        const { hubConnection } = userConnection;
 
+        if (hubConnection.state === HubConnectionState.Disconnected) {
+            hubConnection
+                .start()
+                .then((a) => {
+                    // grabWebCamVideo()
+                    dispatch(SetConnectionStateAction(hubConnection.state));
+                    console.log('*[Channel] Connected Id: ' + hubConnection.connectionId);
+
+                    hubConnection.on('ReceiveMessage', (message: IMessage) => {
+
+                        console.log(message)
+
+                        if (message.userId === user.id) {
+                            dispatch(
+                                MessageReceivedAction({
+                                    message,
+                                    roomId: userConnection.roomId,
+                                })
+                            );
+                        } else {
+                            dispatch(
+                                SendMessageAction({
+                                    message,
+                                    roomId: userConnection.roomId,
+                                })
+                            );
+                        }
+
+                        createPeerConnection();
+                    });
+
+                    hubConnection.on(
+                        'UsersInRoom',
+                        (users: IUserConnection[]) => {
+                            dispatch(UsersInRoomAction(users));
+                        }
+                    );
+
+                    hubConnection.onclose(() => {
+                        console.log('*[CHAT] Connection closed');
+
+                        closeConnection().then(() =>
+                            dispatch(
+                                SetConnectionStateAction(
+                                    HubConnectionState.Disconnected
+                                )
+                            )
+                        );
+                    });
+
+                    hubConnection.onreconnecting(() => {
+                        console.log('*[CHAT] Lost connection');
+                        dispatch(
+                            SetConnectionStateAction(
+                                HubConnectionState.Reconnecting
+                            )
+                        );
+                    });
+
+                    hubConnection.onreconnected(() => {
+                        console.log('*[CHAT] Re-connected');
+                        dispatch(
+                            SetConnectionStateAction(
+                                HubConnectionState.Connected
+                            )
+                        );
+                    });
+
+                    hubConnection.invoke('JoinRoom', userConnection);
+                })
+                .catch((error) => {
+                    dispatch(ShowAlertAction({ title: error.message }));
+                })
+                .finally(() => {
+                    setLoading(false)
+                    dispatch(SetMidPointStep(!!midPointJoinId ? MidPointStep.Stream : MidPointStep.Welcome))
+                })
+        }
+    };
+
+    const createPeerConnection = () => {
+        if (selectedHostRoom == null)
+            return;
+
+        peerConn.onicecandidate = (event) => {
+            if (event.candidate) {
+            } else {
+                const message: IMessage = {
+                    isBot: true,
+                    id: uuidv4(),
+                    userId: user.id,
+                    message: peerConn.localDescription?.toJSON(),
+                    createdAt: new Date().toDateString(),
+                    roomId: selectedHostRoom.id,
+                    name: "System"
+                };
+
+                dispatch(
+                    SendMessageAction({ message, roomId: selectedHostRoom.id })
+                );
+            }
+        };
+    };
+
+    const closeConnection = async () => {
+        if (!!userConnection?.hubConnection) {
+            await userConnection.hubConnection.stop().catch((err) => {
+                console.error(err);
+
+                dispatch(
+                    ShowAlertAction({
+                        title: 'Close connection error',
+                        message: err.message,
+                    })
+                );
+            });
+        }
+    };
+
+    if (loading) {
         return (
-            <nav  style={{ width: 200 }}>
-                <List>
-                    {userCreatedHostRooms.map(room => 
-                        <ListItem disablePadding key={room.id}>
-                            <ListItemButton onClick={() => set(room)}>
-                                <ListItemText primary={room.name} secondary={
-                                    <span style={{  color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>
-                                        {new Date(room.createdAt).toLocaleDateString("en-GB")}
-                                    </span>
-                                }/>
-                            </ListItemButton>
-                        </ListItem>
-                    )}
-                    <ListItem disablePadding>
-                        <ListItemButton disabled={maxReached} onClick={() => !maxReached && dispatch(CreateHostRoomAction())}>
-                            <ListItemText  primary={"Create New"} secondary={
-                                <span 
-                                    style={{ 
-                                        color: maxReached ? 'rgb(196, 25, 25)' : 'rgba(255, 255, 255, 0.6)', 
-                                        fontSize: 12  
-                                    }}
-                                >
-                                    {maxReached ? "Max reached" : `${limit - userCreatedHostRooms.length} rooms remaining`}
-                                </span>
-                            } />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </nav>
+            <Starting />
         )
     }
 
+    const limit = 5;
+    const maxReached = userCreatedHostRooms.length === limit
+
     return (
-            <div
-                style={{
-                    margin: '0 auto',
-                    width: 400,
-                    marginTop: 140,
-                }}
-            >
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                        position: 'relative'
-                    }}
-                >
-                    <span style={{ fontSize: 40 }}>MidPoint.</span>
-                    <span
-                        style={{
-                            marginTop: 5,
-                            color: 'rgba(255, 255, 255, 0.6)',
-                        }}
-                    >
-                        Please be patient
-                    </span>
-                    <div style={{ display: 'flex', alignItems: 'center', width: 400, margin: 20 }}>
-                        <LoadingBar
-                            updateTime={100}
-                            maxProgress={100} 
-                            // progressIncrease={100 / Object.keys(LoadStartup).length}
-        
-                            progressIncrease={100 / 2}
-                            style={{
-                                height: 2,
-                                backgroundColor: "#19C45D"
-                            }}
-                        />
-            
-                    </div>
-                    <div
-                        onClick={() => dispatch(SetDashboardSection(DashboardSection.Overview))}
-                        style={{
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        <ArrowBackIcon />
-                        <span style={{ marginLeft: 10 }}>Cancel</span>
-                    </div>
-                </div>
-             </div>
-
+        <nav  style={{ width: 200 }}>
+            <List>
+                {userCreatedHostRooms.map(room => 
+                    <ListItem disablePadding key={room.id}>
+                        <ListItemButton onClick={() => set(room)}>
+                            <ListItemText primary={
+                                <>
+                                    {room.name} 
+                                    {room.id == selectedHostRoom?.id && 
+                                        <div  className='controllet-set-input' style={{ background: '#45C419', marginTop: 10 }} />
+                                    }
+                                </>
+                            } secondary={
+                                <span style={{  color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>
+                                    {new Date(room.createdAt).toLocaleDateString("en-GB")}
+                                </span>
+                            }/>
+                        </ListItemButton>
+                    </ListItem>
+                )}
+                <ListItem disablePadding>
+                    <ListItemButton disabled={maxReached} onClick={() => !maxReached && dispatch(CreateHostRoomAction())}>
+                        <ListItemText  primary={"Create New"} secondary={
+                            <span 
+                                style={{ 
+                                    color: maxReached ? 'rgb(196, 25, 25)' : 'rgba(255, 255, 255, 0.6)', 
+                                    fontSize: 12  
+                                }}
+                            >
+                                {maxReached ? "Max reached" : `${limit - userCreatedHostRooms.length} rooms remaining`}
+                            </span>
+                        } />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        </nav>
     )
-
 }

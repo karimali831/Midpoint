@@ -43,9 +43,9 @@ export const StreamHostInfo = () => {
                 />
                 <MainButton
                     onClick={() => setShowUsers(true)}
-                    text="Online Now"
+                    text={`Online Now ${onlineUsers.length}`}
                     outline={!showUsers}
-                    width={80}
+                    width={100}
                 />
             </div>
             <hr
@@ -58,9 +58,9 @@ export const StreamHostInfo = () => {
             <div style={{  overflowY: 'auto', maxHeight: 200 }}>
 
                 {showUsers ? 
-                    onlineUsers.map(uc => {
+                    onlineUsers.map((uc, idx) => {
                         return (
-                            <div key={uc.userId} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                            <div key={idx} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <img src={images.adamProfilePic} style={{
                                     width: 38,
                                     height: 38,

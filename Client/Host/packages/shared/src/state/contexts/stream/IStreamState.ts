@@ -13,7 +13,7 @@ export interface IStreamState {
     loadingMore: boolean
     pageNumber: number
     pageSize: number
-
+    midPointJoinId: string | null
     selectedHostRoom: HostRoom | null
     userCreatedHostRooms: HostRoom[]
 
@@ -28,7 +28,7 @@ export const streamInitialState: IStreamState = {
     loadingMore: false,
     pageNumber: 0,
     pageSize: 50,
-
+    midPointJoinId: null,
     selectedHostRoom: null,
     userCreatedHostRooms: []
 }

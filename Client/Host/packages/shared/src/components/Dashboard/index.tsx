@@ -1,9 +1,9 @@
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InsightsIcon from '@mui/icons-material/Insights';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import CloseIcon from '@mui/icons-material/Close';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -14,8 +14,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import images from '../../assets/images';
 import { DashboardSection, MidPointStep } from '../../enum/DashboardSection';
-import { StartHost } from '../../screens/Host';
-import { SetDashboardSection } from '../../state/contexts/app/Actions';
+import { SetDashboardSection, ShowAlertAction } from '../../state/contexts/app/Actions';
 import { getAppState } from '../../state/contexts/app/Selectors';
 import { MainButton } from '../Buttons/MainButton';
 import { ConnectedMidi } from './ConnectedMidi';
@@ -29,18 +28,51 @@ import { Stream } from './Stream';
 import { StartStream } from './Stream/Start';
 import './styles.css';
 import { Welcome } from './Welcome';
-import { SetHostRoomAction, SetUserConnectionAction } from '../../state/contexts/stream/Actions';
+import { getStreamState } from '../../state/contexts/stream/Selectors';
+import { joinLink } from '../../utils/UrlHelper';
+import { useParams } from 'react-router-dom';
+import { HostParams } from '../../../types/types';
+import { getUserState } from '../../state/contexts/user/Selectors';
+import { Connect } from './Stream/Connect';
+import { DeleteHostRoomAction, SetMidPointJoinIdAction } from '../../state/contexts/stream/Actions';
 
 export const Dashboard = () => {
 
-    const dispatch = useDispatch()
     const { dashboardSection, midpointStep } = useSelector(getAppState)
+    const { user } = useSelector(getUserState)
+    const { userConnection, selectedHostRoom } = useSelector(getStreamState);
+    const { midPointJoinId } = useParams<HostParams>();
+
+    const dispatch = useDispatch()
+
+    React.useEffect(() => {
+        if (!!midPointJoinId && !!user) {
+            dispatch(SetMidPointJoinIdAction(midPointJoinId))
+        }
+    }, [midPointJoinId, user]);
 
     const closeMidpoint = () => {
         // dispatch(SetUserConnectionAction(null))
-        dispatch(SetHostRoomAction(null))
-        dispatch(SetDashboardSection(DashboardSection.Overview))
+
+        // dispatch(SetConnectionStateAction(HubConnectionState.Disconnected));
+
+        // dispatch(SetHostRoomAction(null))
+        dispatch(SetDashboardSection(DashboardSection.Start))
     }
+
+    const copyJoinLink = () => {
+        if (userConnection == null)
+            return
+
+        navigator.clipboard.writeText(joinLink(userConnection.roomId));
+        dispatch(
+            ShowAlertAction({
+                title: 'Link join copied',
+                status: 'success',
+                duration: 1500,
+            })
+        );
+    };
 
     return (
         <motion.div
@@ -90,23 +122,8 @@ export const Dashboard = () => {
                         </span>
 
                         <div style={{ marginTop: 30 }}>
-                            {!!midpointStep ?
+                            {midpointStep != null ?
                                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                    <MainButton
-                                        icon={<AddLinkIcon />}
-                                        text="Generate invite link"
-                                        disabled={midpointStep !== MidPointStep.Stream}
-                                    />
-                                    <div style={{ marginTop: 10 }} />
-                                    <MainButton
-                                        onClick={closeMidpoint}
-                                        icon={<CloseIcon />}
-                                        outline={true}
-                                        text="Close MidPoint"
-                                    />
-                                </div>
-                            :
-                                <>
                                     <MainButton
                                         onClick={() => dispatch(SetDashboardSection(DashboardSection.Start))}
                                         icon={<PowerSettingsNewIcon />}
@@ -114,10 +131,47 @@ export const Dashboard = () => {
                                     />
                                     <div style={{ marginTop: 10 }} />
                                     <MainButton
+                                        icon={<AddLinkIcon />}
+                                        outline={true}
+                                        text="Copy invite link"
+                                        onClick={() => midpointStep === MidPointStep.Stream && copyJoinLink()}
+                                        disabled={midpointStep !== MidPointStep.Stream}
+                                    />
+                                    {/* <div style={{ marginTop: 10 }} />
+                                    <MainButton
+                                        icon={<CloseIcon />}
+                                        danger={true}
+                                        text="Delete Room"
+                                    /> */}
+                                    <div style={{ marginTop: 10 }} />
+                                    {!!selectedHostRoom && selectedHostRoom.createdUserId == user?.id &&
+                                        <>
+                                            <div 
+                                                onClick={() => dispatch(DeleteHostRoomAction(selectedHostRoom.id))}
+                                                style={{ display: 'flex', alignItems: 'center', margin: '15px 0', cursor: 'pointer' }}
+                                            >
+                                                <CloseIcon style={{ fontSize: 20, marginRight: 10 }} />
+                                                <span>Delete Room</span>
+                                            </div>
+                                            <hr style={{ border: '1px solid rgba(255, 255, 255, 0.6)', marginBottom: '-10px', width: '100%' }} />
+                                        </>
+                                    }
+                                </div>
+                            :
+                                <>
+                                    <MainButton
+                                        onClick={() => dashboardSection !== DashboardSection.Start && dispatch(SetDashboardSection(DashboardSection.Start))}
+                                        icon={<PowerSettingsNewIcon />}
+                                        disabled={dashboardSection === DashboardSection.Start}
+                                        text="Start MidPoint."
+                                    />
+                                    <div style={{ marginTop: 10 }} />
+                                    <MainButton
                                         icon={<PeopleAltOutlinedIcon />}
                                         outline={true}
                                         text="Connect MidPoint."
-                                        onClick={() => dispatch(SetDashboardSection(DashboardSection.Connect)) }
+                                        disabled={dashboardSection === DashboardSection.Connect}
+                                        onClick={() => dashboardSection !== DashboardSection.Connect && dispatch(SetDashboardSection(DashboardSection.Connect)) }
                                     />
                                 </>
                             }
@@ -184,7 +238,7 @@ export const Dashboard = () => {
                         ) : dashboardSection === DashboardSection.Settings ? (
                             <Settings />
                         ) : dashboardSection === DashboardSection.Connect ? (
-                            <StartHost />
+                            <Connect />
                         ) : dashboardSection === DashboardSection.Start ? (
                             <StartStream />
                         ) : null}

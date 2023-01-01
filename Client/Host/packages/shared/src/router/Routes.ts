@@ -35,7 +35,7 @@ export const Routes: IRoute[] = [
         headerShown: true,
         order: 3,
         menuName: "Dashboard",
-        path: '/dashboard',
+        path: '/dashboard/:midPointJoinId*',
         url: '/dashboard',
     }
 ];

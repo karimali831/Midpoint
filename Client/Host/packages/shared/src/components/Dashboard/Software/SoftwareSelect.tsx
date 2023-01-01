@@ -4,8 +4,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { SoftwareCard } from './SoftwareCard';
-import { useSelector } from 'react-redux';
-import { getAppState } from '../../../state/contexts/app/Selectors';
 import './styles.css'
 
 export enum SoftwareType {
@@ -28,14 +26,7 @@ export enum SoftwareType {
 
 
 export const SoftwareSelect = () => {
-
-    const { selectedSoftware } = useSelector(getAppState)
-
-    React.useEffect(() => {
-        if (!!selectedSoftware) {
-            // props.goToSoftwareInstall()
-        }
-    }, [selectedSoftware]);
+    React.useEffect(() => {}, []);
 
     const [brandsExpanded, setBrandsExpanded] = useState<boolean>(false)
 

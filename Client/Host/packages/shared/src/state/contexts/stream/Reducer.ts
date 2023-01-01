@@ -1,7 +1,7 @@
 import { HubConnectionState } from '@microsoft/signalr';
 import { createReducer } from '@reduxjs/toolkit';
 import { IChannelData } from '../../../interface/IChannelData';
-import { AddChannelAction, GetHostRoomDataAction, GetHostRoomDataSuccessAction, GetHostRoomsSuccessAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
+import { AddChannelAction, DeleteHostRoomAction, GetHostRoomDataAction, GetHostRoomDataSuccessAction, GetHostRoomsSuccessAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetMidPointJoinIdAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
 import { streamInitialState } from './IStreamState';
 
 export const streamReducer = createReducer(streamInitialState, (builder) => {
@@ -108,6 +108,15 @@ export const streamReducer = createReducer(streamInitialState, (builder) => {
         })
         .addCase(SetHostRoomAction, (state, action) => {
             state.selectedHostRoom = action.payload
+        })
+        .addCase(SetMidPointJoinIdAction, (state, action) => {
+            state.midPointJoinId = action.payload
+        })
+        .addCase(DeleteHostRoomAction, (state, action) => {
+            
+            state.userCreatedHostRooms.filter(x => x.id !== action.payload)
+
+
         })
 });
 

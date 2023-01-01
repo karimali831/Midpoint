@@ -1,7 +1,7 @@
 import { graphQLQuery } from "../graphql/api";
-import { createHostRoom } from "../graphql/mutations";
-import { listHostRooms } from "../graphql/queries";
-import { CreateHostRoomInput, CreateHostRoomMutation, HostRoom, ListHostRoomsQuery, ModelHostRoomChatMessageFilterInput, ModelHostRoomFilterInput } from "../graphql/types";
+import { createHostRoom, deleteHostRoom } from "../graphql/mutations";
+import { listHostRooms, listHostRoomUsers } from "../graphql/queries";
+import { CreateHostRoomInput, CreateHostRoomMutation, DeleteHostRoomInput, DeleteHostRoomMutation, DeleteHostRoomUserInput, DeleteHostRoomUserMutation, HostRoom, HostRoomUser, ListHostRoomsQuery, ListHostRoomUsersQuery, ModelHostRoomChatMessageFilterInput, ModelHostRoomFilterInput, ModelHostRoomUserFilterInput } from "../graphql/types";
 
 export class HostApi {
 
@@ -22,7 +22,7 @@ export class HostApi {
     }
 
     public getUserCreatedHostRooms = async (userId: string): Promise<HostRoom[]> => {
-        console.log("[API] getChatMessages")
+        console.log("[API] getUserCreatedHostRooms")
 
         try {
             const response = await graphQLQuery<ListHostRoomsQuery, ModelHostRoomFilterInput>(listHostRooms, {
@@ -57,7 +57,53 @@ export class HostApi {
         }
     }
 
+    public getHostRoomUsers = async (roomId: string): Promise<HostRoomUser[]> => {
+        console.log("[API] getHostRoomUsers")
 
+        try {
+            const response = await graphQLQuery<ListHostRoomUsersQuery, ModelHostRoomUserFilterInput>(listHostRoomUsers, {
+                filter: {
+                    hostRoomId: { eq: roomId }
+                }
+            });
+
+            return response.data?.listHostRoomUsers?.items as HostRoomUser[]
+        }
+        catch (error) {
+            console.error(HostApi.name, "getHostRoomUsers", error);
+            throw error;
+        }
+    }
+
+    public deleteHostRoom = async (id: string): Promise<boolean> => {
+        console.log("[API] deleteHostRoom" + id)
+
+        try {
+            const response = await graphQLQuery<DeleteHostRoomMutation, DeleteHostRoomInput>(deleteHostRoom, {
+                input: { id }
+            });
+
+            return response.data?.deleteHostRoom ? true : false
+        }
+        catch (error) {
+            console.error(HostApi.name, "deleteHostRoom", error);
+            throw error;
+        }
+    }
+
+    public deleteHostRoomUsers = async (id: string) => {
+        console.log("[API] deleteHostRoomUsers")
+
+        try {
+            await graphQLQuery<DeleteHostRoomUserMutation, DeleteHostRoomUserInput>(deleteHostRoom, {
+                input: { id }
+            });
+        }
+        catch (error) {
+            console.error(HostApi.name, "deleteHostRoomUsers", error);
+            throw error;
+        }
+    }
 
 }
 

@@ -1,7 +1,7 @@
 import { graphQLQuery } from "../graphql/api";
-import { createHostRoomChatMessage } from "../graphql/mutations";
+import { createHostRoomChatMessage, deleteHostRoomChatMessage } from "../graphql/mutations";
 import { listHostRoomChatMessages } from "../graphql/queries";
-import { CreateHostRoomChatMessageInput, CreateHostRoomChatMessageMutation, ListHostRoomChatMessagesQuery, ModelHostRoomChatMessageFilterInput } from "../graphql/types";
+import { CreateHostRoomChatMessageInput, CreateHostRoomChatMessageMutation, DeleteHostRoomChatMessageInput, DeleteHostRoomChatMessageMutation, ListHostRoomChatMessagesQuery, ModelHostRoomChatMessageFilterInput } from "../graphql/types";
 import { IMessage } from "../interface/IMessage";
 
 export class ChatApi {
@@ -34,6 +34,34 @@ export class ChatApi {
         }
         catch (error) {
             console.error(ChatApi.name, "getChatMessages", error);
+            throw error;
+        }
+    }
+
+
+    public getAllChatMessages = async (): Promise<IMessage[]> => {
+        console.log("[API] getAllChatMessages")
+
+        try {
+            const response = await graphQLQuery<ListHostRoomChatMessagesQuery, ModelHostRoomChatMessageFilterInput>(listHostRoomChatMessages);
+            return response.data?.listHostRoomChatMessages?.items as IMessage[]
+        }
+        catch (error) {
+            console.error(ChatApi.name, "getAllChatMessages", error);
+            throw error;
+        }
+    }
+
+    public deleteChatMessages = async (id: string) => {
+        console.log("[API] deleteChatMessages" + id)
+
+        try {
+            await graphQLQuery<DeleteHostRoomChatMessageMutation, DeleteHostRoomChatMessageInput>(deleteHostRoomChatMessage, {
+                input: { id }
+            });
+        }
+        catch (error) {
+            console.error(ChatApi.name, "deleteChatMessages", error);
             throw error;
         }
     }

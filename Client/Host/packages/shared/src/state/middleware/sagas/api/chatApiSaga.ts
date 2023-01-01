@@ -26,6 +26,9 @@ export function* loadChatRoomData(action: PayloadAction<{
 
         const messages: IMessage[] = yield call(chatApi.getChatMessages, action.payload.roomId)
 
+        if (messages.length === 0)
+            return
+
         const data: IChannelData = {
             roomId: messages[0].roomId,
             totalMessages: 10,
