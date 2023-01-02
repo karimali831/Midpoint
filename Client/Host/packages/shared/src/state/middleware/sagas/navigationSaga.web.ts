@@ -1,16 +1,14 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { useParams } from 'react-router-dom';
-import { createMatchSelector, goBack } from 'react-router-redux';
+import { goBack } from 'react-router-redux';
 import { put, select, takeLatest } from 'redux-saga/effects';
-import { HostParams } from '../../../../types/types';
 import { AppScreen } from '../../../enum/AppScreen';
 import { DefaultScreen } from '../../../navigation/RootNavigation';
+import { toast } from 'react-hot-toast'
 import { Routes } from '../../../router/Routes';
 import { history } from '../../../state/InitialiseStore';
 import {
     GoBackAction,
     LocationChangeAction,
-    ShowAlertAction,
     ShowScreenAction,
     ShowScreenType
 } from '../../contexts/app/Actions';
@@ -65,11 +63,7 @@ export function* navigateToScreen(route: PayloadAction<ShowScreenType>) {
             history.push(newLocation.url);
         }
     } catch {
-        yield put(
-            ShowAlertAction({
-                title: 'Error navigating you',
-            })
-        );
+        toast.error("Error navigating you")
     }
 }
 

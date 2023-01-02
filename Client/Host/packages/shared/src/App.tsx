@@ -6,12 +6,12 @@ import { Amplify } from 'aws-amplify';
 import firebase from "firebase/app";
 import { NativeBaseProvider } from 'native-base';
 import React from "react";
+import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import awsmobile from './aws-exports.js';
-import Alert from './components/AlertModal';
 import { Router } from './router/Router';
 import store from './state/InitialiseStore';
 import './styles.css';
@@ -48,7 +48,7 @@ export function App() {
                 <ReactReduxFirebaseProvider {...rrfProps}>
                     <NativeBaseProvider>
                         <div className="App wrapper">
-                            <Alert />
+                            <Toaster position="top-right" />
                             <Router />
                         </div>
                     </NativeBaseProvider>

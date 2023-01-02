@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import { HubConnectionState } from "@microsoft/signalr";
-import { HostRoom } from '../../../graphql/types';
+import { HostRoom, UpdateHostRoomInput } from '../../../graphql/types';
 import { IChannel } from '../../../interface/IChannel';
 import { IChannelData } from '../../../interface/IChannelData';
 import { IMessage } from '../../../interface/IMessage';
@@ -28,6 +28,9 @@ const CreateHostRoomAction = createAction('@@Stream/CreateHostRoom')
 const GetHostRoomsAction= createAction('@@Stream/GetHostRooms')
 const GetHostRoomsSuccessAction = createAction<HostRoom[]>('@@Stream/GetHostRoomsSuccess')
 const DeleteHostRoomAction = createAction<string>('@@Stream/DeleteHostRoom')
+const UpdateHostRoomAction = createAction<UpdateHostRoomInput>('@@Stream/UpdateHostRoom')
+const UpdateHostRoomSuccessAction = createAction<HostRoom>('@@Stream/UpdateHostRoomSuccess')
+const UpdateHostRoomFailAction = createAction('@@Stream/UpdateHostRoomFail')
 
 export {
     SetConnectionStateAction,
@@ -43,6 +46,9 @@ export {
     GetHostRoomsSuccessAction,
     SetHostRoomAction,
     SetMidPointJoinIdAction,
-    DeleteHostRoomAction
+    DeleteHostRoomAction,
+    UpdateHostRoomAction,
+    UpdateHostRoomSuccessAction,
+    UpdateHostRoomFailAction
 };
 

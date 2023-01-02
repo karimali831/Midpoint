@@ -1,7 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { IAlert } from '../../../interface/IAlert';
 import {
-    HideAlertAction,
     SetAppFocusedAction,
     SetAppReadyAction,
     SetDashboardSection,
@@ -9,43 +7,14 @@ import {
     SetOnConfirmLoadingAction,
     SetRegisteringAction,
     SetSoftwareAction,
-    ShowAlertAction,
     ShowScreenAction
 } from './Actions';
-import { appInitialState, InitialAlert } from './IAppState';
+import { appInitialState } from './IAppState';
 
 export const appReducer = createReducer(appInitialState, (builder) => {
     builder
         .addCase(SetAppFocusedAction, (state, action) => {
             state.appFocused = action.payload;
-        })
-        .addCase(ShowAlertAction, (state, action) => {
-            let alert: IAlert = InitialAlert();
-
-            const {
-                title,
-                message,
-                status,
-                autoHide,
-                duration,
-                blurBackground,
-                position,
-            } = action.payload;
-
-            const isError = (status ?? alert.status) === 'error'
-
-            alert = {
-                title,
-                message: message ?? alert.message,
-                status: status ?? alert.status,
-                autoHide: autoHide ?? (isError ? false : alert.autoHide),
-                duration: duration ?? alert.duration,
-                blurBackground: blurBackground ?? alert.blurBackground,
-                position: position ?? alert.position,
-            };
-
-            state.alertModal = alert;
-            state.showAlert = true;
         })
         .addCase(SetAppReadyAction, (state, action) => {
             const modify = [...state.appReady];
@@ -57,10 +26,7 @@ export const appReducer = createReducer(appInitialState, (builder) => {
 
             state.appReady = modify;
         })
-        .addCase(HideAlertAction, (state) => {
-            state.alertModal = InitialAlert();
-            state.showAlert = false;
-        })
+
         .addCase(ShowScreenAction, (state, action) => {
             state.currentScreen = action.payload.screen;
         })

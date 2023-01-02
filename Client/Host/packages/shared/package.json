@@ -54,6 +54,7 @@
         "moment": "^2.29.1",
         "native-base": "^3.4.5",
         "react-device-detect": "^2.1.2",
+        "react-hot-toast": "^2.0.0",
         "react-native-svg": "^12.1.1",
         "react-native-svg-transformer": "^1.0.0",
         "react-native-web-hover": "^0.2.9",
@@ -73,5 +74,9 @@
     },
     "devDependencies": {
         "@types/react": "^18.0.9"
+    },
+    "resolutions": {
+        "goober": "2.1.9",
+        "react-hot-toast": "2.2.0"
     }
 }

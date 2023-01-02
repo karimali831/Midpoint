@@ -14,13 +14,16 @@ export const ChatMessage: React.FC<IOwnProps> = (props) => {
         message,
         createdAt,
         name,
+        user
     } = props.message
 
     const date = new Date(createdAt)
 
+    // console.log(user)
+
 
     return (
-        <div style={{ marginTop: 15, display: 'flex', flexDirection: 'row' }}>
+        <div style={{ marginTop: 15, display: 'flex', flexDirection: 'row'}}>
             <div style={{ maxWidth: 60 }}>
                 <img src={images.adamProfilePic} style={{
                     width: 38,
@@ -32,7 +35,7 @@ export const ChatMessage: React.FC<IOwnProps> = (props) => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column'  }}>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <span style={{ marginRight: 15 }}>{name}</span>
+                    <span style={{ marginRight: 15 }}>{user?.displayName ?? name}</span>
                     <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>
                         {createdAt}
                     </span>

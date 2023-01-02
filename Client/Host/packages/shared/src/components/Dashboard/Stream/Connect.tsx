@@ -1,4 +1,3 @@
-import { HubConnectionState } from '@microsoft/signalr';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import { motion } from 'framer-motion';
@@ -6,14 +5,10 @@ import { Button} from 'native-base';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DashboardSection } from '../../../enum/DashboardSection';
-import { IUserConnection } from '../../../interface/IUserConnection';
 import { FormValidation } from '../../../screens/Login';
 import { SetDashboardSection } from '../../../state/contexts/app/Actions';
-import { SetUserConnectionAction } from '../../../state/contexts/stream/Actions';
+import { SetMidPointJoinIdAction} from '../../../state/contexts/stream/Actions';
 import { getUserState } from '../../../state/contexts/user/Selectors';
-import { newHubConnection } from '../../../utils/HubHelper';
-import { joinLink } from '../../../utils/UrlHelper';
-import { uuidv4 } from '../../../utils/Utils';
 import { FormInput } from '../../Form/input';
 
 
@@ -25,30 +20,16 @@ export const Connect = () => {
 
     const dispatch = useDispatch();
 
-    const [channelName, setChannelName] = useState<FormValidation>({
+    const [midPointJoinId, setMidPointJoinId] = useState<FormValidation>({
         value: '',
-        urlValidator: true,
+        minCharsRequired: 36,
+        maxCharsRequired: 36
     });
     const [loading, setLoading] = useState<boolean>(false);
 
-
-    const join = () => {
-        const userConnection: IUserConnection = {
-            hubConnection: newHubConnection(),
-            connectionState: HubConnectionState.Disconnected,
-            showConnectionStatus: false,
-            userId: user.id,
-            displayName: user.displayName,
-            roomId: uuidv4(),
-            roomName: channelName.value,
-        };
-
-        dispatch(SetUserConnectionAction(userConnection));
-    };
-
     const onSubmit = () => {
         setLoading(true);
-        join();
+        dispatch(SetMidPointJoinIdAction(midPointJoinId.value))
     };
 
     return (
@@ -84,13 +65,14 @@ export const Connect = () => {
 
                 <FormInput
                     onChange={(text) =>
-                        setChannelName({
-                            ...channelName,
+                        setMidPointJoinId({
+                            ...midPointJoinId,
                             value: text,
                         })
                     }
-                    validation={channelName}
-                    placeholder={`${joinLink('room-id')}`}
+                    type={"password"}
+                    validation={midPointJoinId}
+                    placeholder={`Enter MidPoint. join ID`}
                 />
                 <div
                     style={{
@@ -113,12 +95,12 @@ export const Connect = () => {
                         <span style={{ marginLeft: 10 }}>Go back</span>
                     </div>
                     <Button
-                        disabled={channelName.value === ''}
+                        disabled={midPointJoinId.value === ''}
                         onPress={onSubmit}
                         style={{
                             borderRadius: 25,
                             backgroundColor:
-                                channelName.value === '' ? 'grey' : '#195DC4',
+                                midPointJoinId.value === '' ? 'grey' : '#195DC4',
                         }}
                         colorScheme="cyan"
                         isLoading={loading}

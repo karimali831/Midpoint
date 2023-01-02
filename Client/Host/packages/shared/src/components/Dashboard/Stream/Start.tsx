@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux"
 import { showLoading } from 'react-redux-loading-bar'
 import { useSelector } from "react-redux";
 import { getLoadingBar, getStreamState } from "../../../state/contexts/stream/Selectors";
-import { SetMidPointStep, ShowAlertAction } from "../../../state/contexts/app/Actions";
-import { MidPointStep } from "../../../enum/DashboardSection";
+import { SetDashboardSection, SetMidPointStep } from "../../../state/contexts/app/Actions";
+import toast from 'react-hot-toast';
+import { DashboardSection, MidPointStep } from "../../../enum/DashboardSection";
 import { CreateHostRoomAction, GetHostRoomDataAction, GetHostRoomsAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from "../../../state/contexts/stream/Actions";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { HostRoom } from "../../../graphql/types";
@@ -15,6 +16,9 @@ import { getUserState } from "../../../state/contexts/user/Selectors";
 import { newHubConnection } from "../../../utils/HubHelper";
 import { uuidv4 } from "../../../utils/Utils";
 import { Starting } from "./Starting";
+import sounds from "../../../assets/sounds";
+import { Howl } from "howler";
+import useEffectSkipInitialRender  from "../../../hooks/useEffectSkipInitialRender"
 
 /* 
     Before the next screen appears we should load:
@@ -54,19 +58,9 @@ export const StartStream = () => {
         dispatch(GetHostRoomsAction())
     }, [])
 
-    React.useEffect(() => {
+    useEffectSkipInitialRender(() => {
         dispatch(showLoading())
     }, [loading])
-
-    React.useEffect(() => {
-       console.log(percentage)
-    }, [percentage, userCreatedHostRooms])
-    
-    // React.useEffect(() => {
-    //     if (!!userConnection?.hubConnection) {
-    //         start(userConnection);
-    //     }
-    // }, [userConnection]);
 
     React.useEffect(() => {
         if (!!midPointJoinId && !!selectedHostRoom) {
@@ -74,16 +68,28 @@ export const StartStream = () => {
         }
     }, [midPointJoinId, selectedHostRoom]);
 
-    const set = (hostRoom: HostRoom) => {
+    const set = async (hostRoom: HostRoom) => {
     
         if (hostRoom.id == selectedHostRoom?.id && userConnection?.connectionState === HubConnectionState.Connected) {
-            alert("go stright in")
             dispatch(SetMidPointStep(MidPointStep.Stream))
             return
         }
 
-        setLoading(true)
+        if (userConnection != null) {
+            setLoading(true)
+            await closeConnection()
+                .then(() => startConn(hostRoom))
+                .catch(() => toast.error("An error occured"))
 
+            return;
+        }
+
+        setLoading(true)
+        startConn(hostRoom)
+    }
+
+    const startConn = (hostRoom: HostRoom) => {
+ 
         const uc: IUserConnection = {
             hubConnection: newHubConnection(),
             connectionState: HubConnectionState.Disconnected,
@@ -99,7 +105,17 @@ export const StartStream = () => {
         dispatch(SetUserConnectionAction(uc))
 
         start(uc)
+        // setTimeout(() =>  start(uc), 2000)
     }
+
+    const SoundPlay = (src: any) => {
+        const sound = new Howl({
+            src
+        })
+        sound.play()
+    }
+
+    Howler.volume(1.0)
 
     const start = (userConnection: IUserConnection) => {
         const { hubConnection } = userConnection;
@@ -115,6 +131,10 @@ export const StartStream = () => {
                     hubConnection.on('ReceiveMessage', (message: IMessage) => {
 
                         console.log(message)
+
+                        if (message.isBot && message.message.includes("joined")) {
+                            SoundPlay(sounds.confirmSound)
+                        }
 
                         if (message.userId === user.id) {
                             dispatch(
@@ -174,9 +194,7 @@ export const StartStream = () => {
 
                     hubConnection.invoke('JoinRoom', userConnection);
                 })
-                .catch((error) => {
-                    dispatch(ShowAlertAction({ title: error.message }));
-                })
+                .catch((error) => toast.error(error.message))
                 .finally(() => {
                     setLoading(false)
                     dispatch(SetMidPointStep(!!midPointJoinId ? MidPointStep.Stream : MidPointStep.Welcome))
@@ -210,18 +228,30 @@ export const StartStream = () => {
 
     const closeConnection = async () => {
         if (!!userConnection?.hubConnection) {
-            await userConnection.hubConnection.stop().catch((err) => {
-                console.error(err);
-
-                dispatch(
-                    ShowAlertAction({
-                        title: 'Close connection error',
-                        message: err.message,
-                    })
-                );
-            });
+            await userConnection.hubConnection
+                .stop()
+                .then(() => { 
+                    dispatch(SetUserConnectionAction(null))
+                    dispatch(SetHostRoomAction(null))
+                    // dispatch(SetDashboardSection(DashboardSection.Overview))
+                })
+                .catch((err) => {
+                    console.error(err);
+                    toast.error(err.message)
+                });
         }
     };
+
+    const createHostRoom = async () => {
+        if (maxReached) {
+            toast.error("Maximum rooms created reached")
+            return;
+        }
+
+        await closeConnection()
+        dispatch(CreateHostRoomAction())
+    }
+
 
     if (loading) {
         return (
@@ -254,15 +284,15 @@ export const StartStream = () => {
                     </ListItem>
                 )}
                 <ListItem disablePadding>
-                    <ListItemButton disabled={maxReached} onClick={() => !maxReached && dispatch(CreateHostRoomAction())}>
-                        <ListItemText  primary={"Create New"} secondary={
+                    <ListItemButton disabled={maxReached} onClick={createHostRoom}>
+                        <ListItemText  primary={"New Room"} secondary={
                             <span 
                                 style={{ 
                                     color: maxReached ? 'rgb(196, 25, 25)' : 'rgba(255, 255, 255, 0.6)', 
                                     fontSize: 12  
                                 }}
                             >
-                                {maxReached ? "Max reached" : `${limit - userCreatedHostRooms.length} rooms remaining`}
+                                {maxReached ? "Max reached" : `${limit - userCreatedHostRooms.length} remaining`}
                             </span>
                         } />
                     </ListItemButton>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getStreamState } from '../../../state/contexts/stream/Selectors';
 import { MainButton } from '../../Buttons/MainButton';
-import EditIcon from '@mui/icons-material/Edit';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import images from '../../../assets/images';
 
@@ -43,7 +42,7 @@ export const StreamHostInfo = () => {
                 />
                 <MainButton
                     onClick={() => setShowUsers(true)}
-                    text={`Online Now ${onlineUsers.length}`}
+                    text={`${onlineUsers.length} Connected`}
                     outline={!showUsers}
                     width={100}
                 />
@@ -74,15 +73,11 @@ export const StreamHostInfo = () => {
                     })
                 :
                     <div style={{ flexDirection: 'column', display: 'flex' }}>
-                        <span style={{ fontSize: 14, color: 'rgba(255, 255, 255, 0.6)'}}>
+                        <span style={{ fontSize: 14, color: 'rgba(255, 255, 255, 0.6)', marginBottom: 15}}>
                             MidPoint ID: {selectedHostRoom.id.split('-')[4]}
+                            {/* MidPoint Id: {selectedHostRoom.id} */}
                         </span>
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
-                            <span style={{ marginRight: 10, fontSize: 14, color: 'rgba(255, 255, 255, 0.6)'}}>
-                                {selectedHostRoom.name}
-                            </span>
-                            <EditIcon style={{ fontSize: 14 }} />
-                        </div>
+             
                         {data?.messages.length > 0 && data.messages
                             .filter(x => x.isBot)
                             .reverse()

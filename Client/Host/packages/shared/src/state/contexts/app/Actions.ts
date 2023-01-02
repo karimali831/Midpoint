@@ -4,7 +4,6 @@ import { SoftwareType } from '../../../components/Dashboard/Software/SoftwareSel
 import { AppScreen } from '../../../enum/AppScreen';
 import { DashboardSection, MidPointStep } from '../../../enum/DashboardSection';
 import { LoadStartup } from '../../../enum/LoadStartup';
-import { IAlert } from '../../../interface/IAlert';
 import { IAwsError } from '../../../interface/IAwsError';
 import { IAxiosError } from '../../../interface/IAxiosError';
 import { INotificationMessage } from '../../../interface/INotificationMessage';
@@ -20,10 +19,8 @@ export type ShowScreenType = {
 const SetAppFocusedAction = createAction<boolean>('@@App/SetAppFocused');
 const AxiosErrorAlertAction = createAction<IAxiosError>('@@App/AxiosErrorAlert');
 const AwsErrorAlertAction = createAction<IAwsError>('@@App/AwsErrorAlert');
-const ShowAlertAction = createAction<IAlert>('@@App/ShowAlert');
 const LocationChangeAction = createAction('@@App/LocationChange');
 const SetAppReadyAction = createAction<LoadStartup>('@@App/SetAppReady');
-const HideAlertAction = createAction('@@App/HideAlert');
 const ShowScreenAction = createAction<ShowScreenType>('@@App/ShowScreen');
 const SetOnConfirmLoadingAction = createAction<boolean>(
     '@@App/SetOnConfirmLoading'
@@ -40,9 +37,7 @@ const SetRegisteringAction = createAction<boolean>('@App/SetRegistering')
 
 export {
     SetAppFocusedAction,
-    ShowAlertAction,
     SetAppReadyAction,
-    HideAlertAction,
     ShowScreenAction,
     SetOnConfirmLoadingAction,
     GoBackAction,

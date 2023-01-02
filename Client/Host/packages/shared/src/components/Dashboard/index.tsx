@@ -1,6 +1,7 @@
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InsightsIcon from '@mui/icons-material/Insights';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import CastConnectedIcon from '@mui/icons-material/CastConnected';
 import CloseIcon from '@mui/icons-material/Close';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
@@ -14,7 +15,8 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import images from '../../assets/images';
 import { DashboardSection, MidPointStep } from '../../enum/DashboardSection';
-import { SetDashboardSection, ShowAlertAction } from '../../state/contexts/app/Actions';
+import { SetDashboardSection, SetMidPointStep } from '../../state/contexts/app/Actions';
+import toast from 'react-hot-toast';
 import { getAppState } from '../../state/contexts/app/Selectors';
 import { MainButton } from '../Buttons/MainButton';
 import { ConnectedMidi } from './ConnectedMidi';
@@ -34,7 +36,8 @@ import { useParams } from 'react-router-dom';
 import { HostParams } from '../../../types/types';
 import { getUserState } from '../../state/contexts/user/Selectors';
 import { Connect } from './Stream/Connect';
-import { DeleteHostRoomAction, SetMidPointJoinIdAction } from '../../state/contexts/stream/Actions';
+import { SetHostRoomAction, SetMidPointJoinIdAction, SetUserConnectionAction } from '../../state/contexts/stream/Actions';
+import { HubConnectionState } from '@microsoft/signalr';
 
 export const Dashboard = () => {
 
@@ -47,32 +50,35 @@ export const Dashboard = () => {
 
     React.useEffect(() => {
         if (!!midPointJoinId && !!user) {
+            // dispatch(SetDashboardSection(DashboardSection.Start))
             dispatch(SetMidPointJoinIdAction(midPointJoinId))
         }
     }, [midPointJoinId, user]);
 
-    const closeMidpoint = () => {
-        // dispatch(SetUserConnectionAction(null))
-
-        // dispatch(SetConnectionStateAction(HubConnectionState.Disconnected));
-
-        // dispatch(SetHostRoomAction(null))
-        dispatch(SetDashboardSection(DashboardSection.Start))
-    }
+    const closeConnection = async () => {
+        if (!!userConnection?.hubConnection) {
+            await userConnection.hubConnection
+                .stop()
+                .then(() => {
+                    dispatch(SetUserConnectionAction(null))
+                    dispatch(SetHostRoomAction(null))
+                    dispatch(SetDashboardSection(DashboardSection.Overview))
+                })
+                .catch((err) => {
+                    console.error(err);
+                    toast.error(err.message)
+                });
+        }
+    };
 
     const copyJoinLink = () => {
         if (userConnection == null)
             return
 
         navigator.clipboard.writeText(joinLink(userConnection.roomId));
-        dispatch(
-            ShowAlertAction({
-                title: 'Link join copied',
-                status: 'success',
-                duration: 1500,
-            })
-        );
+        toast.success("MidPoint join link copied to clipboard")
     };
+
 
     return (
         <motion.div
@@ -122,40 +128,31 @@ export const Dashboard = () => {
                         </span>
 
                         <div style={{ marginTop: 30 }}>
-                            {midpointStep != null ?
+                            {userConnection?.connectionState === HubConnectionState.Connected ?
                                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                     <MainButton
-                                        onClick={() => dispatch(SetDashboardSection(DashboardSection.Start))}
-                                        icon={<PowerSettingsNewIcon />}
-                                        text="Start MidPoint."
+                                        onClick={() => midpointStep !== MidPointStep.Stream && dispatch(SetMidPointStep(MidPointStep.Stream))}
+                                        icon={<CastConnectedIcon />}
+                                        text="Stream"
+                                        success={true}
                                     />
                                     <div style={{ marginTop: 10 }} />
                                     <MainButton
                                         icon={<AddLinkIcon />}
                                         outline={true}
-                                        text="Copy invite link"
-                                        onClick={() => midpointStep === MidPointStep.Stream && copyJoinLink()}
-                                        disabled={midpointStep !== MidPointStep.Stream}
+                                        text="Copy join link"
+                                        onClick={copyJoinLink}
+                                        
                                     />
-                                    {/* <div style={{ marginTop: 10 }} />
-                                    <MainButton
-                                        icon={<CloseIcon />}
-                                        danger={true}
-                                        text="Delete Room"
-                                    /> */}
                                     <div style={{ marginTop: 10 }} />
-                                    {!!selectedHostRoom && selectedHostRoom.createdUserId == user?.id &&
-                                        <>
-                                            <div 
-                                                onClick={() => dispatch(DeleteHostRoomAction(selectedHostRoom.id))}
-                                                style={{ display: 'flex', alignItems: 'center', margin: '15px 0', cursor: 'pointer' }}
-                                            >
-                                                <CloseIcon style={{ fontSize: 20, marginRight: 10 }} />
-                                                <span>Delete Room</span>
-                                            </div>
-                                            <hr style={{ border: '1px solid rgba(255, 255, 255, 0.6)', marginBottom: '-10px', width: '100%' }} />
-                                        </>
-                                    }
+                                    <div
+                                        onClick={closeConnection}
+                                        style={{ display: 'flex', alignItems: 'center', margin: '15px 0', cursor: 'pointer' }}
+                                    >
+                                        <CloseIcon style={{ fontSize: 20, marginRight: 10 }} />
+                                        <span>Disconnect</span>
+                                    </div>
+                                    <hr style={{ border: '1px solid rgba(255, 255, 255, 0.6)', marginBottom: '-10px', width: '100%' }} />
                                 </div>
                             :
                                 <>

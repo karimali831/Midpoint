@@ -16,6 +16,7 @@ interface IOwnProps {
     passwordToggleEnabled?: boolean
     message?: IFormMessage
     autoCompleteOff?: boolean,
+    hideStatus?: boolean,
     onChange: (text: string) => void
     onBlur?: (text: string) => void
 }
@@ -33,11 +34,13 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
         type,
         autoCompleteOff,
         placeholder,
+        hideStatus,
         passwordToggleEnabled,
         onChange,
         onBlur,
         validation: {
             minCharsRequired,
+            maxCharsRequired,
             emailValidator,
             urlValidator
         }
@@ -119,7 +122,7 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
                 <input
                     ref={ref}
                     placeholder={placeholder}
-                    type={type ?? passwordToggleEnabled ? !showPwd ? "password" : "text" : "text"}
+                    type={type ?? (passwordToggleEnabled ? !showPwd ? "password" : "text" : "text")}
                     style={{ width: '100%' }}
                     autoComplete={autoCompleteOff ? "off" : undefined}
                     onChange={onInputChange}
@@ -132,11 +135,17 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
                             {showPwd ? <VisibilityOffOutlinedIcon style={{ color: 'grey ' }} /> : <VisibilityOutlinedIcon style={{ color: 'grey ' }} />}
                         </span>
                     }
-
+                    
                     {
-                        !!alert ? <CloseIcon style={{ color: "#C41919" }} /> :
-                            validValue ? <CheckIcon style={{ color: "#45C419" }} />
-                                : null
+                        !hideStatus ?
+                            <>
+                                {!!alert ? <CloseIcon style={{ color: "#C41919" }} /> :
+                                    validValue ? <CheckIcon style={{ color: "#45C419" }} />
+                                        : null
+                                }
+                            </>
+
+                        : null
                     }
                 </div>
 

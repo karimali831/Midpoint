@@ -11,6 +11,7 @@ export interface IStreamState {
     onlineUsers: IUserConnection[]
     loadingMessages: boolean
     loadingMore: boolean
+    updatingHostRoom: boolean
     pageNumber: number
     pageSize: number
     midPointJoinId: string | null
@@ -26,6 +27,7 @@ export const streamInitialState: IStreamState = {
     onlineUsers: [],
     loadingMessages: false,
     loadingMore: false,
+    updatingHostRoom: false,
     pageNumber: 0,
     pageSize: 50,
     midPointJoinId: null,

@@ -7,33 +7,62 @@ interface IOwnProps {
     outline?: boolean;
     disabled?: boolean
     danger?: boolean
+    success?: boolean
     onClick?: () => void;
 }
 
 export const MainButton: React.FC<IOwnProps> = (props) => {
     React.useEffect(() => {}, []);
 
+    const {
+        text,
+        icon,
+        width,
+        outline,
+        disabled,
+        danger,
+        success,
+        onClick
+    } = props
+
+    let bgColor;
+
+    
+    if (success) {
+        bgColor = '#45C419'
+    }
+    else if (danger) {
+        bgColor = 'rgb(196, 25, 25)'
+    }
+    else if (outline) {
+        'transparent'
+    }
+    else{
+        bgColor = '#195DC4'
+    }
+
+
     return (
         <div
-            onClick={props.onClick}
+            onClick={onClick}
             style={{
                 borderRadius: 25,
                 width: props.width ?? '100%',
-                background: props.danger ? 'rgb(196, 25, 25)' : props.outline ? 'transparent' : '#195DC4',
-                opacity: props.disabled ? 0.25 : 1,
+                background: bgColor,
+                opacity: disabled ? 0.25 : 1,
                 padding: '5px 10px',
                 alignItems: 'center',
                 height: 25,
                 display: 'flex',
                 justifyContent: 'center',
-                border: props.outline ? '1px solid #eee' : 'none',
-                cursor: props.onClick ? 'pointer' : 'default',
+                border: outline ? '1px solid #eee' : 'none',
+                cursor: onClick ? 'pointer' : 'default',
             }}
         >
-            {props.icon && (
-                <span style={{ marginRight: 10 }}>{props.icon}</span>
+            {icon && (
+                <span style={{ marginRight: 10, marginTop: 5 }}>{icon}</span>
             )}
-            <span style={{ fontSize: 14 }}>{props.text}</span>
+            <span style={{ fontSize: 14 }}>{text}</span>
         </div>
     );
 };

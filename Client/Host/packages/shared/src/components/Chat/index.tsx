@@ -3,8 +3,8 @@ import { Box, Button, Divider, IconButton, InputAdornment, List, ListItem, ListI
 import { Text, View } from 'native-base';
 import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 import { IMessage } from '../../interface/IMessage';
-import { ShowAlertAction } from '../../state/contexts/app/Actions';
 import { getUserState } from '../../state/contexts/user/Selectors';
 import { SendMessageAction } from '../../state/contexts/stream/Actions';
 import { getStreamState } from '../../state/contexts/stream/Selectors';
@@ -49,10 +49,7 @@ export const Chat: React.FC = () => {
         await userConnection.hubConnection.invoke("SendMessage", messageDto)
             .catch(err => {
                 console.error(err);
-                dispatch(ShowAlertAction({
-                    title: "Send message error",
-                    message: err.message
-                }))
+                toast.error(err.message)
             });
     }
 

@@ -6,7 +6,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { getUserState } from '../../../state/contexts/user/Selectors';
 import { ChatMessage } from './ChatMessage';
 import { IMessage } from '../../../interface/IMessage';
-import { ShowAlertAction } from '../../../state/contexts/app/Actions';
+import toast from 'react-hot-toast';
 import { SendMessageAction} from '../../../state/contexts/stream/Actions';
 import { uuidv4 } from '../../../utils/Utils';
 
@@ -37,6 +37,7 @@ export const StreamChat = () => {
 
         chatWindowRef.current?.scrollTo(0, 0)
         setMessage('')
+        
         const messageDto: IMessage = {
             id: uuidv4(),
             userId: userConnection.userId,
@@ -47,15 +48,11 @@ export const StreamChat = () => {
             roomId: selectedHostRoom.id
         }
 
-        dispatch(SendMessageAction({ message: messageDto, roomId: userConnection.roomId }))
-
         await userConnection.hubConnection.invoke("SendMessage", messageDto)
+            .then(() => dispatch(SendMessageAction({ message: messageDto, roomId: userConnection.roomId })))
             .catch(err => {
                 console.error(err);
-                dispatch(ShowAlertAction({
-                    title: "Send message error",
-                    message: err.message
-                }))
+                toast.error(err.message)
             });
     }
     

@@ -1,15 +1,16 @@
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { hostApi } from '../../../../api/hostApi';
-import { CreateHostRoomInput, HostRoom, HostRoomUser } from '../../../../graphql/types';
+import { CreateHostRoomInput, HostRoom, HostRoomUser, UpdateHostRoomInput } from '../../../../graphql/types';
 import { IAwsError } from '../../../../interface/IAwsError';
-import { AwsErrorAlertAction, SetDashboardSection, SetMidPointStep, ShowAlertAction } from '../../../contexts/app/Actions';
+import { AwsErrorAlertAction, SetDashboardSection, SetMidPointStep } from '../../../contexts/app/Actions';
 import { getUserId } from '../../../contexts/user/Selectors';
-import { CreateHostRoomAction, DeleteHostRoomAction, GetHostRoomsAction, GetHostRoomsSuccessAction, SetHostRoomAction, SetMidPointJoinIdAction } from '../../../contexts/stream/Actions';
+import { CreateHostRoomAction, DeleteHostRoomAction, GetHostRoomsAction, GetHostRoomsSuccessAction, SetHostRoomAction, SetMidPointJoinIdAction, UpdateHostRoomAction, UpdateHostRoomFailAction, UpdateHostRoomSuccessAction } from '../../../contexts/stream/Actions';
 import { showLoading } from 'react-redux-loading-bar';
 import { DashboardSection, MidPointStep } from '../../../../enum/DashboardSection';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { getUserCreatedHostRooms } from '../../../contexts/stream/Selectors';
 import { chatApi } from '../../../../api/chatApi';
+import toast from 'react-hot-toast';
 import { IMessage } from '../../../../interface/IMessage';
 
 export default function* hostApiSaga() {
@@ -17,6 +18,27 @@ export default function* hostApiSaga() {
     yield takeLatest(GetHostRoomsAction.type, getHostRooms);
     yield takeLatest(SetMidPointJoinIdAction.type, setHostRoomFromJoinId)
     yield takeLatest(DeleteHostRoomAction.type, deleteHostRoom)
+    yield takeLatest(UpdateHostRoomAction, updateHostRoom)
+}
+
+export function* updateHostRoom(action: PayloadAction<UpdateHostRoomInput>) {
+    try{
+
+        const response: HostRoom = yield call(hostApi.updateHostRoom, action.payload)
+
+        if (response) {
+            yield put(UpdateHostRoomSuccessAction(response))
+        }
+        else{
+            toast.error("An error occured")
+            yield put(UpdateHostRoomFailAction())
+        }
+
+    }
+    catch (e) {
+        yield put(AwsErrorAlertAction(e as IAwsError))
+        yield put(UpdateHostRoomFailAction())
+    } 
 }
 
 export function* deleteHostRoom(action: PayloadAction<string>) {
@@ -38,9 +60,9 @@ export function* deleteHostRoom(action: PayloadAction<string>) {
             call(hostApi.deleteHostRoomUsers, user.id) 
         ))
         yield call(hostApi.deleteHostRoom, action.payload)
-
-        yield put(ShowAlertAction({ title: "Room deleted", status: "success" }))
         yield put(SetDashboardSection(DashboardSection.Overview))
+
+        toast.success("Room deleted")
 
     }
     catch (e) {
@@ -54,9 +76,15 @@ export function* setHostRoomFromJoinId(action: PayloadAction<string>) {
             return;
 
         const response: HostRoom = yield call(hostApi.getHostRoom, action.payload)
-        yield put(SetHostRoomAction(response))
-        yield put(SetDashboardSection(DashboardSection.Start))
 
+        if (response == null) {
+            toast.error("This host room does not exist or was deleted")
+        }
+        else{
+            yield put(SetDashboardSection(DashboardSection.Start))
+            yield put(SetHostRoomAction(response))
+        }
+    
     }
     catch (e) {
         yield put(AwsErrorAlertAction(e as IAwsError))
@@ -66,7 +94,7 @@ export function* setHostRoomFromJoinId(action: PayloadAction<string>) {
 
 export function* getHostRooms() {
     try{
-        yield put(showLoading())
+        // yield put(showLoading())
 
         const userId: string = yield select(getUserId)
         const response: HostRoom[] = yield call(hostApi.getUserCreatedHostRooms, userId)
@@ -83,7 +111,7 @@ export function* getHostRooms() {
     catch (e) {
         yield put(AwsErrorAlertAction(e as IAwsError))
     } finally {
-        yield put(showLoading())
+        // yield put(showLoading())
     } 
 
 }
@@ -93,28 +121,24 @@ export function* createHostRoom() {
 
         const userCreatedHostRooms: HostRoom[] = yield select(getUserCreatedHostRooms)
 
-        if (userCreatedHostRooms.length >= 5)
+        if (userCreatedHostRooms.length >= 5) {
+            toast.error("Maximum rooms created")
             return;
+        }
 
-
-        yield put(showLoading())
         const userId: string = yield select(getUserId)
 
         const input: CreateHostRoomInput = {
             createdUserId: userId,
-            name: 'My Room'
+            name: 'New Room'
         }
 
         const response: HostRoom = yield call(hostApi.createHostRoom, input)
-
-        yield put(SetHostRoomAction(response))
-        yield put(SetMidPointStep(MidPointStep.Welcome))
+        yield put(SetMidPointJoinIdAction(response.id))
 
     } catch (e) {
         yield put(AwsErrorAlertAction(e as IAwsError))
-    } finally {
-        yield put(showLoading())
-    } 
+    }
 
 }
 

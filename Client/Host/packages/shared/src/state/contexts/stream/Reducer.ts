@@ -1,7 +1,7 @@
 import { HubConnectionState } from '@microsoft/signalr';
 import { createReducer } from '@reduxjs/toolkit';
 import { IChannelData } from '../../../interface/IChannelData';
-import { AddChannelAction, DeleteHostRoomAction, GetHostRoomDataAction, GetHostRoomDataSuccessAction, GetHostRoomsSuccessAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetMidPointJoinIdAction, SetUserConnectionAction, UsersInRoomAction } from './Actions';
+import { AddChannelAction, DeleteHostRoomAction, GetHostRoomDataAction, GetHostRoomDataSuccessAction, GetHostRoomsSuccessAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetMidPointJoinIdAction, SetUserConnectionAction, UpdateHostRoomAction, UpdateHostRoomFailAction, UpdateHostRoomSuccessAction, UsersInRoomAction } from './Actions';
 import { streamInitialState } from './IStreamState';
 
 export const streamReducer = createReducer(streamInitialState, (builder) => {
@@ -108,15 +108,30 @@ export const streamReducer = createReducer(streamInitialState, (builder) => {
         })
         .addCase(SetHostRoomAction, (state, action) => {
             state.selectedHostRoom = action.payload
+
+            if (action.payload == null) {
+                state.channelData = []
+            }
         })
         .addCase(SetMidPointJoinIdAction, (state, action) => {
             state.midPointJoinId = action.payload
         })
         .addCase(DeleteHostRoomAction, (state, action) => {
             
-            state.userCreatedHostRooms.filter(x => x.id !== action.payload)
+            state.userCreatedHostRooms = state.userCreatedHostRooms.filter(x => x.id !== action.payload)
 
+        })
+        .addCase(UpdateHostRoomAction, (state) => {
+            state.updatingHostRoom = true
+        })
+        .addCase(UpdateHostRoomSuccessAction, (state, action) => {
+            
+            state.selectedHostRoom = action.payload
+            state.updatingHostRoom = false
+        })
+        .addCase(UpdateHostRoomFailAction, (state) => {
 
+            state.updatingHostRoom = false
         })
 });
 

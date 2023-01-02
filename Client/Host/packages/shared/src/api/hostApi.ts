@@ -1,7 +1,7 @@
 import { graphQLQuery } from "../graphql/api";
-import { createHostRoom, deleteHostRoom } from "../graphql/mutations";
+import { createHostRoom, deleteHostRoom, updateHostRoom } from "../graphql/mutations";
 import { listHostRooms, listHostRoomUsers } from "../graphql/queries";
-import { CreateHostRoomInput, CreateHostRoomMutation, DeleteHostRoomInput, DeleteHostRoomMutation, DeleteHostRoomUserInput, DeleteHostRoomUserMutation, HostRoom, HostRoomUser, ListHostRoomsQuery, ListHostRoomUsersQuery, ModelHostRoomChatMessageFilterInput, ModelHostRoomFilterInput, ModelHostRoomUserFilterInput } from "../graphql/types";
+import { CreateHostRoomInput, CreateHostRoomMutation, DeleteHostRoomInput, DeleteHostRoomMutation, DeleteHostRoomUserInput, DeleteHostRoomUserMutation, HostRoom, HostRoomUser, ListHostRoomsQuery, ListHostRoomUsersQuery, ModelHostRoomChatMessageFilterInput, ModelHostRoomFilterInput, ModelHostRoomUserFilterInput, UpdateHostRoomInput, UpdateHostRoomMutation } from "../graphql/types";
 
 export class HostApi {
 
@@ -13,7 +13,7 @@ export class HostApi {
                 input
             });
 
-            return response.data as HostRoom
+            return response.data?.createHostRoom as HostRoom
         }
         catch (error) {
             console.error(HostApi.name, "createHostRoom", error);
@@ -101,6 +101,22 @@ export class HostApi {
         }
         catch (error) {
             console.error(HostApi.name, "deleteHostRoomUsers", error);
+            throw error;
+        }
+    }
+
+    public updateHostRoom = async (input: UpdateHostRoomInput): Promise<HostRoom> => {
+        console.log("[API] updateHostRoom")
+
+        try {
+            const response = await graphQLQuery<UpdateHostRoomMutation, UpdateHostRoomInput>(updateHostRoom, {
+                input
+            });
+
+            return response.data?.updateHostRoom as HostRoom
+        }
+        catch (error) {
+            console.error(HostApi.name, "updateHostRoom", error);
             throw error;
         }
     }

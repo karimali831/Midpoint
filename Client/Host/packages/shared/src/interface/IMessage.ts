@@ -1,3 +1,5 @@
+import { User } from "../graphql/types"
+
 export interface IMessage {
     id: string
     userId: string
@@ -7,4 +9,5 @@ export interface IMessage {
     createdAt: string
     isBot?: boolean
     read?: boolean
+    user?: User | null
 }

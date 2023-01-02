@@ -3,13 +3,26 @@ import { Button } from 'native-base';
 import React from "react";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useDispatch } from 'react-redux';
-import { MidPointStep } from '../../enum/DashboardSection';
-import { SetMidPointStep } from '../../state/contexts/app/Actions';
+import { DashboardSection, MidPointStep } from '../../enum/DashboardSection';
+import { SetDashboardSection, SetMidPointStep } from '../../state/contexts/app/Actions';
+import { useSelector } from 'react-redux';
+import { getStreamState } from '../../state/contexts/stream/Selectors';
+import { HubConnectionState } from '@microsoft/signalr';
+import { toast } from 'react-hot-toast';
 
 
 export const Welcome = () => {
-    React.useEffect(() => { }, [])
     const dispatch = useDispatch()
+
+    // const { userConnection } = useSelector(getStreamState)
+
+
+    // React.useEffect(() => {`
+    //     if (userConnection == null || userConnection.connectionState !== HubConnectionState.Connected) {
+    //         toast.error("An error occured establishing connection")
+    //         dispatch(SetDashboardSection(DashboardSection.Start))
+    //     }
+    //  }, [userConnection])
 
     return (
         <motion.div

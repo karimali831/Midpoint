@@ -26,6 +26,7 @@ import './styles.css';
 export type FormValidation = {
     value: string
     minCharsRequired?: number
+    maxCharsRequired?: number
     emailValidator?: boolean
     urlValidator?: boolean
 }
