@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
-import { showLoading } from 'react-redux-loading-bar'
+import { hideLoading } from 'react-redux-loading-bar'
 import { useSelector } from "react-redux";
 import { getLoadingBar, getStreamState } from "../../../state/contexts/stream/Selectors";
-import { SetDashboardSection, SetMidPointStep } from "../../../state/contexts/app/Actions";
+import { SetMidPointStep } from "../../../state/contexts/app/Actions";
 import toast from 'react-hot-toast';
-import { DashboardSection, MidPointStep } from "../../../enum/DashboardSection";
+import { MidPointStep } from "../../../enum/DashboardSection";
 import { CreateHostRoomAction, GetHostRoomDataAction, GetHostRoomsAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from "../../../state/contexts/stream/Actions";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { HostRoom } from "../../../graphql/types";
@@ -14,21 +14,22 @@ import { IMessage } from "../../../interface/IMessage";
 import { IUserConnection } from "../../../interface/IUserConnection";
 import { getUserState } from "../../../state/contexts/user/Selectors";
 import { newHubConnection } from "../../../utils/HubHelper";
-import { uuidv4 } from "../../../utils/Utils";
+import { timeout, uuidv4 } from "../../../utils/Utils";
 import { Starting } from "./Starting";
 import sounds from "../../../assets/sounds";
 import { Howl } from "howler";
-import useEffectSkipInitialRender  from "../../../hooks/useEffectSkipInitialRender"
+import { CreateAction } from "../../../state/contexts/instance/Actions";
+import { getInstanceState } from "../../../state/contexts/instance/Selectors";
 
 /* 
     Before the next screen appears we should load:
     1. All the software and brand images
     2. Create host room  
-
 */
 export const StartStream = () => {
 
-    const [loading, setLoading] = useState<boolean>(false)
+    // const [loading, setLoading] = useState<boolean>(false)
+    const [hostRoom, setHostRoom] = useState<HostRoom | null>(null)
     const { user } = useSelector(getUserState)
 
     if (!user)
@@ -42,6 +43,8 @@ export const StartStream = () => {
         midPointJoinId 
     } = useSelector(getStreamState)
 
+    const { instance } = useSelector(getInstanceState)
+
     const dispatch = useDispatch()
 
     const configuration = {
@@ -54,13 +57,20 @@ export const StartStream = () => {
 
     const peerConn = new RTCPeerConnection(configuration);
 
+    React.useEffect(() =>  {
+        if (instance != null) {
+            startWebRtc()
+        }
+
+    }, [instance])
+
     React.useEffect(() => {
         dispatch(GetHostRoomsAction())
     }, [])
 
-    useEffectSkipInitialRender(() => {
-        dispatch(showLoading())
-    }, [loading])
+    // useEffectSkipInitialRender(() => {
+    //     dispatch(showLoading())
+    // }, [loading])
 
     React.useEffect(() => {
         if (!!midPointJoinId && !!selectedHostRoom) {
@@ -75,8 +85,25 @@ export const StartStream = () => {
             return
         }
 
+        setHostRoom(hostRoom)
+        // setLoading(true)
+
+        toast.loading("Launching new instance in the cloud...")
+        dispatch(CreateAction())
+
+
+    }
+
+    const startWebRtc = async () => {
+        toast.loading("Starting WebRTC...")
+        await timeout(2000)
+
+        if (hostRoom == null) {
+            toast.error("An error occurred")
+            return;
+        }
+
         if (userConnection != null) {
-            setLoading(true)
             await closeConnection()
                 .then(() => startConn(hostRoom))
                 .catch(() => toast.error("An error occured"))
@@ -84,7 +111,6 @@ export const StartStream = () => {
             return;
         }
 
-        setLoading(true)
         startConn(hostRoom)
     }
 
@@ -196,7 +222,10 @@ export const StartStream = () => {
                 })
                 .catch((error) => toast.error(error.message))
                 .finally(() => {
-                    setLoading(false)
+                    toast.remove()
+                    dispatch(hideLoading())
+
+                    toast.success("You're all set!")
                     dispatch(SetMidPointStep(!!midPointJoinId ? MidPointStep.Stream : MidPointStep.Welcome))
                 })
         }
@@ -252,15 +281,12 @@ export const StartStream = () => {
         dispatch(CreateHostRoomAction())
     }
 
-
-    if (loading) {
-        return (
-            <Starting />
-        )
-    }
-
     const limit = 5;
     const maxReached = userCreatedHostRooms.length === limit
+
+    if (hostRoom != null) {
+        return <Starting />
+    }
 
     return (
         <nav  style={{ width: 200 }}>

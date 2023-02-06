@@ -7,6 +7,7 @@ import { userReducer } from './contexts/user/Reducer';
 import { loadingBarReducer } from 'react-redux-loading-bar';
 import { streamReducer } from './contexts/stream/Reducer';
 import { IStoreState } from './IStoreState';
+import { instanceReducer } from './contexts/instance/Reducer';
 
 const rootReducer = combineReducers<IStoreState>({
     app: appReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers<IStoreState>({
     user: userReducer,
     stream: streamReducer,
     midi: midiReducer,
-    chat: chatReducer
+    chat: chatReducer,
+    instance: instanceReducer
 });
 
 export default rootReducer;

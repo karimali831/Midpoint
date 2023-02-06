@@ -1,8 +1,11 @@
+using Amazon.EC2;
 using Beatrice.Service;
+using Beatrice.Service.Service;
 using Beatrice.Web.Controllers.Api;
 using Beatrice.Web.ErrorHandler;
 using Beatrice.Web.Helper;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Beatrice.Web
 {
@@ -79,6 +82,13 @@ namespace Beatrice.Web
 
             // Add functionality to inject IOptions<T>
             services.AddOptions();
+
+            services.AddMvc();
+            services.AddSingleton<IEC2InstanceService, EC2InstanceService>();
+
+            var other = this.Configuration.GetAWSOptions("other");
+
+            services.AddAWSService<IAmazonEC2>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

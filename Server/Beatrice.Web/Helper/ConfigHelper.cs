@@ -2,9 +2,6 @@
 {
     public interface IConfigHelper
     {
-        string RainwayApiPublicKey { get; }
-        string RainwayApiSecretKey { get; }
-        string SentryUrl { get; }
         IConfigurationSection GetConfigurationSection(string key);
     }
 

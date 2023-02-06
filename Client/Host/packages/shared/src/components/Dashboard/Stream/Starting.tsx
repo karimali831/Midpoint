@@ -40,9 +40,7 @@ export const Starting = () => {
                     <LoadingBar
                         updateTime={100}
                         maxProgress={100} 
-                        // progressIncrease={100 / Object.keys(LoadStartup).length}
-
-                        progressIncrease={100 / 2}
+                        progressIncrease={1}
                         style={{
                             height: 2,
                             backgroundColor: "#19C45D"

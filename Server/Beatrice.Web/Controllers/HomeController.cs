@@ -17,12 +17,7 @@ namespace Beatrice.Web.Controllers
         {
             return View();
         }
-
-        public IActionResult WebRTC()
-        {
-            return View();
-        }
-
+        
         public IActionResult Privacy()
         {
             return View();

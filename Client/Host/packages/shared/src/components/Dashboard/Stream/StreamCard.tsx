@@ -1,22 +1,41 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import { StreamCardType } from '../../../enum/StreamCardType';
 
 interface IOwnProps {
     title: string;
+    height: number
     size: 'small' | 'large';
     icon: ReactElement;
     children: ReactElement;
+    maximiseCard: StreamCardType | null
+    onOpenInFull: () => void
 }
 
+
 export const StreamCard: React.FC<IOwnProps> = (props) => {
-    React.useEffect(() => {}, []);
+    const [width, setWidth] = useState<string>(props.size == 'large' ? '65%' : '35%')
+
+
+    React.useEffect(() => {
+
+
+        if (props.maximiseCard) {
+            setWidth('100%')
+        }
+        else{
+            setWidth(props.size == 'large' ? '65%' : '35%')
+        }
+    }, [props.maximiseCard]);
+
+    console.log(width)
 
     return (
         <div
             className='stream-card'
             style={{
-                width: props.size == 'large' ? '65%' : '35%'
+                width: width
             }}
         >
             <div
@@ -40,8 +59,8 @@ export const StreamCard: React.FC<IOwnProps> = (props) => {
                     }}
                 >
                     <span style={{ marginLeft: 10 }}>{props.title}</span>
-                    <div>
-                        <InfoOutlinedIcon style={{ fontSize: 16, marginRight: 10 }} />
+                    <div onClick={props.onOpenInFull} style={{ cursor: 'pointer' }}>
+                        {/* <InfoOutlinedIcon style={{ fontSize: 16, marginRight: 10 }} /> */}
                         <OpenInFullIcon style={{ fontSize: 16 }} />
                     </div>
                 </div>
@@ -51,8 +70,7 @@ export const StreamCard: React.FC<IOwnProps> = (props) => {
                     background: 'rgba(25, 93, 196, 0.15)',
                     display: 'flex',
                     padding: 15,
-                    maxHeight: 550,
-                    minHeight: 280,
+                    height: props.height,
                     borderBottomLeftRadius: 10,
                     borderBottomRightRadius: 10,
                 }}

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { loadingBarMiddleware, showLoading } from 'react-redux-loading-bar';
+import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import { persistReducer } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import { LocationChangeAction } from './contexts/app/Actions';

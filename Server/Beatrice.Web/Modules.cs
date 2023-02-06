@@ -1,4 +1,5 @@
 ﻿using Beatrice.Service.Model;
+using Beatrice.Service.Service;
 
 namespace Beatrice.Web
 {
@@ -12,6 +13,8 @@ namespace Beatrice.Web
             services.AddSingleton<IDictionary<string, UserConnection>>(
                 opts => new Dictionary<string, UserConnection>()
             );
+
+            services.AddScoped<IEC2InstanceService, EC2InstanceService>();
 
             return services;
         }

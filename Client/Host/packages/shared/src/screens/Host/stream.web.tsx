@@ -44,13 +44,12 @@ const VideoStream: React.FC<IOwnProps> = (props) => {
     }
 
     return (
-        <div>
-            <h5>Video chat</h5>
-            <div className="videoArea">
-                <video id="localVideo" ref={localVideoRef} autoPlay={true} playsInline={true}></video>
-                <video id="remoteVideo" ref={removeVideoRef} autoPlay={true} playsInline={true}></video>
+        <>
+            <div className="videoArea" style={{ height: 250 }}>
+                <video id="localVideo" ref={localVideoRef} autoPlay={true} playsInline={true}  style={{ width: '100%', height: 250 }}></video>
+                <video id="remoteVideo" ref={removeVideoRef} autoPlay={true} playsInline={true}  style={{ width: '100%', height: 250  }}></video>
             </div>
-        </div>
+        </>
     )
 }
 

@@ -3,7 +3,8 @@ export enum DashboardSection {
     Statistics,
     Settings,
     Connect,
-    Start
+    Start,
+    Starting
 }
 
 export enum MidPointStep {

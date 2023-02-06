@@ -4,6 +4,7 @@ import { IMidiState, midiInitialState } from './contexts/midi/IMidiState';
 import { IUserState, userInitialState } from './contexts/user/IUserState';
 import { IStreamState, streamInitialState } from './contexts/stream/IStreamState';
 import { ILoadingBarState, loadingBarInitialState } from './contexts/stream/ILoadingBarState';
+import { IInstanceState, instanceInitialState } from './contexts/instance/IInstanceState';
 
 export interface IStoreState {
     app: IAppState;
@@ -14,6 +15,7 @@ export interface IStoreState {
     stream: IStreamState
     midi: IMidiState
     chat: IChatState
+    instance: IInstanceState
 }
 
 export const StoreState: IStoreState = {
@@ -23,5 +25,6 @@ export const StoreState: IStoreState = {
     user: userInitialState,
     stream: streamInitialState,
     midi: midiInitialState,
-    chat: chatInitialState
+    chat: chatInitialState,
+    instance: instanceInitialState
 };

@@ -8,7 +8,8 @@ import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import  './styles.css'
 import { IMidiDevice } from '../../../models/IMidiDevice';
-import { UpdateUserInfoAction } from '../../../state/contexts/user/Actions';
+import { CamToggleAction, UpdateUserInfoAction } from '../../../state/contexts/user/Actions';
+import Switch from '@mui/material/Switch';
 import { getUserState } from '../../../state/contexts/user/Selectors';
 import {Howl, Howler} from 'howler'
 import sounds from '../../../assets/sounds';
@@ -21,7 +22,8 @@ export const StreamSetup = () => {
     } = useSelector(getMidiState);
 
     const connectedDevices = inputs.filter(x => x.connection === "open" && x.state === "connected")
-    const [expand, setExpand] = useState<boolean>(true)
+    const [expand, setExpand] = useState<boolean>(false)
+    const [checked, setChecked] = React.useState(['']);
 
     const dispatch = useDispatch()
     const { user } = useSelector(getUserState)
@@ -40,11 +42,11 @@ export const StreamSetup = () => {
                 }
             }
         }
-        else{
-            if (!expand) {
-                setExpand(true)
-            }
-        }
+        // else{
+        //     if (!expand) {
+        //         setExpand(true)
+        //     }
+        // }
 
     }, [JSON.stringify(connectedDevices)]);
 
@@ -64,6 +66,24 @@ export const StreamSetup = () => {
             updatedValue: activeInput === input ? null : input.name 
         }))
     }
+
+
+     const handleToggle = (value: string) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+
+        if (value === "cam") {
+            dispatch(CamToggleAction())
+        }
+    };
 
     const SoundPlay = (src: any) => {
         const sound = new Howl({
@@ -92,7 +112,7 @@ export const StreamSetup = () => {
                         }
                     </span>
                 </div>
-                <Collapse in={expand}>
+                <Collapse in={expand} >
                     <hr className='controllet-set-divider' />
                     {
                         connectedDevices.length == 0 ?
@@ -125,6 +145,22 @@ export const StreamSetup = () => {
                     })}
                 </Collapse>
             </div>
+            {   
+                !expand && 
+                <>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>Video on</span>
+                        <Switch
+                            edge="end"
+                            onChange={handleToggle('cam')}
+                            checked={checked.indexOf('cam') !== -1}
+                            inputProps={{
+                                'aria-labelledby': 'switch-list-label-cam',
+                            }}
+                        />
+                    </div>
+                </>
+            }
         </div>
     );
 };

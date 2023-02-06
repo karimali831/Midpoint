@@ -63,19 +63,26 @@ export const StreamChat = () => {
     }
 
     const data = channelData.filter(x => x.roomId === userConnection?.roomId)[0]
-
+    const messages = data?.messages.filter(x => !x.isBot) ?? []
 
     return (
         <div style={{ position: 'relative', width: '100%' }}>
 
-            <div ref={chatWindowRef} style={{  overflowY: 'auto', maxHeight: 230 }}>
+            <div ref={chatWindowRef} style={{  overflowY: 'auto', maxHeight: 300 }}>
                 {
-                    data?.messages.length > 0 && data.messages.filter(x => !x.isBot).reverse().map(message => 
-                    <ChatMessage message={message} key={message.id} />
-                )}
+                    messages.length > 0 ? messages.reverse().map(message => 
+                        <ChatMessage message={message} key={message.id} />
+                    )
+
+                    :
+                        <div style={{ textAlign: 'center', marginTop: '20%' }}>
+                            <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Keep your team updated during the stream.</span>
+                        </div> 
+                    
+                }
             </div>
 
-            <div style={{ display: 'flex', position: 'absolute', bottom: 0, width: '100%' }}>
+            <div style={{ display: 'flex', position: 'absolute', bottom: -10, width: '100%' }}>
            
                     <input 
                         className='chat-input' 
@@ -90,7 +97,7 @@ export const StreamChat = () => {
                         style={{ 
                             position: 'absolute', 
                             right: 0, 
-                            bottom: 5,
+                            bottom: 20,
                             cursor: 'pointer'
                         }}
                     >

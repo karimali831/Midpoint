@@ -5,6 +5,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CableIcon from '@mui/icons-material/Cable';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import EditIcon from '@mui/icons-material/Edit';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
@@ -31,6 +32,7 @@ import toast from 'react-hot-toast';
 import { SetDashboardSection } from '../../../state/contexts/app/Actions';
 import { FormInput } from '../../Form/input';
 import { Button } from 'native-base';
+import { StreamCardType } from '../../../enum/StreamCardType';
 
 interface IOwnProps {}
 
@@ -44,8 +46,8 @@ export const Stream: React.FC<IOwnProps> = () => {
     } = useSelector(getStreamState)
 
     const { midpointStep } = useSelector(getAppState)
-    const { user } = useSelector(getUserState)
-
+    const { user, camOn } = useSelector(getUserState)
+    const [maximiseStreamCard, setMaximiseStreamCard] = useState<StreamCardType | null>(null)
     const [roomName, setRoomName] = useState<string>(selectedHostRoom?.name ?? '')
     const [editInput, setEditInput] = useState<boolean>(false)
 
@@ -93,7 +95,19 @@ export const Stream: React.FC<IOwnProps> = () => {
             .then(() => dispatch(DeleteHostRoomAction(selectedHostRoom.id)))
     }
 
-    const { camOn } = useSelector(getUserState);
+    const maximiseCard = (card: StreamCardType) => {
+        if (maximiseStreamCard == null) {
+            setMaximiseStreamCard(card)
+        }
+
+        else if (maximiseStreamCard == card)  {
+            setMaximiseStreamCard(null)
+        }
+        else{
+            setMaximiseStreamCard(card)
+        }
+    }
+
 
     return (
         <motion.div
@@ -214,29 +228,56 @@ export const Stream: React.FC<IOwnProps> = () => {
                 }
             </div>
             <div className='stream-row'>
-                <StreamCard
-                    size="small"
-                    title="Users"
-                    icon={<PeopleAltIcon />}
-                >
-                    <StreamHostInfo />
-                </StreamCard>
-                <StreamCard size="large" title="Chat" icon={<ChatIcon />}>
-                    <StreamChat />
-                </StreamCard>
+                {
+                    (maximiseStreamCard == null || maximiseStreamCard == StreamCardType.Users) &&
+                    <StreamCard
+                        size="small"
+                        title="Users"
+                        height={350}
+                        maximiseCard={maximiseStreamCard}
+                        onOpenInFull={() => maximiseCard(StreamCardType.Users)}
+                        icon={<PeopleAltIcon />}
+                    >
+                        <StreamHostInfo />
+                    </StreamCard>
+                }
+                {
+                    (maximiseStreamCard == null || maximiseStreamCard == StreamCardType.Chat) &&
+                    <StreamCard 
+                        size="large" 
+                        title="Chat" 
+                        height={350}
+                        maximiseCard={maximiseStreamCard}
+                        onOpenInFull={() => maximiseCard(StreamCardType.Chat)}
+                        icon={<ChatIcon />}
+                    >
+                        <StreamChat />
+                    </StreamCard>
+                }
             </div>
             <div className='stream-row'>
+            {
+                (maximiseStreamCard == null || maximiseStreamCard == StreamCardType.Setup) &&
                 <StreamCard
                     size="small"
                     title="Setup"
+                    height={250}
+                    maximiseCard={maximiseStreamCard}
+                    onOpenInFull={() => maximiseCard(StreamCardType.Setup)}
                     icon={<SettingsOutlinedIcon />}
                 >
                     <StreamSetup />
                 </StreamCard>
+            }
+            {
+                (maximiseStreamCard == null || maximiseStreamCard == StreamCardType.Midi) &&
                 <StreamCard
                     size="large"
-                    title="Connected MIDI Devices"
-                    icon={<CableIcon />}
+                    height={250}
+                    maximiseCard={maximiseStreamCard}
+                    onOpenInFull={() => maximiseCard(StreamCardType.Midi)}
+                    title={camOn ? "Video Cam" : "Connected MIDI Devices"}
+                    icon={camOn ? <VideocamIcon /> : <CableIcon />}
                 >
                     {
                         camOn ? 
@@ -244,6 +285,7 @@ export const Stream: React.FC<IOwnProps> = () => {
                         <StreamMidiInfo />
                     }
                 </StreamCard>
+            }
             </div>
         </motion.div>
     );
