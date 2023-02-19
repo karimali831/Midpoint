@@ -16,6 +16,11 @@ export const DashboardLink: React.FC<IOwnProps> = (props) => {
     const dispatch = useDispatch()
     const { dashboardSection } = useSelector(getAppState)
 
+    let selected = props.section === dashboardSection
+
+    if (props.section == DashboardSection.Tokens && (dashboardSection == DashboardSection.Payment || dashboardSection == DashboardSection.PaymentSuccessful))
+        selected = true
+
     return (
         <div
             onClick={() => dispatch(SetDashboardSection(props.section))}
@@ -28,7 +33,7 @@ export const DashboardLink: React.FC<IOwnProps> = (props) => {
             }}
         >
             {
-                props.section === dashboardSection &&
+                selected &&
                 <div style={{
                         width: 6,
                         height: 6,
@@ -42,7 +47,7 @@ export const DashboardLink: React.FC<IOwnProps> = (props) => {
             <span style={{
                 marginLeft: 10,
                 fontSize: 20,
-                fontWeight: props.section === dashboardSection ? 500 : 400
+                fontWeight: selected ? 500 : 400
             }}>
                 {DashboardSection[props.section]}
             </span>

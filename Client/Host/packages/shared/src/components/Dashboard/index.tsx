@@ -9,6 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import WindowIcon from '@mui/icons-material/Window';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { motion } from 'framer-motion';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -38,6 +39,9 @@ import { getUserState } from '../../state/contexts/user/Selectors';
 import { Connect } from './Stream/Connect';
 import { SetHostRoomAction, SetMidPointJoinIdAction, SetUserConnectionAction } from '../../state/contexts/stream/Actions';
 import { HubConnectionState } from '@microsoft/signalr';
+import { Tokens } from './Tokens';
+import { Payment } from './Payment/Payment';
+import { PaymentSuccess } from './Payment/Success';
 
 export const Dashboard = () => {
 
@@ -178,6 +182,10 @@ export const Dashboard = () => {
                                     section={DashboardSection.Overview}
                                     icon={<WindowIcon />}
                                 />
+                                 <DashboardLink
+                                    section={DashboardSection.Tokens}
+                                    icon={<ShoppingCartIcon />}
+                                />
                                 <DashboardLink
                                     section={DashboardSection.Statistics}
                                     icon={<InsightsIcon />}
@@ -230,6 +238,12 @@ export const Dashboard = () => {
                             <Welcome />
                         ) : dashboardSection === DashboardSection.Overview ? (
                             <DashboardOverview />
+                        ) : dashboardSection === DashboardSection.Tokens ? (
+                            <Tokens />
+                        ) : dashboardSection === DashboardSection.Payment ? (
+                            <Payment />
+                        ) : dashboardSection === DashboardSection.PaymentSuccessful ? (
+                            <PaymentSuccess />
                         ) : dashboardSection === DashboardSection.Statistics ? (
                             <Statistics />
                         ) : dashboardSection === DashboardSection.Settings ? (

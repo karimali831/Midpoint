@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.101.48" />
     <PackageReference Include="AWSSDK.EC2" Version="3.7.117" />
     <PackageReference Include="Blazor.Extensions.WebUSB" Version="1.0.0" />
+    <PackageReference Include="FireSharp" Version="2.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Stripe.net" Version="41.7.0" />
   </ItemGroup>
 
 </Project>

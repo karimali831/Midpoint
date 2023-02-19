@@ -5,6 +5,7 @@ import { IUserState, userInitialState } from './contexts/user/IUserState';
 import { IStreamState, streamInitialState } from './contexts/stream/IStreamState';
 import { ILoadingBarState, loadingBarInitialState } from './contexts/stream/ILoadingBarState';
 import { IInstanceState, instanceInitialState } from './contexts/instance/IInstanceState';
+import { checkoutInitialState, ICheckoutState } from './contexts/checkout/ICheckoutState';
 
 export interface IStoreState {
     app: IAppState;
@@ -16,6 +17,7 @@ export interface IStoreState {
     midi: IMidiState
     chat: IChatState
     instance: IInstanceState
+    checkout: ICheckoutState
 }
 
 export const StoreState: IStoreState = {
@@ -26,5 +28,6 @@ export const StoreState: IStoreState = {
     stream: streamInitialState,
     midi: midiInitialState,
     chat: chatInitialState,
-    instance: instanceInitialState
+    instance: instanceInitialState,
+    checkout: checkoutInitialState
 };

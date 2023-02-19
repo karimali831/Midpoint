@@ -39,6 +39,8 @@
         "@mui/material": "^5.10.8",
         "@mui/styles": "^5.10.8",
         "@reduxjs/toolkit": "^1.8.2",
+        "@stripe/react-stripe-js": "^1.16.4",
+        "@stripe/stripe-js": "^1.46.0",
         "@types/howler": "^2.2.7",
         "@types/react-redux": "^7.1.24",
         "@types/react-router-dom": "^5.3.3",
@@ -63,6 +65,7 @@
         "react-redux-loading-bar": "^5.0.4",
         "react-router-dom": "5.2.0",
         "react-router-redux": "^4.0.8",
+        "react-spinners": "^0.13.8",
         "react-use-error-boundary": "^1.0.2",
         "redux-devtools-extension": "^2.13.9",
         "redux-persist": "^6.0.0",
@@ -73,7 +76,8 @@
         "zen-observable-ts": "^1.1.0"
     },
     "devDependencies": {
-        "@types/react": "^18.0.9"
+        "@types/react": "^18.0.9",
+        "@types/stripe": "^8.0.417"
     },
     "resolutions": {
         "goober": "2.1.9",

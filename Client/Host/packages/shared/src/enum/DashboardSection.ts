@@ -1,5 +1,8 @@
 export enum DashboardSection {
     Overview,
+    Tokens,
+    Payment,
+    PaymentSuccessful,
     Statistics,
     Settings,
     Connect,

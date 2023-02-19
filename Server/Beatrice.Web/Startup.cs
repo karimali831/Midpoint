@@ -1,11 +1,15 @@
+using Amazon;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.EC2;
-using Beatrice.Service;
+using Amazon.Runtime;
+using Beatrice.Service.Configuration;
 using Beatrice.Service.Service;
 using Beatrice.Web.Controllers.Api;
 using Beatrice.Web.ErrorHandler;
 using Beatrice.Web.Helper;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNetCore.Mvc;
+using Stripe;
 
 namespace Beatrice.Web
 {
@@ -39,6 +43,21 @@ namespace Beatrice.Web
 
             // Dependency injection
             services.Modules();
+            
+            // Stripe
+            var stripeConfig = Configuration.GetSection("Stripe");
+            StripeConfiguration.ApiKey = stripeConfig["SecretKey"];
+            services.Configure<StripeConfig>(stripeConfig);
+            
+            // Aws
+            var credentials = new BasicAWSCredentials("AKIA5HPQCAYQVDAKYUE2", "zn4q9EBTtAsSwimGDjjmwxqCMcYdsi9qE6qC4TI2");
+            var config = new AmazonDynamoDBConfig()
+            {
+                RegionEndpoint = RegionEndpoint.EUWest2
+            };
+            var client = new AmazonDynamoDBClient(credentials, config);
+            services.AddSingleton<IAmazonDynamoDB>(client);
+            services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
 
             // Mini profiler
             //services.AddMiniProfiler();

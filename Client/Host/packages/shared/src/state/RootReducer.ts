@@ -8,6 +8,7 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 import { streamReducer } from './contexts/stream/Reducer';
 import { IStoreState } from './IStoreState';
 import { instanceReducer } from './contexts/instance/Reducer';
+import { checkoutReducer } from './contexts/checkout/Reducer';
 
 const rootReducer = combineReducers<IStoreState>({
     app: appReducer,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers<IStoreState>({
     stream: streamReducer,
     midi: midiReducer,
     chat: chatReducer,
-    instance: instanceReducer
+    instance: instanceReducer,
+    checkout: checkoutReducer
 });
 
 export default rootReducer;
