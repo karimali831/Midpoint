@@ -29,21 +29,24 @@ namespace Beatrice.Service.Service
 
         public async Task UpdateTokens(int tokens, string awsUid)
         {
-            try{
-                
+            try
+            {
+                var user = await GetAsync(awsUid);
+       
                 var request = new UpdateItemRequest
                 {
                     TableName = TblName,
                     Key = new Dictionary<string,AttributeValue>() { { "id", new AttributeValue { S = awsUid } } },
                     ExpressionAttributeNames = new Dictionary<string,string>()
                     {
-                        {"#T", "imageUri"}
+                        {"#T", "purchasedTokens"}
                     },
                     ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
                     {
-                        {":imageUri", new AttributeValue {N = tokens.ToString() }},
+                        {":purchasedTokens", new AttributeValue {N = (tokens + (user.PurchasedToken ?? 0)).ToString() }},
                     },
-                    UpdateExpression = "SET #T = #T - :imageUri"
+                    UpdateExpression = "SET #T = :purchasedTokens",
+                    // ReturnValues = ReturnValue.ALL_NEW
                 };
                 var response = await _client.UpdateItemAsync(request);
                 
@@ -86,14 +89,15 @@ namespace Beatrice.Service.Service
             var fullName = user.First(x => x.Key == "fullName").Value;
             var firebaseUid = user.First(x => x.Key == "firebaseUid").Value;
             var email = user.First(x => x.Key == "email").Value;
+            var tokens = user.FirstOrDefault(x => x.Key == "purchasedTokens").Value;
 
             var awsUser = new AwsUser
             {
                 Id = id.S,
                 FullName = fullName.S,
                 FirebaseUid = firebaseUid.S,
-                Email = email.S
-                
+                Email = email.S,
+                PurchasedToken = tokens != null ? int.Parse(tokens.N) : 0
             };
 
             return awsUser;

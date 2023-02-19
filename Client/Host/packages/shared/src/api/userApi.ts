@@ -2,7 +2,7 @@
 import { graphQLQuery } from '../graphql/api';
 import { createUser, updateUser } from '../graphql/mutations';
 import { listUsers } from '../graphql/queries';
-import { CreateUserInput, CreateUserMutation, ListUsersQuery, ModelUserFilterInput, UpdateUserInput, UpdateUserMutation } from '../graphql/types';
+import { CreateUserInput, CreateUserMutation, ListUsersQuery, ModelUserFilterInput, UpdateUserInput, UpdateUserMutation } from '../../../../src/graphql/types'
 import { IUser } from '../models/IUser';
 
 class UserApi {
@@ -18,8 +18,13 @@ class UserApi {
                     }
                 }
             })
+            
 
             const user = response.data?.listUsers?.items
+
+            console.log(user![0]?.purchasedTokens)
+            console.log(userId)
+
             return user![0] as IUser
         }
         catch (error) {

@@ -1,7 +1,7 @@
+import { CreateHostRoomChatMessageInput, CreateHostRoomChatMessageMutation, ListHostRoomChatMessagesQuery, ModelHostRoomChatMessageFilterInput, DeleteHostRoomChatMessageMutation, DeleteHostRoomChatMessageInput } from "../../../../src/graphql/types";
 import { graphQLQuery } from "../graphql/api";
 import { createHostRoomChatMessage, deleteHostRoomChatMessage } from "../graphql/mutations";
 import { listHostRoomChatMessages } from "../graphql/queries";
-import { CreateHostRoomChatMessageInput, CreateHostRoomChatMessageMutation, DeleteHostRoomChatMessageInput, DeleteHostRoomChatMessageMutation, ListHostRoomChatMessagesQuery, ModelHostRoomChatMessageFilterInput } from "../graphql/types";
 import { IMessage } from "../interface/IMessage";
 
 export class ChatApi {

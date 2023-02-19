@@ -1,10 +1,10 @@
 import { createAction } from '@reduxjs/toolkit';
 import { HubConnectionState } from "@microsoft/signalr";
-import { HostRoom, UpdateHostRoomInput } from '../../../graphql/types';
 import { IChannel } from '../../../interface/IChannel';
 import { IChannelData } from '../../../interface/IChannelData';
 import { IMessage } from '../../../interface/IMessage';
 import { IUserConnection } from '../../../interface/IUserConnection';
+import { HostRoom, UpdateHostRoomInput } from '../../../../../../src/graphql/types';
 
 // ACTION CREATORS
 const SetConnectionStateAction = createAction<HubConnectionState>('@@Stream/SetConnectionState');

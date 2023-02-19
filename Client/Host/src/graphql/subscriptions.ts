@@ -2,20 +2,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    createUser(input: $input, condition: $condition) {
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
+    onCreateUser(filter: $filter) {
       id
       fullName
       firebaseUid
       email
       displayName
       imageUri
-      purchasedTokens
       defaultMidiDevice
+      purchasedTokens
       hostRoomUser {
         items {
           id
@@ -37,20 +34,17 @@ export const createUser = /* GraphQL */ `
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    updateUser(input: $input, condition: $condition) {
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
+    onUpdateUser(filter: $filter) {
       id
       fullName
       firebaseUid
       email
       displayName
       imageUri
-      purchasedTokens
       defaultMidiDevice
+      purchasedTokens
       hostRoomUser {
         items {
           id
@@ -72,20 +66,17 @@ export const updateUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    deleteUser(input: $input, condition: $condition) {
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
+    onDeleteUser(filter: $filter) {
       id
       fullName
       firebaseUid
       email
       displayName
       imageUri
-      purchasedTokens
       defaultMidiDevice
+      purchasedTokens
       hostRoomUser {
         items {
           id
@@ -107,12 +98,11 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
-export const createHostRoomUser = /* GraphQL */ `
-  mutation CreateHostRoomUser(
-    $input: CreateHostRoomUserInput!
-    $condition: ModelHostRoomUserConditionInput
+export const onCreateHostRoomUser = /* GraphQL */ `
+  subscription OnCreateHostRoomUser(
+    $filter: ModelSubscriptionHostRoomUserFilterInput
   ) {
-    createHostRoomUser(input: $input, condition: $condition) {
+    onCreateHostRoomUser(filter: $filter) {
       id
       userId
       hostRoomId
@@ -126,8 +116,8 @@ export const createHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -174,12 +164,11 @@ export const createHostRoomUser = /* GraphQL */ `
     }
   }
 `;
-export const updateHostRoomUser = /* GraphQL */ `
-  mutation UpdateHostRoomUser(
-    $input: UpdateHostRoomUserInput!
-    $condition: ModelHostRoomUserConditionInput
+export const onUpdateHostRoomUser = /* GraphQL */ `
+  subscription OnUpdateHostRoomUser(
+    $filter: ModelSubscriptionHostRoomUserFilterInput
   ) {
-    updateHostRoomUser(input: $input, condition: $condition) {
+    onUpdateHostRoomUser(filter: $filter) {
       id
       userId
       hostRoomId
@@ -193,8 +182,8 @@ export const updateHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -241,12 +230,11 @@ export const updateHostRoomUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteHostRoomUser = /* GraphQL */ `
-  mutation DeleteHostRoomUser(
-    $input: DeleteHostRoomUserInput!
-    $condition: ModelHostRoomUserConditionInput
+export const onDeleteHostRoomUser = /* GraphQL */ `
+  subscription OnDeleteHostRoomUser(
+    $filter: ModelSubscriptionHostRoomUserFilterInput
   ) {
-    deleteHostRoomUser(input: $input, condition: $condition) {
+    onDeleteHostRoomUser(filter: $filter) {
       id
       userId
       hostRoomId
@@ -260,8 +248,8 @@ export const deleteHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -308,12 +296,11 @@ export const deleteHostRoomUser = /* GraphQL */ `
     }
   }
 `;
-export const createHostRoomMidiMessage = /* GraphQL */ `
-  mutation CreateHostRoomMidiMessage(
-    $input: CreateHostRoomMidiMessageInput!
-    $condition: ModelHostRoomMidiMessageConditionInput
+export const onCreateHostRoomMidiMessage = /* GraphQL */ `
+  subscription OnCreateHostRoomMidiMessage(
+    $filter: ModelSubscriptionHostRoomMidiMessageFilterInput
   ) {
-    createHostRoomMidiMessage(input: $input, condition: $condition) {
+    onCreateHostRoomMidiMessage(filter: $filter) {
       id
       userId
       roomId
@@ -325,8 +312,8 @@ export const createHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -372,12 +359,11 @@ export const createHostRoomMidiMessage = /* GraphQL */ `
     }
   }
 `;
-export const updateHostRoomMidiMessage = /* GraphQL */ `
-  mutation UpdateHostRoomMidiMessage(
-    $input: UpdateHostRoomMidiMessageInput!
-    $condition: ModelHostRoomMidiMessageConditionInput
+export const onUpdateHostRoomMidiMessage = /* GraphQL */ `
+  subscription OnUpdateHostRoomMidiMessage(
+    $filter: ModelSubscriptionHostRoomMidiMessageFilterInput
   ) {
-    updateHostRoomMidiMessage(input: $input, condition: $condition) {
+    onUpdateHostRoomMidiMessage(filter: $filter) {
       id
       userId
       roomId
@@ -389,8 +375,8 @@ export const updateHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -436,12 +422,11 @@ export const updateHostRoomMidiMessage = /* GraphQL */ `
     }
   }
 `;
-export const deleteHostRoomMidiMessage = /* GraphQL */ `
-  mutation DeleteHostRoomMidiMessage(
-    $input: DeleteHostRoomMidiMessageInput!
-    $condition: ModelHostRoomMidiMessageConditionInput
+export const onDeleteHostRoomMidiMessage = /* GraphQL */ `
+  subscription OnDeleteHostRoomMidiMessage(
+    $filter: ModelSubscriptionHostRoomMidiMessageFilterInput
   ) {
-    deleteHostRoomMidiMessage(input: $input, condition: $condition) {
+    onDeleteHostRoomMidiMessage(filter: $filter) {
       id
       userId
       roomId
@@ -453,8 +438,8 @@ export const deleteHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -500,12 +485,9 @@ export const deleteHostRoomMidiMessage = /* GraphQL */ `
     }
   }
 `;
-export const createHostRoom = /* GraphQL */ `
-  mutation CreateHostRoom(
-    $input: CreateHostRoomInput!
-    $condition: ModelHostRoomConditionInput
-  ) {
-    createHostRoom(input: $input, condition: $condition) {
+export const onCreateHostRoom = /* GraphQL */ `
+  subscription OnCreateHostRoom($filter: ModelSubscriptionHostRoomFilterInput) {
+    onCreateHostRoom(filter: $filter) {
       id
       name
       desc
@@ -525,8 +507,8 @@ export const createHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
-          purchasedTokens
           defaultMidiDevice
+          purchasedTokens
           createdAt
           updatedAt
         }
@@ -597,12 +579,9 @@ export const createHostRoom = /* GraphQL */ `
     }
   }
 `;
-export const updateHostRoom = /* GraphQL */ `
-  mutation UpdateHostRoom(
-    $input: UpdateHostRoomInput!
-    $condition: ModelHostRoomConditionInput
-  ) {
-    updateHostRoom(input: $input, condition: $condition) {
+export const onUpdateHostRoom = /* GraphQL */ `
+  subscription OnUpdateHostRoom($filter: ModelSubscriptionHostRoomFilterInput) {
+    onUpdateHostRoom(filter: $filter) {
       id
       name
       desc
@@ -622,8 +601,8 @@ export const updateHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
-          purchasedTokens
           defaultMidiDevice
+          purchasedTokens
           createdAt
           updatedAt
         }
@@ -694,12 +673,9 @@ export const updateHostRoom = /* GraphQL */ `
     }
   }
 `;
-export const deleteHostRoom = /* GraphQL */ `
-  mutation DeleteHostRoom(
-    $input: DeleteHostRoomInput!
-    $condition: ModelHostRoomConditionInput
-  ) {
-    deleteHostRoom(input: $input, condition: $condition) {
+export const onDeleteHostRoom = /* GraphQL */ `
+  subscription OnDeleteHostRoom($filter: ModelSubscriptionHostRoomFilterInput) {
+    onDeleteHostRoom(filter: $filter) {
       id
       name
       desc
@@ -719,8 +695,8 @@ export const deleteHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
-          purchasedTokens
           defaultMidiDevice
+          purchasedTokens
           createdAt
           updatedAt
         }
@@ -791,12 +767,11 @@ export const deleteHostRoom = /* GraphQL */ `
     }
   }
 `;
-export const createHostRoomChatMessage = /* GraphQL */ `
-  mutation CreateHostRoomChatMessage(
-    $input: CreateHostRoomChatMessageInput!
-    $condition: ModelHostRoomChatMessageConditionInput
+export const onCreateHostRoomChatMessage = /* GraphQL */ `
+  subscription OnCreateHostRoomChatMessage(
+    $filter: ModelSubscriptionHostRoomChatMessageFilterInput
   ) {
-    createHostRoomChatMessage(input: $input, condition: $condition) {
+    onCreateHostRoomChatMessage(filter: $filter) {
       id
       userId
       roomId
@@ -809,8 +784,8 @@ export const createHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -857,12 +832,11 @@ export const createHostRoomChatMessage = /* GraphQL */ `
     }
   }
 `;
-export const updateHostRoomChatMessage = /* GraphQL */ `
-  mutation UpdateHostRoomChatMessage(
-    $input: UpdateHostRoomChatMessageInput!
-    $condition: ModelHostRoomChatMessageConditionInput
+export const onUpdateHostRoomChatMessage = /* GraphQL */ `
+  subscription OnUpdateHostRoomChatMessage(
+    $filter: ModelSubscriptionHostRoomChatMessageFilterInput
   ) {
-    updateHostRoomChatMessage(input: $input, condition: $condition) {
+    onUpdateHostRoomChatMessage(filter: $filter) {
       id
       userId
       roomId
@@ -875,8 +849,8 @@ export const updateHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }
@@ -923,12 +897,11 @@ export const updateHostRoomChatMessage = /* GraphQL */ `
     }
   }
 `;
-export const deleteHostRoomChatMessage = /* GraphQL */ `
-  mutation DeleteHostRoomChatMessage(
-    $input: DeleteHostRoomChatMessageInput!
-    $condition: ModelHostRoomChatMessageConditionInput
+export const onDeleteHostRoomChatMessage = /* GraphQL */ `
+  subscription OnDeleteHostRoomChatMessage(
+    $filter: ModelSubscriptionHostRoomChatMessageFilterInput
   ) {
-    deleteHostRoomChatMessage(input: $input, condition: $condition) {
+    onDeleteHostRoomChatMessage(filter: $filter) {
       id
       userId
       roomId
@@ -941,8 +914,8 @@ export const deleteHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
         hostRoomUser {
           nextToken
         }

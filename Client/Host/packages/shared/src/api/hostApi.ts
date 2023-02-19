@@ -1,7 +1,7 @@
+import { CreateHostRoomInput, HostRoom, CreateHostRoomMutation, ListHostRoomsQuery, ModelHostRoomFilterInput, HostRoomUser, ListHostRoomUsersQuery, ModelHostRoomUserFilterInput, DeleteHostRoomMutation, DeleteHostRoomInput, DeleteHostRoomUserMutation, DeleteHostRoomUserInput, UpdateHostRoomInput, UpdateHostRoomMutation } from "../../../../src/graphql/types";
 import { graphQLQuery } from "../graphql/api";
 import { createHostRoom, deleteHostRoom, updateHostRoom } from "../graphql/mutations";
 import { listHostRooms, listHostRoomUsers } from "../graphql/queries";
-import { CreateHostRoomInput, CreateHostRoomMutation, DeleteHostRoomInput, DeleteHostRoomMutation, DeleteHostRoomUserInput, DeleteHostRoomUserMutation, HostRoom, HostRoomUser, ListHostRoomsQuery, ListHostRoomUsersQuery, ModelHostRoomChatMessageFilterInput, ModelHostRoomFilterInput, ModelHostRoomUserFilterInput, UpdateHostRoomInput, UpdateHostRoomMutation } from "../graphql/types";
 
 export class HostApi {
 

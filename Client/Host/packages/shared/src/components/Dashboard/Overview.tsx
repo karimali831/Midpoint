@@ -3,10 +3,18 @@ import StreamIcon from '@mui/icons-material/Stream';
 import StreamOutlinedIcon from '@mui/icons-material/StreamOutlined';
 import { motion } from 'framer-motion';
 import React from "react";
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { DashboardSection } from '../../enum/DashboardSection';
+import { SetDashboardSection } from '../../state/contexts/app/Actions';
+import { getUserState } from '../../state/contexts/user/Selectors';
 import { DashboardCard } from './DashboardCard';
 
 export const DashboardOverview = () => {
     React.useEffect(() => { }, [])
+
+    const dispatch = useDispatch()
+    const { user } = useSelector(getUserState)
 
     return (
         <>
@@ -34,7 +42,9 @@ export const DashboardOverview = () => {
                         alignItems: 'center',
                         width: '100%'
                     }}>
-                        <span style={{ fontSize: 24, marginRight: 15 }}>7</span>
+                        <span style={{ fontSize: 24, marginRight: 15 }}>
+                            {user?.purchasedTokens ?? 0}
+                        </span>
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -42,14 +52,15 @@ export const DashboardOverview = () => {
                             width: '100%'
                         }}>
                             <span>Tokens</span>
-                            <div style={{
+                            <div onClick={() => dispatch(SetDashboardSection(DashboardSection.Tokens))} style={{
                                 width: 100,
                                 borderRadius: 25,
                                 border: '1px solid #eee',
                                 padding: 5,
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
+                                cursor: 'pointer'
                             }}>
                                 <span>Get tokens</span>
                             </div>

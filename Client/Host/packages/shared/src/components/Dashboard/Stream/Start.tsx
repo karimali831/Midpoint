@@ -8,7 +8,6 @@ import toast from 'react-hot-toast';
 import { MidPointStep } from "../../../enum/DashboardSection";
 import { CreateHostRoomAction, GetHostRoomDataAction, GetHostRoomsAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from "../../../state/contexts/stream/Actions";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import { HostRoom } from "../../../graphql/types";
 import { HubConnectionState } from "@microsoft/signalr";
 import { IMessage } from "../../../interface/IMessage";
 import { IUserConnection } from "../../../interface/IUserConnection";
@@ -20,6 +19,7 @@ import sounds from "../../../assets/sounds";
 import { Howl } from "howler";
 import { CreateAction } from "../../../state/contexts/instance/Actions";
 import { getInstanceState } from "../../../state/contexts/instance/Selectors";
+import { HostRoom } from "../../../../../../src/graphql/types";
 
 /* 
     Before the next screen appears we should load:

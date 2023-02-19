@@ -1,4 +1,4 @@
-import { HostRoom } from "../../../graphql/types";
+import { HostRoom } from "../../../../../../src/graphql/types";
 import { IChannel } from "../../../interface/IChannel";
 import { IChannelData } from "../../../interface/IChannelData";
 import { IUserConnection } from "../../../interface/IUserConnection";

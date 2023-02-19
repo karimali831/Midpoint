@@ -5,5 +5,6 @@ export interface IUser {
     email: string
     displayName: string
     defaultMidiDevice: string
+    purchasedTokens: string | null
 }
 

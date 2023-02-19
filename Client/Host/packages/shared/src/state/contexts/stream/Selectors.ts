@@ -1,5 +1,4 @@
-
-import { HostRoom } from "../../../graphql/types";
+import { HostRoom } from "../../../../../../src/graphql/types";
 import { IStoreState } from "../../IStoreState";
 
 export const getUserCreatedHostRooms = (state: IStoreState): HostRoom[] => state.stream.userCreatedHostRooms;
