@@ -12,13 +12,15 @@ namespace Beatrice.Web.Controllers
     public class StripeController : Controller
     {
         private readonly IOptionsSnapshot<StripeConfig> _stripeConfig;
-
+        private readonly IAwsUserService _awsUserService;
+        private readonly IStripeCustomerService _stripeCustomerService;
 
         public StripeController(
-            IOptionsSnapshot<StripeConfig> stripeConfig)
+            IOptionsSnapshot<StripeConfig> stripeConfig, IAwsUserService awsUserService, IStripeCustomerService stripeCustomerService)
         {
             _stripeConfig = stripeConfig;
-
+            _awsUserService = awsUserService;
+            _stripeCustomerService = stripeCustomerService;
         }
         
         [HttpPost]
@@ -46,18 +48,23 @@ namespace Beatrice.Web.Controllers
 
             
 
-                if (stripeEvent.Data.Object is Invoice invoice)
+                if (stripeEvent.Data.Object is PaymentIntent paymentIntent)
                 {
-      
-                    
-                    // InvoicePaymentSucceeded is obsolete oddly that fires rather than InvoicePaid
-                    if (stripeEvent.Type is Events.InvoicePaid or Events.InvoicePaymentSucceeded)
+                    if (stripeEvent.Type == Events.PaymentIntentSucceeded)
                     {
-                        // Used to provision services after the trial has ended.
-                        // The status of the invoice will show up as paid. Store the status in your
-                        // database to reference when a user accesses your service to avoid hitting rate
-                        // limits.
-               
+
+                        var customer = await _stripeCustomerService.GetAsync(paymentIntent.CustomerId);
+                        var awsUid = customer.Metadata.FirstOrDefault(x => x.Key == "AwsUid").Value;
+                        var tokens = paymentIntent.Metadata.FirstOrDefault(x => x.Key == "Tokens").Value;
+
+                        
+                        if (!string.IsNullOrEmpty(tokens) && !string.IsNullOrEmpty(awsUid))
+                        {
+
+                            await _awsUserService.UpdateTokens(int.Parse(tokens), awsUid);
+
+                        }
+
                     }
 
       

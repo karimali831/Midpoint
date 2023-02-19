@@ -10,8 +10,8 @@ class StripeApi extends HttpClient {
     public getPricingModel = async () => 
         this.api.get<IStripePricePlan[]>('/GetPricingModel');
     
-    public createPaymentIntent = async (priceId: string) => 
-        this.api.post<IRetrieveSecretTokenApiResponse>(`/CreatePaymentIntent/${priceId}`);
+    public createPaymentIntent = async (priceId: string, awsUid: string) => 
+        this.api.post<IRetrieveSecretTokenApiResponse>(`/CreatePaymentIntent/${priceId}/${awsUid}`);
 }
 
 export interface IRetrieveSecretTokenApiResponse {

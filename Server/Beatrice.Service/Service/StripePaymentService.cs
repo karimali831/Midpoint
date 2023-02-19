@@ -4,28 +4,41 @@ namespace Beatrice.Service.Service
 {
     public interface IStripePaymentService
     {
-        Task<PaymentIntent> CreatePaymentIntent(long amount);
+        Task<PaymentIntent> CreatePaymentIntent(string priceId, string awsUid);
     }
     
     public class StripePaymentService : IStripePaymentService
     {
         private readonly PaymentIntentService _paymentIntentService;
-        private readonly IAwsUserService _awsUserService;
+        private readonly IStripeCustomerService _stripeCustomerService;
+        private readonly IStripePriceService _stripePriceService;
         
-        public StripePaymentService(IAwsUserService awsUserService)
+        public StripePaymentService(IStripeCustomerService stripeCustomerService, IStripePriceService stripePriceService)
         {
-            _awsUserService = awsUserService;
+            _stripeCustomerService = stripeCustomerService;
+            _stripePriceService = stripePriceService;
             _paymentIntentService = new PaymentIntentService();
         }
 
-        public async Task<PaymentIntent> CreatePaymentIntent(long amount)
+        public async Task<PaymentIntent> CreatePaymentIntent(string priceId, string awsUid)
         {
-            var user = await _awsUserService.GetUser();
+            var price = await _stripePriceService.GetAsync(priceId);
+            var amount = price.UnitAmount ?? 0;
+
+            if (amount == 0)
+                throw new Exception("An error occurred");
+            
+            var customer = await _stripeCustomerService.GetOrCreateAsync(awsUid);
             
             return await _paymentIntentService.CreateAsync(new PaymentIntentCreateOptions
             {
                 Amount = amount,
-                Currency = "gbp"
+                Customer = customer.Id,
+                Currency = "gbp",
+                Metadata = new Dictionary<string, string>
+                {
+                    { "Tokens", price.TransformQuantity.DivideBy.ToString() }
+                }
             });
         } 
     }

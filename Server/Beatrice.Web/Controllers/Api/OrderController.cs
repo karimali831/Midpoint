@@ -23,27 +23,18 @@ namespace Beatrice.Web.Controllers.Api
             return await _stripePriceService.GetPricingModel();
         }
 
-        [HttpPost("CreatePaymentIntent/{priceId}")]
-        public async Task<JsonResult> CreatePaymentIntent([FromRoute] string priceId)
+        [HttpPost("CreatePaymentIntent/{priceId}/{awsUid}")]
+        public async Task<JsonResult> CreatePaymentIntent([FromRoute] string priceId, string awsUid)
         {
             try
             {
-                var price = await _stripePriceService.GetAsync(priceId);
-                var amount = price.UnitAmount ?? 0;
-
-                if (amount == 0)
-                    throw new Exception("An error occurred");
-                
-                var paymentIntent = await _stripePaymentService.CreatePaymentIntent(amount);
+                var paymentIntent = await _stripePaymentService.CreatePaymentIntent(priceId, awsUid);
                 return Json(new { clientSecret = paymentIntent.ClientSecret });
             }
             catch (Exception exp)
             {
                 return Json(new { ErrorMsg = exp.Message} );
             }
-
         }
-        
-
     }
 }

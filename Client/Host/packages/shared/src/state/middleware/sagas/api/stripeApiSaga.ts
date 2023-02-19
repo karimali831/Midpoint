@@ -2,8 +2,10 @@ import toast from 'react-hot-toast';
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { IRetrieveSecretTokenApiResponse, stripeApi } from '../../../../api/stripeApi';
 import { IStripePricePlan } from '../../../../models/IStripePricePlan';
+import { IUser } from '../../../../models/IUser';
 import { CreatePaymentIntentAction, CreatePaymentIntentFailureAction, CreatePaymentIntentSuccessAction, GetPricingPlanAction, GetPricingPlanSuccessAction } from '../../../contexts/checkout/Actions';
 import { getSelectedPricePlan } from '../../../contexts/checkout/Selectors';
+import { getUser } from '../../../contexts/user/Selectors';
 
 export default function* stripeApiSaga() {
     yield takeLatest(GetPricingPlanAction.type, getPricingPlan);
@@ -23,8 +25,9 @@ export function* getPricingPlan() {
 export function* createPaymentIntent() {
     try {
 
+        const user: IUser = yield select(getUser)
         const selectedPricePlan: IStripePricePlan = yield select(getSelectedPricePlan)
-        const response : IRetrieveSecretTokenApiResponse = yield call(stripeApi.createPaymentIntent, selectedPricePlan.id)
+        const response : IRetrieveSecretTokenApiResponse = yield call(stripeApi.createPaymentIntent, selectedPricePlan.id, user.id)
 
         if (response.clientSecret) {
             yield put(CreatePaymentIntentSuccessAction(response.clientSecret))

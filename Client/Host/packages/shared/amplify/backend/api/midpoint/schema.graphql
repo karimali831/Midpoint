@@ -11,6 +11,7 @@ type User @model {
     displayName: String!
     imageUri: String
     defaultMidiDevice: String
+    tokens: Int
     hostRoomUser: [HostRoomUser] @hasMany
 }
 
