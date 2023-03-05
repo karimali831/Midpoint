@@ -10,7 +10,8 @@ class ECEInstanceApi extends HttpClient {
     public start = async (awsUid: string) => 
         this.api.get<EC2Response>(`/ec2instance/start/${awsUid}`);
     
-
+    public get = async (instanceId: string, awsUid: string) => 
+        this.api.get(`/ec2instance/get/${instanceId}/${awsUid}`);
 }
 
 export interface EC2Response {
