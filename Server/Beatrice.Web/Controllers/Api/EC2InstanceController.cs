@@ -1,6 +1,6 @@
-﻿using Beatrice.Service.Model;
-using Beatrice.Service.Service;
-using Beatrice.Web.Attributes;
+﻿using Amazon.EC2.Model;
+using MidPoint.Library.Model;
+using MidPoint.Library.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beatrice.Web.Controllers.Api
@@ -16,20 +16,17 @@ namespace Beatrice.Web.Controllers.Api
         {
             _ec2InstanceService = ec2InstanceService;
         }
-
-        [HttpGet("start")]
-        public async Task<EC2Response> Create()
-        {
-            var response = await _ec2InstanceService.CreateAsync();
-            return response;
-        }
-
         
-        [HttpDelete("delete/{instanceId}")]
-        public async Task Delete([FromRoute] string instanceId)
+        [HttpGet("get")]
+        public async Task<IList<Instance>> GetAll()
         {
-            return;
+            return await _ec2InstanceService.GetAllRunningAsync();
         }
 
+        [HttpGet("start/{awsUid}")]
+        public async Task<EC2Response> Create(string awsUid)
+        {
+            return await _ec2InstanceService.CreateAsync(awsUid);
+        }
     }
 }

@@ -1,6 +1,6 @@
 const isDev = false;
 
-export const rootUrl: string = 'https://localhost:7204'
+export const rootUrl: string = 'https://localhost:5001'
 
 export const rootUrl2: string =
     process.env.NODE_ENV === 'development'

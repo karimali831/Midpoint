@@ -18,13 +18,8 @@ class UserApi {
                     }
                 }
             })
-            
 
             const user = response.data?.listUsers?.items
-
-            console.log(user![0]?.purchasedTokens)
-            console.log(userId)
-
             return user![0] as IUser
         }
         catch (error) {

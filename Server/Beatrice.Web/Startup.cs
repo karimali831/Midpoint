@@ -3,11 +3,12 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.EC2;
 using Amazon.Runtime;
-using Beatrice.Service.Configuration;
-using Beatrice.Service.Service;
+using MidPoint.Library.Configuration;
+using MidPoint.Library.Service;
 using Beatrice.Web.Controllers.Api;
-using Beatrice.Web.ErrorHandler;
-using Beatrice.Web.Helper;
+using Beatrice.Web.Middleware;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNet.SignalR;
 using Stripe;
 
@@ -15,14 +16,13 @@ namespace Beatrice.Web
 {
     public class Startup
     {
-        public IConfigurationRoot Configuration { get; set; }
+        private IConfigurationRoot Configuration { get; set; }
 
         public Startup(IWebHostEnvironment env)
         {
             GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(20);
             GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(30);
             GlobalHost.Configuration.KeepAlive = null;
-
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -38,9 +38,8 @@ namespace Beatrice.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configuration
-            services.AddSingleton<IConfigHelper, ConfigHelper>();
-
+            services.AddSingleton<IConfiguration>(Configuration);
+            
             // Dependency injection
             services.Modules();
             
@@ -50,14 +49,32 @@ namespace Beatrice.Web
             services.Configure<StripeConfig>(stripeConfig);
             
             // Aws
-            var credentials = new BasicAWSCredentials("AKIA5HPQCAYQVDAKYUE2", "zn4q9EBTtAsSwimGDjjmwxqCMcYdsi9qE6qC4TI2");
+            var awsConfig = Configuration.GetSection("Aws");
+            services.Configure<AwsConfig>(awsConfig);
+            var credentials = new BasicAWSCredentials(awsConfig["AccessKey"], awsConfig["SecretAccessKey"]);
             var config = new AmazonDynamoDBConfig()
             {
                 RegionEndpoint = RegionEndpoint.EUWest2
             };
+            
             var client = new AmazonDynamoDBClient(credentials, config);
             services.AddSingleton<IAmazonDynamoDB>(client);
             services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
+            
+            // Hangfire
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+            services.AddHangfireServer();
 
             // Mini profiler
             //services.AddMiniProfiler();
@@ -101,7 +118,6 @@ namespace Beatrice.Web
 
             // Add functionality to inject IOptions<T>
             services.AddOptions();
-
             services.AddMvc();
             services.AddSingleton<IEC2InstanceService, EC2InstanceService>();
 
@@ -111,7 +127,7 @@ namespace Beatrice.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IBackgroundJobClient backgroundJobs, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -119,12 +135,25 @@ namespace Beatrice.Web
             }
             else
             {
-                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            app.ConfigureExceptionHandler(env);
 
             //app.UseMiniProfiler();
+            
+            // Hangfire
+            app.UseHangfireDashboard("/hangfire");
+            
+            backgroundJobs.Enqueue(() => Console.WriteLine("Hello world from Hangfire!"));
+            
+            RecurringJob.AddOrUpdate(
+                
+                () => app.ApplicationServices.GetRequiredService<ITokenJobService>().UpdateAsync(),
+                "*/30 * * * *"
+            );
+
 
             app.UseHttpsRedirection();
 
@@ -137,10 +166,7 @@ namespace Beatrice.Web
             app.UseCors();
 
             app.UseAuthorization();
-
-            // Error handler middleware
-            app.UseMiddleware<ErrorHandlerMiddleware>();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -153,6 +179,7 @@ namespace Beatrice.Web
                 );
 
                 endpoints.MapBlazorHub();
+                endpoints.MapHangfireDashboard();
             });
 
         }

@@ -7,8 +7,8 @@ class ECEInstanceApi extends HttpClient {
         super(rootUrl + "/api");
     }
 
-    public start = async () => 
-        this.api.get<EC2Response>('/ec2instance/start');
+    public start = async (awsUid: string) => 
+        this.api.get<EC2Response>(`/ec2instance/start/${awsUid}`);
     
 
 }

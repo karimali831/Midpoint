@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beatrice.Web", "Beatrice.Web.csproj", "{D1972AC3-9AC3-4F90-9A9C-0487EBA7B4E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beatrice.Service", "..\Beatrice.Service\Beatrice.Service.csproj", "{09354835-1761-4FBA-8992-CB5C32B22DC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidPoint.Library", "..\MidPoint.Library\MidPoint.Library.csproj", "{09354835-1761-4FBA-8992-CB5C32B22DC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

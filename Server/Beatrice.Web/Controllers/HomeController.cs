@@ -1,6 +1,7 @@
 ﻿using Beatrice.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Sentry;
 
 namespace Beatrice.Web.Controllers
 {
@@ -15,6 +16,8 @@ namespace Beatrice.Web.Controllers
 
         public IActionResult Index()
         {
+            SentrySdk.CaptureMessage("Hello Sentry");
+            
             return View();
         }
         

@@ -1,5 +1,5 @@
-﻿using Beatrice.Service.Service;
-using Beatrice.Service.ViewModels;
+﻿using MidPoint.Library.Service;
+using MidPoint.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beatrice.Web.Controllers.Api

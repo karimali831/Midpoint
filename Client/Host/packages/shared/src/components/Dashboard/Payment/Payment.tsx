@@ -10,6 +10,7 @@ import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import CheckoutForm from "./CheckoutForm";
 import './styles.css'
+import { getUserState } from "../../../state/contexts/user/Selectors";
 
 const stripePromise = loadStripe('pk_test_51McZmmC5WPfsVaOE5th1L0P80EsMjPR5WFOPsbxXIi0G3KFsVWBe1Ai3m6q1v5ZNfIHdGpBHTrEsVXgeNxX0AteV00Czx26jLJ');
 
@@ -17,6 +18,7 @@ export const Payment = () => {
     React.useEffect(() => { }, [])
 
     const {selectedPricePlan } = useSelector(getCheckoutState)
+    const { user } = useSelector(getUserState)
 
     if (!selectedPricePlan)
         return null
@@ -66,6 +68,12 @@ export const Payment = () => {
                     </>
                 }
                     <hr color="grey" style={{ margin: '20px 0' }} />
+                    {user?.purchasedTokens != null &&
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                            <span style={{ fontSize: 18 }}>Tot up</span>
+                            <span style={{ fontSize: 18 }}>{(user.purchasedTokens  + selectedPricePlan.tokens)} tokens</span>
+                        </div>
+                    }
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <span style={{ fontSize: 18 }}>Total</span>
                         <span style={{ fontSize: 18 }}>{selectedPricePlan.unitAmountStr}</span>

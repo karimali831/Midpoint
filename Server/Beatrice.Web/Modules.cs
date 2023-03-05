@@ -1,5 +1,9 @@
-﻿using Beatrice.Service.Model;
-using Beatrice.Service.Service;
+﻿using MidPoint.Library.ExceptionHandler;
+using MidPoint.Library.ExceptionHandler.Sentry;
+using MidPoint.Library.Model;
+using MidPoint.Library.Service;
+using MidPoint.Library.Helper;
+using MidPoint.Library.Repository;
 
 namespace Beatrice.Web
 {
@@ -7,17 +11,23 @@ namespace Beatrice.Web
     {
         public static IServiceCollection Modules(this IServiceCollection services)
         {
+            services.AddSingleton<IConfigHelper, ConfigHelper>();
+            services.AddSingleton<ITokenJobService, TokenJobService>();
+            services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
+
             // web rtc
             services.AddSingleton<IDictionary<string, UserConnection>>(
                 opts => new Dictionary<string, UserConnection>()
             );
 
             services.AddSingleton<IStripeProductService, StripeProductService>();
-            services.AddScoped<IEC2InstanceService, EC2InstanceService>();
+            services.AddSingleton<IAwsUserService, AwsUserService>();
             services.AddScoped<IStripePaymentService, StripePaymentService>();
             services.AddScoped<IStripePriceService, StripePriceService>();
             services.AddScoped<IStripeCustomerService, StripeCustomerService>();
-            services.AddScoped<IAwsUserService, AwsUserService>();
+            
+            // repositories
+            services.AddSingleton<ITokenLogRepository, TokenLogRepository>();
 
             return services;
         }

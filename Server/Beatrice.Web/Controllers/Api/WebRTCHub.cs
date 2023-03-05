@@ -1,5 +1,5 @@
-﻿using Beatrice.Service.Helper;
-using Beatrice.Service.Model;
+﻿using MidPoint.Library.Helper;
+using MidPoint.Library.Model;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Beatrice.Web.Controllers.Api
