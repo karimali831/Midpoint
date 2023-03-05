@@ -26,6 +26,7 @@ import {
     UpdateUserInfoSuccessAction
 } from '../../../contexts/user/Actions';
 import { getUserId } from '../../../contexts/user/Selectors';
+import { ec2InstanceApi } from '../../../../api/ec2InstanceApi';
 
 export default function* userApiSaga() {
     yield takeLatest(FirebaseAuthenticatedAction.type, firebaseAuthenticated);
@@ -110,6 +111,10 @@ export function* firebaseAuthenticated(action: any) {
             userApi.getUserByFirebaseUid,
             auth.uid
         );
+
+        if (user.createdInstanceId) {
+            yield call(ec2InstanceApi.get, user.createdInstanceId, user.id);
+        }
 
         if (user) {
             yield put(LoginSuccessAction(user));

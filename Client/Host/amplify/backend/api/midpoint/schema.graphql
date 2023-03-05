@@ -12,6 +12,7 @@ type User @model {
     imageUri: String
     defaultMidiDevice: String
     purchasedTokens: Int
+    createdInstanceId: String
     hostRoomUser: [HostRoomUser] @hasMany
 }
 

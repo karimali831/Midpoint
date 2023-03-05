@@ -13,6 +13,7 @@ export const onCreateUser = /* GraphQL */ `
       imageUri
       defaultMidiDevice
       purchasedTokens
+      createdInstanceId
       hostRoomUser {
         items {
           id
@@ -45,6 +46,7 @@ export const onUpdateUser = /* GraphQL */ `
       imageUri
       defaultMidiDevice
       purchasedTokens
+      createdInstanceId
       hostRoomUser {
         items {
           id
@@ -77,6 +79,7 @@ export const onDeleteUser = /* GraphQL */ `
       imageUri
       defaultMidiDevice
       purchasedTokens
+      createdInstanceId
       hostRoomUser {
         items {
           id
@@ -118,6 +121,7 @@ export const onCreateHostRoomUser = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -184,6 +188,7 @@ export const onUpdateHostRoomUser = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -250,6 +255,7 @@ export const onDeleteHostRoomUser = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -314,6 +320,7 @@ export const onCreateHostRoomMidiMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -377,6 +384,7 @@ export const onUpdateHostRoomMidiMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -440,6 +448,7 @@ export const onDeleteHostRoomMidiMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -509,6 +518,7 @@ export const onCreateHostRoom = /* GraphQL */ `
           imageUri
           defaultMidiDevice
           purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -603,6 +613,7 @@ export const onUpdateHostRoom = /* GraphQL */ `
           imageUri
           defaultMidiDevice
           purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -697,6 +708,7 @@ export const onDeleteHostRoom = /* GraphQL */ `
           imageUri
           defaultMidiDevice
           purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -786,6 +798,7 @@ export const onCreateHostRoomChatMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -851,6 +864,7 @@ export const onUpdateHostRoomChatMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -916,6 +930,7 @@ export const onDeleteHostRoomChatMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }

@@ -1,4 +1,5 @@
 ﻿using Amazon.EC2;
+using Amazon.EC2.Internal;
 using Amazon.EC2.Model;
 using Microsoft.Extensions.Options;
 using MidPoint.Library.Configuration;
@@ -9,9 +10,9 @@ namespace MidPoint.Library.Service
 {
     public interface IEC2InstanceService
     {
-        Task<List<Instance>> GetAllRunningAsync();
+        Task<List<Instance>> GetRunningAsync(string instanceId = null);
         Task<EC2Response> CreateAsync(string awsUid);
-        Task TerminateAsync(List<string> instanceIds);
+        Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data);
     }
 
     public class EC2InstanceService : IEC2InstanceService
@@ -43,13 +44,13 @@ namespace MidPoint.Library.Service
             }
         }
         
-        public async Task<List<Instance>> GetAllRunningAsync()
+        public async Task<List<Instance>> GetRunningAsync(string instanceId = null)
         {
             var request = new DescribeInstancesRequest();
             
             return (await _ec2Client.DescribeInstancesAsync(request)).Reservations
                 .SelectMany(x => x.Instances)
-                .Where(x => x.State.Code == 16)
+                .Where(x => x.State.Code == 16 && (instanceId == null || instanceId == x.InstanceId))
                 .ToList();
         }
 
@@ -67,12 +68,17 @@ namespace MidPoint.Library.Service
             return await Launch(describeResponse, awsUid);
         }
 
-        public async Task TerminateAsync(List<string> instanceIds)
+        public async Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data)
         {
             await _ec2Client.TerminateInstancesAsync(new TerminateInstancesRequest
             {
-                InstanceIds = instanceIds
+                InstanceIds = data.Select(x => x.InstanceId).ToList()
             });
+
+            foreach (var awsUid in data.Select(x => x.AwsUid))
+            {
+                await _awsUserService.UpdateAsync<string>("createdInstanceId", null, awsUid);
+            }
         }
 
         private async Task<EC2Response> Launch(DescribeSecurityGroupsResponse describeResponse, string awsUid)
@@ -100,11 +106,10 @@ namespace MidPoint.Library.Service
             };
 
             var launchResponse = await _ec2Client.RunInstancesAsync(launchRequest);
-
             var instanceId = launchResponse.Reservation.Instances.First().InstanceId;
-            await CheckState(new List<string> { instanceId });
             
-            await _awsUserService.UpdateAsync("")
+            await CheckState(new List<string> { instanceId });
+            await _awsUserService.UpdateAsync("createdInstanceId", instanceId, awsUid);
             
             return new EC2Response
             {

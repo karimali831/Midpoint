@@ -13,6 +13,7 @@ export const getUser = /* GraphQL */ `
       imageUri
       defaultMidiDevice
       purchasedTokens
+      createdInstanceId
       hostRoomUser {
         items {
           id
@@ -58,6 +59,7 @@ export const listUsers = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -86,6 +88,7 @@ export const getHostRoomUser = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -163,6 +166,7 @@ export const listHostRoomUsers = /* GraphQL */ `
           imageUri
           defaultMidiDevice
           purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -203,6 +207,7 @@ export const getHostRoomMidiMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -277,6 +282,7 @@ export const listHostRoomMidiMessages = /* GraphQL */ `
           imageUri
           defaultMidiDevice
           purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -324,6 +330,7 @@ export const getHostRoom = /* GraphQL */ `
           imageUri
           defaultMidiDevice
           purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -462,6 +469,7 @@ export const getHostRoomChatMessage = /* GraphQL */ `
         imageUri
         defaultMidiDevice
         purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -538,6 +546,7 @@ export const listHostRoomChatMessages = /* GraphQL */ `
           imageUri
           defaultMidiDevice
           purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }

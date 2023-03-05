@@ -6,5 +6,6 @@ export interface IUser {
     displayName: string
     defaultMidiDevice: string
     purchasedTokens: number | null
+    createdInstanceId: string | null
 }
 

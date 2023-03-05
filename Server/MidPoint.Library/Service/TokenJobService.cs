@@ -29,8 +29,8 @@ namespace MidPoint.Library.Service
         [JobDisplayName("Deduct tokens every 30 minutes job")]
         public async Task UpdateAsync()
         {
-            var runningInstances = await _ec2InstanceService.GetAllRunningAsync();
-            var terminateInstanceIds = new List<string>();
+            var runningInstances = await _ec2InstanceService.GetRunningAsync();
+            var terminateInstanceIds = new List<(string InstanceId, string AwsUid)>();
 
             const int deductInterval = 30;
             const int deductTokens = 250;
@@ -46,7 +46,7 @@ namespace MidPoint.Library.Service
                 var tokens = Convert.ToInt32(Math.Floor(calc));
 
                 if (tokens <= 0)
-                    terminateInstanceIds.Add(instance.InstanceId);
+                    terminateInstanceIds.Add((instance.InstanceId, awsUid));
                 
                 await _tokenLogRepository.AddAsync(new TokenLog
                 {

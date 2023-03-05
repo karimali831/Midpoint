@@ -11,6 +11,7 @@ export type CreateUserInput = {
   imageUri?: string | null,
   defaultMidiDevice?: string | null,
   purchasedTokens?: number | null,
+  createdInstanceId?: string | null,
 };
 
 export type ModelUserConditionInput = {
@@ -21,6 +22,7 @@ export type ModelUserConditionInput = {
   imageUri?: ModelStringInput | null,
   defaultMidiDevice?: ModelStringInput | null,
   purchasedTokens?: ModelIntInput | null,
+  createdInstanceId?: ModelStringInput | null,
   and?: Array< ModelUserConditionInput | null > | null,
   or?: Array< ModelUserConditionInput | null > | null,
   not?: ModelUserConditionInput | null,
@@ -104,6 +106,7 @@ export type User = {
   imageUri?: string | null,
   defaultMidiDevice?: string | null,
   purchasedTokens?: number | null,
+  createdInstanceId?: string | null,
   hostRoomUser?: ModelHostRoomUserConnection | null,
   createdAt: string,
   updatedAt: string,
@@ -200,6 +203,7 @@ export type UpdateUserInput = {
   imageUri?: string | null,
   defaultMidiDevice?: string | null,
   purchasedTokens?: number | null,
+  createdInstanceId?: string | null,
 };
 
 export type DeleteUserInput = {
@@ -372,6 +376,7 @@ export type ModelUserFilterInput = {
   imageUri?: ModelStringInput | null,
   defaultMidiDevice?: ModelStringInput | null,
   purchasedTokens?: ModelIntInput | null,
+  createdInstanceId?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
   not?: ModelUserFilterInput | null,
@@ -458,6 +463,7 @@ export type ModelSubscriptionUserFilterInput = {
   imageUri?: ModelSubscriptionStringInput | null,
   defaultMidiDevice?: ModelSubscriptionStringInput | null,
   purchasedTokens?: ModelSubscriptionIntInput | null,
+  createdInstanceId?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
   or?: Array< ModelSubscriptionUserFilterInput | null > | null,
 };
@@ -566,6 +572,7 @@ export type CreateUserMutation = {
     imageUri?: string | null,
     defaultMidiDevice?: string | null,
     purchasedTokens?: number | null,
+    createdInstanceId?: string | null,
     hostRoomUser?:  {
       __typename: "ModelHostRoomUserConnection",
       items:  Array< {
@@ -605,6 +612,7 @@ export type UpdateUserMutation = {
     imageUri?: string | null,
     defaultMidiDevice?: string | null,
     purchasedTokens?: number | null,
+    createdInstanceId?: string | null,
     hostRoomUser?:  {
       __typename: "ModelHostRoomUserConnection",
       items:  Array< {
@@ -644,6 +652,7 @@ export type DeleteUserMutation = {
     imageUri?: string | null,
     defaultMidiDevice?: string | null,
     purchasedTokens?: number | null,
+    createdInstanceId?: string | null,
     hostRoomUser?:  {
       __typename: "ModelHostRoomUserConnection",
       items:  Array< {
@@ -691,6 +700,7 @@ export type CreateHostRoomUserMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -767,6 +777,7 @@ export type UpdateHostRoomUserMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -843,6 +854,7 @@ export type DeleteHostRoomUserMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -917,6 +929,7 @@ export type CreateHostRoomMidiMessageMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -990,6 +1003,7 @@ export type UpdateHostRoomMidiMessageMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1063,6 +1077,7 @@ export type DeleteHostRoomMidiMessageMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1145,6 +1160,7 @@ export type CreateHostRoomMutation = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -1253,6 +1269,7 @@ export type UpdateHostRoomMutation = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -1361,6 +1378,7 @@ export type DeleteHostRoomMutation = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -1461,6 +1479,7 @@ export type CreateHostRoomChatMessageMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1536,6 +1555,7 @@ export type UpdateHostRoomChatMessageMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1611,6 +1631,7 @@ export type DeleteHostRoomChatMessageMutation = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1678,6 +1699,7 @@ export type GetUserQuery = {
     imageUri?: string | null,
     defaultMidiDevice?: string | null,
     purchasedTokens?: number | null,
+    createdInstanceId?: string | null,
     hostRoomUser?:  {
       __typename: "ModelHostRoomUserConnection",
       items:  Array< {
@@ -1722,6 +1744,7 @@ export type ListUsersQuery = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1756,6 +1779,7 @@ export type GetHostRoomUserQuery = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1837,6 +1861,7 @@ export type ListHostRoomUsersQuery = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -1883,6 +1908,7 @@ export type GetHostRoomMidiMessageQuery = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -1961,6 +1987,7 @@ export type ListHostRoomMidiMessagesQuery = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -2015,6 +2042,7 @@ export type GetHostRoomQuery = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -2166,6 +2194,7 @@ export type GetHostRoomChatMessageQuery = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -2246,6 +2275,7 @@ export type ListHostRoomChatMessagesQuery = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -2286,6 +2316,7 @@ export type OnCreateUserSubscription = {
     imageUri?: string | null,
     defaultMidiDevice?: string | null,
     purchasedTokens?: number | null,
+    createdInstanceId?: string | null,
     hostRoomUser?:  {
       __typename: "ModelHostRoomUserConnection",
       items:  Array< {
@@ -2324,6 +2355,7 @@ export type OnUpdateUserSubscription = {
     imageUri?: string | null,
     defaultMidiDevice?: string | null,
     purchasedTokens?: number | null,
+    createdInstanceId?: string | null,
     hostRoomUser?:  {
       __typename: "ModelHostRoomUserConnection",
       items:  Array< {
@@ -2362,6 +2394,7 @@ export type OnDeleteUserSubscription = {
     imageUri?: string | null,
     defaultMidiDevice?: string | null,
     purchasedTokens?: number | null,
+    createdInstanceId?: string | null,
     hostRoomUser?:  {
       __typename: "ModelHostRoomUserConnection",
       items:  Array< {
@@ -2408,6 +2441,7 @@ export type OnCreateHostRoomUserSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -2483,6 +2517,7 @@ export type OnUpdateHostRoomUserSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -2558,6 +2593,7 @@ export type OnDeleteHostRoomUserSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -2631,6 +2667,7 @@ export type OnCreateHostRoomMidiMessageSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -2703,6 +2740,7 @@ export type OnUpdateHostRoomMidiMessageSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -2775,6 +2813,7 @@ export type OnDeleteHostRoomMidiMessageSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -2856,6 +2895,7 @@ export type OnCreateHostRoomSubscription = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -2963,6 +3003,7 @@ export type OnUpdateHostRoomSubscription = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3070,6 +3111,7 @@ export type OnDeleteHostRoomSubscription = {
         imageUri?: string | null,
         defaultMidiDevice?: string | null,
         purchasedTokens?: number | null,
+        createdInstanceId?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3169,6 +3211,7 @@ export type OnCreateHostRoomChatMessageSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -3243,6 +3286,7 @@ export type OnUpdateHostRoomChatMessageSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,
@@ -3317,6 +3361,7 @@ export type OnDeleteHostRoomChatMessageSubscription = {
       imageUri?: string | null,
       defaultMidiDevice?: string | null,
       purchasedTokens?: number | null,
+      createdInstanceId?: string | null,
       hostRoomUser?:  {
         __typename: "ModelHostRoomUserConnection",
         nextToken?: string | null,

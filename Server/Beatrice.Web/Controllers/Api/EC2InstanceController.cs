@@ -11,16 +11,33 @@ namespace Beatrice.Web.Controllers.Api
     public class EC2InstanceController : ControllerBase
     {
         private readonly IEC2InstanceService _ec2InstanceService;
-
-        public EC2InstanceController(IEC2InstanceService ec2InstanceService)
+        private readonly IAwsUserService _awsUserService;
+        
+        public EC2InstanceController(
+            IEC2InstanceService ec2InstanceService, 
+            IAwsUserService awsUserService)
         {
             _ec2InstanceService = ec2InstanceService;
+            _awsUserService = awsUserService;
         }
         
-        [HttpGet("get")]
-        public async Task<IList<Instance>> GetAll()
+        [HttpGet("get/{instanceId:string}/{awsUid:string}")]
+        public async Task Get(string instanceId, string awsUid)
         {
-            return await _ec2InstanceService.GetAllRunningAsync();
+            var instance = (await _ec2InstanceService.GetRunningAsync(instanceId))
+                .FirstOrDefault();
+
+            if (instance == null)
+            {
+                await _awsUserService.UpdateAsync<string>("createdInstanceId", null, awsUid);
+            }
+        }
+        
+
+        [HttpGet("get")]
+        public async Task<IList<Instance>> Get()
+        {
+            return await _ec2InstanceService.GetRunningAsync();
         }
 
         [HttpGet("start/{awsUid}")]

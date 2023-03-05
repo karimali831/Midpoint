@@ -11,7 +11,7 @@ namespace MidPoint.Library.Service
     public interface IAwsUserService
     {
         Task<AwsUser?> GetUser();
-        Task UpdateAsync<T>(string field, T value, string awsUid);
+        Task UpdateAsync<T>(string field, T? value, string awsUid);
         Task<AwsUser> GetAsync(string awsUid);
     }
     
@@ -32,7 +32,7 @@ namespace MidPoint.Library.Service
             _exceptionHandlerService = exceptionHandlerService;
         }
 
-        public async Task UpdateAsync<T>(string field, T value, string awsUid)
+        public async Task UpdateAsync<T>(string field, T? value, string awsUid)
         {
             try
             {
