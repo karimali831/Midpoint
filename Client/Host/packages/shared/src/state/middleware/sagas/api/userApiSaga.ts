@@ -26,7 +26,9 @@ import {
     UpdateUserInfoSuccessAction
 } from '../../../contexts/user/Actions';
 import { getUserId } from '../../../contexts/user/Selectors';
-import { ec2InstanceApi } from '../../../../api/ec2InstanceApi';
+import { ec2InstanceApi, EC2Response } from '../../../../api/ec2InstanceApi';
+import { CreateSuccessAction } from '../../../contexts/instance/Actions';
+import { GetHostRoomsAction, SetMidPointJoinIdAction} from '../../../contexts/stream/Actions';
 
 export default function* userApiSaga() {
     yield takeLatest(FirebaseAuthenticatedAction.type, firebaseAuthenticated);
@@ -95,9 +97,6 @@ export function* updateUserInfo(
 }
 
 export function* authLoadDone() {
-
-
-
     yield put(SetAppReadyAction(LoadStartup.Auth));
 }
 
@@ -106,20 +105,22 @@ export function* firebaseAuthenticated(action: any) {
     try {
 
         const auth = action.auth as IFirebaseUser
+        const user: IUser = yield call(userApi.getUserByFirebaseUid,auth.uid);
 
-        const user: IUser = yield call(
-            userApi.getUserByFirebaseUid,
-            auth.uid
-        );
+        yield put(LoginSuccessAction(user))
+        yield put(GetHostRoomsAction())
+        
+        const response : EC2Response = yield call(ec2InstanceApi.get, user.id);
 
-        if (user.createdInstanceId) {
-            yield call(ec2InstanceApi.get, user.createdInstanceId, user.id);
+        if (response) {
+            yield put(CreateSuccessAction(response))
+            yield put(SetMidPointJoinIdAction(response.hostRoomId))
         }
-
-        if (user) {
-            yield put(LoginSuccessAction(user));
-        }
+        
     } catch (e) {
+
+        toast.error("An error occurred")
+
         yield put(AwsErrorAlertAction(e as IAwsError))
         yield call(authLoadDone);
     }

@@ -29,7 +29,6 @@ const store = configureStore({
 });
 
 sagaMiddleware.run(rootSaga);
-
 store.dispatch(LocationChangeAction())
 
 export default store;

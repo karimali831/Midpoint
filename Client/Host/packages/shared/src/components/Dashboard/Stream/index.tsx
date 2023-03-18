@@ -2,6 +2,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import moment from 'moment'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CableIcon from '@mui/icons-material/Cable';
@@ -33,6 +34,7 @@ import { SetDashboardSection } from '../../../state/contexts/app/Actions';
 import { FormInput } from '../../Form/input';
 import { Button } from 'native-base';
 import { StreamCardType } from '../../../enum/StreamCardType';
+import { getInstanceState } from '../../../state/contexts/instance/Selectors';
 
 interface IOwnProps {}
 
@@ -47,16 +49,25 @@ export const Stream: React.FC<IOwnProps> = () => {
 
     const { midpointStep } = useSelector(getAppState)
     const { user, camOn } = useSelector(getUserState)
+    const { instance } = useSelector(getInstanceState)
     const [maximiseStreamCard, setMaximiseStreamCard] = useState<StreamCardType | null>(null)
     const [roomName, setRoomName] = useState<string>(selectedHostRoom?.name ?? '')
     const [editInput, setEditInput] = useState<boolean>(false)
 
     const [soundOn, setSoundOn] = useState<boolean>(true)
+    const [timeLive, setTimeLive] = useState<string>('0m 0s')
 
     const dispatch = useDispatch()
     
     if (selectedHostRoom == null || userConnection == null)
         return null;
+
+    React.useEffect(() => {
+        window.setInterval(() => {
+            const duration = moment.duration(moment().diff(instance?.launchTime));
+            setTimeLive(`${duration.minutes()}m ${duration.seconds()}s`)
+        }, 1000)
+    }, [])
 
     React.useEffect(() => {
         if (updatingHostRoom && editInput) {
@@ -73,6 +84,7 @@ export const Stream: React.FC<IOwnProps> = () => {
             dispatch(SetMidPointJoinIdAction(null))
         }
     }, [midPointJoinId, userConnection]);
+
 
     const closeConnection = async () => {
         if (!!userConnection?.hubConnection) {
@@ -194,14 +206,15 @@ export const Stream: React.FC<IOwnProps> = () => {
                     </div>
                     <AccessTimeOutlinedIcon />
                     <span style={{ marginLeft: 10, fontSize: 12, marginRight: 20 }}>
-                        Time live: 46m 30s
+                        Time live: {timeLive}
+                        {/* 46m 30s */}
                     </span>
                     <NotificationsOutlinedIcon />
                     <span style={{ marginLeft: 10, fontSize: 12 }}>
                         Set an alarm
                     </span>
                 </div>
-
+{/* 
                 {midpointStep === MidPointStep.Stream && !!selectedHostRoom  &&
                     <>
                         <div style={{ marginRight: 30, display: 'flex', flexDirection: 'row' }}>
@@ -225,7 +238,7 @@ export const Stream: React.FC<IOwnProps> = () => {
                             }
                         </div>
                     </>
-                }
+                } */}
             </div>
             <div className='stream-row'>
                 {

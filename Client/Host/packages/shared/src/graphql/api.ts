@@ -13,7 +13,7 @@ export async function graphQLQuery<T1, T2>(query: any, options?: GraphQLOptions<
 export async function graphQLSubscription<T>(query: any, params?: T):
     Promise<Observable<object>> {
     return await API.graphql(
-        graphqlOperation(query, params)
+        graphqlOperation(query)
     ) as Observable<object>
 }
 

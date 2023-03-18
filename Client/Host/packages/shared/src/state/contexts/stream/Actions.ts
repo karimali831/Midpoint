@@ -4,7 +4,7 @@ import { IChannel } from '../../../interface/IChannel';
 import { IChannelData } from '../../../interface/IChannelData';
 import { IMessage } from '../../../interface/IMessage';
 import { IUserConnection } from '../../../interface/IUserConnection';
-import { HostRoom, UpdateHostRoomInput } from '../../../../../../src/graphql/types';
+import { HostRoom, UpdateHostRoomInput } from '../../../graphql/types';
 
 // ACTION CREATORS
 const SetConnectionStateAction = createAction<HubConnectionState>('@@Stream/SetConnectionState');
@@ -19,7 +19,6 @@ const GetHostRoomDataAction = createAction<{
     pageNumber: number,
     loadMore?: boolean
 }>("@@Stream/GetHostRoomData")
-
 
 const GetHostRoomDataSuccessAction = createAction<IChannelData>("@@Stream/GetHostRoomDataSuccess")
 const SetMidPointJoinIdAction = createAction<string | null>('@@Stream/SetMidPointJoinId')

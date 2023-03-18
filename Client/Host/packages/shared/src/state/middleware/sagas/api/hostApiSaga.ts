@@ -1,17 +1,16 @@
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { hostApi } from '../../../../api/hostApi';
 import { IAwsError } from '../../../../interface/IAwsError';
-import { AwsErrorAlertAction, SetDashboardSection, SetMidPointStep } from '../../../contexts/app/Actions';
+import { AwsErrorAlertAction, SetDashboardSection } from '../../../contexts/app/Actions';
 import { getUserId } from '../../../contexts/user/Selectors';
 import { CreateHostRoomAction, DeleteHostRoomAction, GetHostRoomsAction, GetHostRoomsSuccessAction, SetHostRoomAction, SetMidPointJoinIdAction, UpdateHostRoomAction, UpdateHostRoomFailAction, UpdateHostRoomSuccessAction } from '../../../contexts/stream/Actions';
-import { showLoading } from 'react-redux-loading-bar';
-import { DashboardSection, MidPointStep } from '../../../../enum/DashboardSection';
+import { DashboardSection } from '../../../../enum/DashboardSection';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { getUserCreatedHostRooms } from '../../../contexts/stream/Selectors';
 import { chatApi } from '../../../../api/chatApi';
 import toast from 'react-hot-toast';
 import { IMessage } from '../../../../interface/IMessage';
-import { CreateHostRoomInput, HostRoom, HostRoomUser, UpdateHostRoomInput } from '../../../../../../../src/graphql/types';
+import { CreateHostRoomInput, HostRoom, HostRoomUser, UpdateHostRoomInput } from '../../../../graphql/types';
 
 export default function* hostApiSaga() {
     yield takeLatest(CreateHostRoomAction.type, createHostRoom);
@@ -62,7 +61,7 @@ export function* deleteHostRoom(action: PayloadAction<string>) {
         yield call(hostApi.deleteHostRoom, action.payload)
         yield put(SetDashboardSection(DashboardSection.Overview))
 
-        toast.success("Room deleted")
+        toast.success("Stream ended")
 
     }
     catch (e) {
@@ -94,31 +93,25 @@ export function* setHostRoomFromJoinId(action: PayloadAction<string>) {
 
 export function* getHostRooms() {
     try{
-        // yield put(showLoading())
-
         const userId: string = yield select(getUserId)
         const response: HostRoom[] = yield call(hostApi.getUserCreatedHostRooms, userId)
 
         if (response.length > 0) {
             yield put(GetHostRoomsSuccessAction(response))
+            yield put(SetHostRoomAction(response[0]))
         }
-        // else{
-        //     yield put(CreateHostRoomAction())
-        // }
-
-
+        else{
+            yield put(CreateHostRoomAction())
+        }
     }
     catch (e) {
         yield put(AwsErrorAlertAction(e as IAwsError))
-    } finally {
-        // yield put(showLoading())
     } 
 
 }
 
 export function* createHostRoom() {
     try {
-
         const userCreatedHostRooms: HostRoom[] = yield select(getUserCreatedHostRooms)
 
         if (userCreatedHostRooms.length >= 5) {
@@ -134,7 +127,7 @@ export function* createHostRoom() {
         }
 
         const response: HostRoom = yield call(hostApi.createHostRoom, input)
-        yield put(SetMidPointJoinIdAction(response.id))
+        yield put(SetHostRoomAction(response))
 
     } catch (e) {
         yield put(AwsErrorAlertAction(e as IAwsError))

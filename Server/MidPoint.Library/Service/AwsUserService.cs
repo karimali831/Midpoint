@@ -37,8 +37,12 @@ namespace MidPoint.Library.Service
             try
             {
                 var attributeValue = new AttributeValue();
-                
-                if (typeof(T) == typeof(int))
+
+                if (value is null)
+                {
+                    attributeValue.NULL = true;
+                }
+                else if (typeof(T) == typeof(int))
                 {
                     attributeValue.N = value.ToString();
                 }
@@ -73,7 +77,7 @@ namespace MidPoint.Library.Service
                     { "Field", field },
                     { "Value", value.ToString() },
                     { "AwsUid", awsUid }
-                });
+                }).Send();
             }
             catch (AmazonServiceException e)
             {
@@ -83,7 +87,7 @@ namespace MidPoint.Library.Service
                     { "Field", field },
                     { "Value", value.ToString() },
                     { "AwsUid", awsUid }
-                });
+                }).Send();
             }
             catch (Exception e)
             {
@@ -93,7 +97,7 @@ namespace MidPoint.Library.Service
                     { "Field", field },
                     { "Value", value.ToString() },
                     { "AwsUid", awsUid }
-                });
+                }).Send();
             }
             
         }

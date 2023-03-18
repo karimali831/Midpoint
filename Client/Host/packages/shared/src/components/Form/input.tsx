@@ -121,6 +121,7 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
             <div style={{ position: 'relative' }}>
                 <input
                     ref={ref}
+                    className="mp"
                     placeholder={placeholder}
                     type={type ?? (passwordToggleEnabled ? !showPwd ? "password" : "text" : "text")}
                     style={{ width: '100%' }}

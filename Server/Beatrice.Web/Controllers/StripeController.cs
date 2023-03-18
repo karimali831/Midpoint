@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MidPoint.Library.ExceptionHandler;
+using MidPoint.Library.Model.Db;
+using MidPoint.Library.Repository;
 using Stripe;
 
 namespace Beatrice.Web.Controllers
@@ -13,18 +15,21 @@ namespace Beatrice.Web.Controllers
         private readonly IOptionsSnapshot<StripeConfig> _stripeConfig;
         private readonly IAwsUserService _awsUserService;
         private readonly IStripeCustomerService _stripeCustomerService;
+        private readonly ITokenLogRepository _tokenLogRepository;
         private readonly IExceptionHandlerService _exceptionHandlerService;
 
         public StripeController(
             IOptionsSnapshot<StripeConfig> stripeConfig, 
             IAwsUserService awsUserService, 
             IStripeCustomerService stripeCustomerService, 
-            IExceptionHandlerService exceptionHandlerService)
+            IExceptionHandlerService exceptionHandlerService, 
+            ITokenLogRepository tokenLogRepository)
         {
             _stripeConfig = stripeConfig;
             _awsUserService = awsUserService;
             _stripeCustomerService = stripeCustomerService;
             _exceptionHandlerService = exceptionHandlerService;
+            _tokenLogRepository = tokenLogRepository;
         }
         
         [HttpPost]
@@ -61,7 +66,19 @@ namespace Beatrice.Web.Controllers
                             var purchasedTokens = paymentIntent.Metadata.FirstOrDefault(x => x.Key == "Tokens").Value;
 
                             var user = await _awsUserService.GetAsync(awsUid);
-                            var tokens = int.Parse(purchasedTokens) + user.PurchasedToken ?? 0;
+                            var preTokens = user.PurchasedToken ?? 0;
+                            var tokens = int.Parse(purchasedTokens) + preTokens;
+
+                            await _tokenLogRepository.AddAsync(new TokenLog
+                            {
+                                Id = Guid.NewGuid(),
+                                PaymentIntentId = paymentIntent.Id,
+                                AwsUid = awsUid,
+                                PreTokens = preTokens,
+                                PostTokens = tokens
+                            });
+                            
+                            ;
                             await _awsUserService.UpdateAsync("purchasedTokens", tokens, awsUid);
                         }
                         catch (Exception exp)

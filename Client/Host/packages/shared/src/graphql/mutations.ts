@@ -14,8 +14,9 @@ export const createUser = /* GraphQL */ `
       email
       displayName
       imageUri
-      purchasedTokens
       defaultMidiDevice
+      purchasedTokens
+      createdInstanceId
       hostRoomUser {
         items {
           id
@@ -49,8 +50,9 @@ export const updateUser = /* GraphQL */ `
       email
       displayName
       imageUri
-      purchasedTokens
       defaultMidiDevice
+      purchasedTokens
+      createdInstanceId
       hostRoomUser {
         items {
           id
@@ -84,8 +86,9 @@ export const deleteUser = /* GraphQL */ `
       email
       displayName
       imageUri
-      purchasedTokens
       defaultMidiDevice
+      purchasedTokens
+      createdInstanceId
       hostRoomUser {
         items {
           id
@@ -126,8 +129,9 @@ export const createHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -193,8 +197,9 @@ export const updateHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -260,8 +265,9 @@ export const deleteHostRoomUser = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -325,8 +331,9 @@ export const createHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -389,8 +396,9 @@ export const updateHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -453,8 +461,9 @@ export const deleteHostRoomMidiMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -525,8 +534,9 @@ export const createHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
-          purchasedTokens
           defaultMidiDevice
+          purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -622,8 +632,9 @@ export const updateHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
-          purchasedTokens
           defaultMidiDevice
+          purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -719,8 +730,9 @@ export const deleteHostRoom = /* GraphQL */ `
           email
           displayName
           imageUri
-          purchasedTokens
           defaultMidiDevice
+          purchasedTokens
+          createdInstanceId
           createdAt
           updatedAt
         }
@@ -809,8 +821,9 @@ export const createHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -875,8 +888,9 @@ export const updateHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }
@@ -941,8 +955,9 @@ export const deleteHostRoomChatMessage = /* GraphQL */ `
         email
         displayName
         imageUri
-        purchasedTokens
         defaultMidiDevice
+        purchasedTokens
+        createdInstanceId
         hostRoomUser {
           nextToken
         }

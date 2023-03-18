@@ -4,6 +4,7 @@
     {
         public Guid Id { get; set; }
         public string Ec2InstanceId { get; set; }
+        public string PaymentIntentId { get; set; }
         public string AwsUid { get; set; }
         public int PreTokens { get; set; }
         public int PostTokens { get; set; }

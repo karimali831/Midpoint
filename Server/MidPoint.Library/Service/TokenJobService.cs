@@ -57,7 +57,7 @@ namespace MidPoint.Library.Service
                     PostTokens = tokens
                 });
                 
-                // await _awsUserService.UpdateAsync("purchasedTokens", tokens, awsUid);
+                await _awsUserService.UpdateAsync("purchasedTokens", tokens, awsUid);
             }
 
             if (terminateInstanceIds.Any())

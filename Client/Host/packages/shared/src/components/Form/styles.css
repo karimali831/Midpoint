@@ -1,4 +1,4 @@
-input{
+input.mp{
     background: #121212;
     border: none;
     margin: 30px 0 15px 0;
@@ -7,17 +7,17 @@ input{
     border-bottom: 1px #fff solid;
 }
 
-input:focus {
+input.mp:focus {
     outline: none;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
+input.mp:-webkit-autofill,
+input.mp:-webkit-autofill:hover, 
+input.mp:-webkit-autofill:focus, 
+input.mp:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px #121212 inset !important;
 }
 
-input:-webkit-autofill{
+input.mp:-webkit-autofill{
     -webkit-text-fill-color: #fff !important;
 }

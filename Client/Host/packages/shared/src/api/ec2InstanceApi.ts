@@ -7,16 +7,21 @@ class ECEInstanceApi extends HttpClient {
         super(rootUrl + "/api");
     }
 
-    public start = async (awsUid: string) => 
-        this.api.get<EC2Response>(`/ec2instance/start/${awsUid}`);
+    public start = async (awsUid: string, hostRoomId: string) => 
+        this.api.get<EC2Response>(`/ec2instance/start/${awsUid}/${hostRoomId}`);
     
-    public get = async (instanceId: string, awsUid: string) => 
-        this.api.get(`/ec2instance/get/${instanceId}/${awsUid}`);
+    public get = async (awsUid: string) => 
+        this.api.get<Date>(`/ec2instance/get/${awsUid}`);
+
+    public terminate = async (awsUid: string) => 
+        this.api.get(`/ec2instance/terminate/${awsUid}`);
 }
 
 export interface EC2Response {
     message: string
     status: HttpStatusCode
+    launchTime: Date | null
+    hostRoomId: string | null
 }
 
 export const ec2InstanceApi = new ECEInstanceApi();

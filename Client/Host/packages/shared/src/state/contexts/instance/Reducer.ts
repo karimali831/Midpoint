@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
-    CreateAction, CreateSuccessAction,
+    CreateSuccessAction,
 } from './Actions';
 import { instanceInitialState } from './IInstanceState';
 

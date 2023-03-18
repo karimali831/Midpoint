@@ -37,24 +37,26 @@ import { useParams } from 'react-router-dom';
 import { HostParams } from '../../../types/types';
 import { getUserState } from '../../state/contexts/user/Selectors';
 import { Connect } from './Stream/Connect';
-import { SetHostRoomAction, SetMidPointJoinIdAction, SetUserConnectionAction } from '../../state/contexts/stream/Actions';
+import { DeleteHostRoomAction, SetHostRoomAction, SetMidPointJoinIdAction, SetUserConnectionAction } from '../../state/contexts/stream/Actions';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Tokens } from './Tokens';
 import { Payment } from './Payment/Payment';
 import { PaymentSuccess } from './Payment/Success';
+import { getInstanceState } from '../../state/contexts/instance/Selectors';
+import { TerminateAction } from '../../state/contexts/instance/Actions';
 
 export const Dashboard = () => {
 
     const { dashboardSection, midpointStep } = useSelector(getAppState)
     const { user } = useSelector(getUserState)
     const { userConnection, selectedHostRoom } = useSelector(getStreamState);
+    const { instance } = useSelector(getInstanceState)
     const { midPointJoinId } = useParams<HostParams>();
 
     const dispatch = useDispatch()
 
     React.useEffect(() => {
         if (!!midPointJoinId && !!user) {
-            // dispatch(SetDashboardSection(DashboardSection.Start))
             dispatch(SetMidPointJoinIdAction(midPointJoinId))
         }
     }, [midPointJoinId, user]);
@@ -64,9 +66,14 @@ export const Dashboard = () => {
             await userConnection.hubConnection
                 .stop()
                 .then(() => {
+                    dispatch(TerminateAction())
                     dispatch(SetUserConnectionAction(null))
                     dispatch(SetHostRoomAction(null))
                     dispatch(SetDashboardSection(DashboardSection.Overview))
+
+                    if (selectedHostRoom )
+                        dispatch(DeleteHostRoomAction(selectedHostRoom.id))
+
                 })
                 .catch((err) => {
                     console.error(err);
@@ -138,7 +145,7 @@ export const Dashboard = () => {
                                         onClick={() => midpointStep !== MidPointStep.Stream && dispatch(SetMidPointStep(MidPointStep.Stream))}
                                         icon={<CastConnectedIcon />}
                                         text="Stream"
-                                        success={true}
+                                        // success={true}
                                     />
                                     <div style={{ marginTop: 10 }} />
                                     <MainButton

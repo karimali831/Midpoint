@@ -1,4 +1,4 @@
-import { User } from "../../../../src/graphql/types"
+import { User } from "../graphql/types"
 
 
 export interface IMessage {

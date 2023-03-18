@@ -11,7 +11,7 @@ namespace MidPoint.Library.Service
     public interface IEC2InstanceService
     {
         Task<List<Instance>> GetRunningAsync(string instanceId = null);
-        Task<EC2Response> CreateAsync(string awsUid);
+        Task<EC2Response> CreateAsync(string awsUid, string hostRoomId);
         Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data);
     }
 
@@ -54,7 +54,7 @@ namespace MidPoint.Library.Service
                 .ToList();
         }
 
-        public async Task<EC2Response> CreateAsync(string awsUid)
+        public async Task<EC2Response> CreateAsync(string awsUid, string hostRoomId)
         {
             var createResponse = await _ec2Client.DescribeSecurityGroupsAsync();
 
@@ -65,7 +65,7 @@ namespace MidPoint.Library.Service
             };
 
             var describeResponse = await _ec2Client.DescribeSecurityGroupsAsync(describeRequest);
-            return await Launch(describeResponse, awsUid);
+            return await Launch(describeResponse, awsUid, hostRoomId);
         }
 
         public async Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data)
@@ -81,7 +81,7 @@ namespace MidPoint.Library.Service
             }
         }
 
-        private async Task<EC2Response> Launch(DescribeSecurityGroupsResponse describeResponse, string awsUid)
+        private async Task<EC2Response> Launch(DescribeSecurityGroupsResponse describeResponse, string awsUid, string hostRoomId)
         {
             var groups = new List<string>() { describeResponse.SecurityGroups[0].GroupId };
             var launchRequest = new RunInstancesRequest()
@@ -99,22 +99,25 @@ namespace MidPoint.Library.Service
                         ResourceType = ResourceType.Instance,
                         Tags = new List<Tag>
                         {
-                            new() { Key = "AwsUid", Value = awsUid }
+                            new() { Key = "AwsUid", Value = awsUid },
+                            new() { Key = "HostRoomId", Value = hostRoomId }
                         }
                     }
                 }
             };
 
             var launchResponse = await _ec2Client.RunInstancesAsync(launchRequest);
-            var instanceId = launchResponse.Reservation.Instances.First().InstanceId;
+            var instance = launchResponse.Reservation.Instances.First();
             
-            await CheckState(new List<string> { instanceId });
-            await _awsUserService.UpdateAsync("createdInstanceId", instanceId, awsUid);
+            await CheckState(new List<string> { instance.InstanceId });
+            await _awsUserService.UpdateAsync("createdInstanceId", instance.InstanceId, awsUid);
             
             return new EC2Response
             {
                 Message = launchResponse.ResponseMetadata.RequestId,
-                Status = launchResponse.HttpStatusCode
+                Status = launchResponse.HttpStatusCode,
+                LaunchTime = instance.LaunchTime,
+                HostRoomId = hostRoomId
             };
         }
         

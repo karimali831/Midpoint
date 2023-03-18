@@ -33,7 +33,7 @@ export const Welcome = () => {
             <div style={{ marginTop: 150, display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <span style={{ fontSize: 34 }}>Welcome to MidPoint.</span>
                 <span style={{ margin: "10px 30px", color: 'rgba(255, 255, 255, 0.6)', flexWrap: 'wrap' }}>
-                    In 10 minutes, you will start playing with your tokens. This will give you enough time to set everything up.
+                    In 10 minutes, you will start paying with your tokens. This will give you enough time to set everything up.
                 </span>
                 <Button
                     onPress={() => dispatch(SetMidPointStep(MidPointStep.ConnectedMidi))}

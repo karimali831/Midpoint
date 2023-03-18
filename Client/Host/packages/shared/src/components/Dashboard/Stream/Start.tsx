@@ -1,13 +1,12 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
-import { hideLoading } from 'react-redux-loading-bar'
+import { hideLoading, showLoading } from 'react-redux-loading-bar'
 import { useSelector } from "react-redux";
 import { getLoadingBar, getStreamState } from "../../../state/contexts/stream/Selectors";
-import { SetMidPointStep } from "../../../state/contexts/app/Actions";
+import { SetDashboardSection, SetMidPointStep } from "../../../state/contexts/app/Actions";
 import toast from 'react-hot-toast';
-import { MidPointStep } from "../../../enum/DashboardSection";
-import { CreateHostRoomAction, GetHostRoomDataAction, GetHostRoomsAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from "../../../state/contexts/stream/Actions";
-import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { DashboardSection, MidPointStep } from "../../../enum/DashboardSection";
+import { GetHostRoomDataAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from "../../../state/contexts/stream/Actions";
 import { HubConnectionState } from "@microsoft/signalr";
 import { IMessage } from "../../../interface/IMessage";
 import { IUserConnection } from "../../../interface/IUserConnection";
@@ -19,30 +18,21 @@ import sounds from "../../../assets/sounds";
 import { Howl } from "howler";
 import { CreateAction } from "../../../state/contexts/instance/Actions";
 import { getInstanceState } from "../../../state/contexts/instance/Selectors";
-import { HostRoom } from "../../../../../../src/graphql/types";
 
-/* 
-    Before the next screen appears we should load:
-    1. All the software and brand images
-    2. Create host room  
-*/
 export const StartStream = () => {
-
-    // const [loading, setLoading] = useState<boolean>(false)
-    const [hostRoom, setHostRoom] = useState<HostRoom | null>(null)
+    const [hasEnoughTokens, setHasEnoughTokens] = useState<boolean | null>(null)
     const { user } = useSelector(getUserState)
 
-    if (!user)
-        return null;
-
-    const percentage = useSelector(getLoadingBar)
-    const { userConnection } = useSelector(getStreamState)
     const { 
-        userCreatedHostRooms, 
         selectedHostRoom, 
         midPointJoinId 
     } = useSelector(getStreamState)
 
+    if (!user || !selectedHostRoom)
+        return null;
+
+    const percentage = useSelector(getLoadingBar)
+    const { userConnection } = useSelector(getStreamState)
     const { instance } = useSelector(getInstanceState)
 
     const dispatch = useDispatch()
@@ -58,76 +48,69 @@ export const StartStream = () => {
     const peerConn = new RTCPeerConnection(configuration);
 
     React.useEffect(() =>  {
-        if (instance != null) {
-            startWebRtc()
+        if (user.purchasedTokens && user.purchasedTokens >= 250) {
+            setHasEnoughTokens(true)
+
+            if (instance == null) {
+                toast.loading("Launching new instance in the cloud...")
+                dispatch(CreateAction())
+            }
         }
-
-    }, [instance])
-
-    React.useEffect(() => {
-        dispatch(GetHostRoomsAction())
+        else{
+            // toast.custom("Insufficient tokens")
+            dispatch(SetDashboardSection(DashboardSection.Tokens))
+        }
     }, [])
 
-    // useEffectSkipInitialRender(() => {
-    //     dispatch(showLoading())
-    // }, [loading])
 
-    React.useEffect(() => {
-        if (!!midPointJoinId && !!selectedHostRoom) {
-            set(selectedHostRoom)
+    React.useEffect(() =>  {
+        if (instance) {
+            dispatch(showLoading())
+            startWebRtc()
         }
-    }, [midPointJoinId, selectedHostRoom]);
-
-    const set = async (hostRoom: HostRoom) => {
-    
-        if (hostRoom.id == selectedHostRoom?.id && userConnection?.connectionState === HubConnectionState.Connected) {
-            dispatch(SetMidPointStep(MidPointStep.Stream))
-            return
-        }
-
-        setHostRoom(hostRoom)
-        // setLoading(true)
-
-        toast.loading("Launching new instance in the cloud...")
-        dispatch(CreateAction())
-
-
-    }
+    }, [instance])
 
     const startWebRtc = async () => {
         toast.loading("Starting WebRTC...")
-        await timeout(2000)
+        // await timeout(2000)
 
-        if (hostRoom == null) {
+        if (selectedHostRoom == null) {
             toast.error("An error occurred")
             return;
         }
 
         if (userConnection != null) {
             await closeConnection()
-                .then(() => startConn(hostRoom))
+                .then(() => startConn())
                 .catch(() => toast.error("An error occured"))
 
             return;
         }
 
-        startConn(hostRoom)
+        startConn()
     }
 
-    const startConn = (hostRoom: HostRoom) => {
- 
+    const startConn = () => {
+
+        console.log("test")
+
+        if (hasEnoughTokens === false) {
+            toast.error("Not enough tokens")
+            return;
+        }
+
         const uc: IUserConnection = {
             hubConnection: newHubConnection(),
             connectionState: HubConnectionState.Disconnected,
             showConnectionStatus: false,
             userId: user.id,
             displayName: user.displayName,
-            roomId: hostRoom.id,
-            roomName: hostRoom.name
+            roomId: selectedHostRoom.id,
+            roomName: selectedHostRoom.name
         }
 
-        dispatch(GetHostRoomDataAction({ roomId: hostRoom.id, pageNumber: 1 }))
-        dispatch(SetHostRoomAction(hostRoom))
+        dispatch(GetHostRoomDataAction({ roomId: selectedHostRoom.id, pageNumber: 1 }))
+        dispatch(SetHostRoomAction(selectedHostRoom))
         dispatch(SetUserConnectionAction(uc))
 
         start(uc)
@@ -155,9 +138,6 @@ export const StartStream = () => {
                     console.log('*[Channel] Connected Id: ' + hubConnection.connectionId);
 
                     hubConnection.on('ReceiveMessage', (message: IMessage) => {
-
-                        console.log(message)
-
                         if (message.isBot && message.message.includes("joined")) {
                             SoundPlay(sounds.confirmSound)
                         }
@@ -225,7 +205,7 @@ export const StartStream = () => {
                     toast.remove()
                     dispatch(hideLoading())
 
-                    toast.success("You're all set!")
+                    // toast.success("You're all set!")
                     dispatch(SetMidPointStep(!!midPointJoinId ? MidPointStep.Stream : MidPointStep.Welcome))
                 })
         }
@@ -271,59 +251,7 @@ export const StartStream = () => {
         }
     };
 
-    const createHostRoom = async () => {
-        if (maxReached) {
-            toast.error("Maximum rooms created reached")
-            return;
-        }
 
-        await closeConnection()
-        dispatch(CreateHostRoomAction())
-    }
+    return <Starting />
 
-    const limit = 5;
-    const maxReached = userCreatedHostRooms.length === limit
-
-    if (hostRoom != null) {
-        return <Starting />
-    }
-
-    return (
-        <nav  style={{ width: 200 }}>
-            <List>
-                {userCreatedHostRooms.map(room => 
-                    <ListItem disablePadding key={room.id}>
-                        <ListItemButton onClick={() => set(room)}>
-                            <ListItemText primary={
-                                <>
-                                    {room.name} 
-                                    {room.id == selectedHostRoom?.id && 
-                                        <div  className='controllet-set-input' style={{ background: '#45C419', marginTop: 10 }} />
-                                    }
-                                </>
-                            } secondary={
-                                <span style={{  color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>
-                                    {new Date(room.createdAt).toLocaleDateString("en-GB")}
-                                </span>
-                            }/>
-                        </ListItemButton>
-                    </ListItem>
-                )}
-                <ListItem disablePadding>
-                    <ListItemButton disabled={maxReached} onClick={createHostRoom}>
-                        <ListItemText  primary={"New Room"} secondary={
-                            <span 
-                                style={{ 
-                                    color: maxReached ? 'rgb(196, 25, 25)' : 'rgba(255, 255, 255, 0.6)', 
-                                    fontSize: 12  
-                                }}
-                            >
-                                {maxReached ? "Max reached" : `${limit - userCreatedHostRooms.length} remaining`}
-                            </span>
-                        } />
-                    </ListItemButton>
-                </ListItem>
-            </List>
-        </nav>
-    )
 }
