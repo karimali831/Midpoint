@@ -108,7 +108,8 @@ namespace Beatrice.Web
                         "http://localhost:3000",
                         "https://localhost:3000",
                         "https://karimali-001-site5.itempurl.com",
-                        "https://beattrice.netlify.app"
+                        "https://beattrice.netlify.app",
+                        "http://midpoint-dev.eba-bmgq98xb.eu-west-2.elasticbeanstalk.com"
                     )
                     .AllowAnyHeader()
                     .AllowAnyMethod()
