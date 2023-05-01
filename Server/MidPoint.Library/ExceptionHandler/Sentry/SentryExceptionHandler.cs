@@ -2,10 +2,6 @@
 {
     public class ExceptionHandlerService : IExceptionHandlerService
     {
-        public ExceptionHandlerService()
-        {
-        }
-
         public IErrorBuilder ReportException(Exception exception)
         {
             return new SentryErrorBuilder(exception);

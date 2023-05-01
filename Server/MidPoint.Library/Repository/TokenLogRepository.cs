@@ -6,29 +6,41 @@ namespace MidPoint.Library.Repository
     public interface ITokenLogRepository
     {
         Task<bool> AddAsync(TokenLog model);
-        Task<IEnumerable<TokenLog>> GetAllByInstanceId(string instanceId);
+        Task<int> GetTotalDeductions(string instanceId);
+        Task SetInactiveAsync(string awsUid);
     }
 
     public class TokenLogRepository : DapperBaseRepository, ITokenLogRepository
     {
-        private const string TABLE = "[dbo].[TokensLog]";
-        private static readonly string[] FIELDS = typeof(TokenLog).SqlFields();
-        
+        private const string Table = "[dbo].[TokensLog]";
+        private static readonly string[] Fields = typeof(TokenLog).SqlFields();
+
         public TokenLogRepository(IConfigHelper config) : base(config)
         {
         }
         
         public async Task<bool> AddAsync(TokenLog model)
         {
-            return await ExecuteAsync(DapperHelper.INSERT(TABLE, FIELDS), model);
+            return await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
         }
 
         public async Task<IEnumerable<TokenLog>> GetAllByInstanceId(string instanceId)
         {
-            return await QueryAsync<TokenLog>($"{DapperHelper.SELECT(TABLE, FIELDS)} WHERE Ec2InstanceId = @instanceId", new
+            return await QueryAsync<TokenLog>($"{DapperHelper.SELECT(Table, Fields)} WHERE Ec2InstanceId = @instanceId", new
             {
                 instanceId
             });
+        }
+        
+        public async Task<int> GetTotalDeductions(string instanceId)
+        {
+            return await ExecuteScalarAsync<int>($"{DapperHelper.SUM(Table, "Deducted")} WHERE Ec2InstanceId = @instanceId", 
+                new { instanceId });
+        }
+
+        public async Task SetInactiveAsync(string awsUid)
+        {
+            await ExecuteAsync($"UPDATE {Table} SET Active = 0 WHERE AwsUid = @awsUid AND Created < GETDATE() AND Active = 1", new { awsUid });
         }
     }
 }

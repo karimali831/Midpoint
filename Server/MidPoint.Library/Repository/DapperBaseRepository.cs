@@ -9,11 +9,12 @@ namespace MidPoint.Library.Repository
 {
     public interface IDapperBaseRepository
     {
-        Task<IEnumerable<T>> QueryAsync<T>(string query, object parameters = null);
-        Task<bool> ExecuteAsync(string query, object parameters = null);
-        Task<T> ExecuteScalarAsync<T>(string query, object parameters = null);
-        Task<T> QueryFirstOrDefaultAsync<T>(string query, object parameters = null);
-        Task<T> QuerySingleOrDefaultAsync<T>(string query, object parameters = null);
+        Task<IEnumerable<T>> QueryAsync<T>(string query, object? parameters = null);
+        Task<bool> ExecuteAsync(string query, object? parameters = null);
+        Task<T> ExecuteScalarAsync<T>(string query, object? parameters = null);
+        Task<T> QueryFirstOrDefaultAsync<T>(string query, object? parameters = null);
+        Task<T> QuerySingleOrDefaultAsync<T>(string query, object? parameters = null);
+        Task<int> ExecuteScalarAsync(string query, object parameters);
     }
 
     public abstract  class DapperBaseRepository : IDapperBaseRepository, IDisposable
@@ -71,11 +72,22 @@ namespace MidPoint.Library.Repository
 
         public async Task<T> QuerySingleOrDefaultAsync<T>(string query, object parameters = null)
         {
-            ;
-
             try
             {
                 return await _dbConnection.QuerySingleOrDefaultAsync<T>(query, parameters);
+            }
+            catch (Exception exp)
+            {
+                exceptionHandlerService.ReportException(exp).Send();
+                throw new Exception(exp.Message);
+            }
+        }
+
+        public async Task<int> ExecuteScalarAsync(string query, object parameters)
+        {
+            try
+            {
+                return await _dbConnection.ExecuteScalarAsync<int>(query, parameters);
             }
             catch (Exception exp)
             {

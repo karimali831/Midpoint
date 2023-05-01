@@ -2,7 +2,7 @@
 {
     public interface IErrorBuilder
     {
-        IErrorBuilder AddTags(IDictionary<string, string> tags);
+        IErrorBuilder AddTags(IDictionary<string, string?> tags);
         void Send();
     }
 }

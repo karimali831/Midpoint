@@ -37,6 +37,11 @@ namespace MidPoint.Library.Helper
             return $"SELECT COUNT(*) AS TotalItems FROM {table} {filter}";
         }
         
+        public static string SUM(string table, string column, StringBuilder filter = null)
+        {
+            return $"SELECT SUM({column}) FROM {table} {filter}";
+        }
+        
         public static string INSERT(string table, string[] fields)
         {
             return $"INSERT INTO {table} ({string.Join(", ", fields)}) VALUES ({string.Join(", ", fields.Select(f => $"@{f}"))})";

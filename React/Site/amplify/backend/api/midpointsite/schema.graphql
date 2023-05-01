@@ -1,0 +1,59 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type User @model {
+    id: ID! @primaryKey
+    fullName: String!
+    firebaseUid: ID!
+    email: String!
+    displayName: String!
+    imageUri: String
+    defaultMidiDevice: String
+    purchasedTokens: Int!
+    remainingTokens: Int!
+    createdInstanceId: String
+    hostRoomUser: [HostRoomUser] @hasMany
+}
+
+type HostRoomUser @model {
+    id: ID! @primaryKey
+    userId: ID! @index(name: "byUser")
+    hostRoomId: ID! @index(name: "byHostRoom")
+    lastSeen: String
+    archived: Boolean!
+    pinned: Boolean!
+
+    user: User @hasOne
+    hostRoom: HostRoom @belongsTo
+}
+
+
+type HostRoom @model {
+    id: ID! @primaryKey
+    name: String!
+    desc: String
+    imageUri: String
+    createdUserId: ID! @index(name: "byUser")
+    lastMessageId: ID
+    lastMessage: HostRoomChatMessage @hasOne
+    chatMessages: [HostRoomChatMessage] @hasMany
+    hostRoomUsers: [HostRoomUser] @hasMany
+}
+
+
+type HostRoomChatMessage @model {
+    id: ID! @primaryKey
+    userId: ID! @index(name: "byUser")
+    roomId: ID! @index(name: "byHostRoom")
+
+    message: String!
+    read: Boolean!
+
+    user: User @hasOne
+    hostRoom: HostRoom @belongsTo
+}
+
+# type Subscription {
+#     onUserUpdate(id: ID!): User @aws_subscribe(mutations: ["updateUser"])
+# }

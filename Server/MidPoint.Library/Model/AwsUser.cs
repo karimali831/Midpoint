@@ -2,7 +2,7 @@
 
 namespace MidPoint.Library.Model
 {
-    [DynamoDBTable("User-7mgehs52gbeipcctppznxmdqgm-dev")]
+    [DynamoDBTable("User-2v6vouo63zfdna2aln3bca6rga-dev")]
     public class AwsUser
     {
         [DynamoDBHashKey]
@@ -12,6 +12,7 @@ namespace MidPoint.Library.Model
         public string FirebaseUid { get; set; }
         public string Email { get; set; }
         public string DisplayName { get; set; }
-        public int? PurchasedToken { get; set; }
+        public int? PurchasedTokens { get; set; }
+        public int? RemainingTokens { get; set; }
     }
 }

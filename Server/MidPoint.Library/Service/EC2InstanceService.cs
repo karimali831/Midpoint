@@ -1,87 +1,136 @@
-﻿using Amazon.EC2;
-using Amazon.EC2.Internal;
+﻿using Amazon;
+using Amazon.EC2;
 using Amazon.EC2.Model;
 using Microsoft.Extensions.Options;
 using MidPoint.Library.Configuration;
 using MidPoint.Library.ExceptionHandler;
 using MidPoint.Library.Model;
+using MidPoint.Library.Repository;
 
 namespace MidPoint.Library.Service
 {
-    public interface IEC2InstanceService
+    public interface IEc2InstanceService
     {
-        Task<List<Instance>> GetRunningAsync(string instanceId = null);
-        Task<EC2Response> CreateAsync(string awsUid, string hostRoomId);
+        Task<List<Instance>> GetAllRunningAsync();
+        Task<Instance?> GetRunningAsync(string instanceId);
+        Task<EC2Response> CreateAsync(string? awsUid, string hostRoomId);
         Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data);
     }
 
-    public class EC2InstanceService : IEC2InstanceService
+    public class Ec2InstanceService : IEc2InstanceService
     {
         private readonly AmazonEC2Client _ec2Client;
-        private readonly IOptions<AwsConfig> _awsConfig;
         private readonly IAwsUserService _awsUserService;
         private readonly IExceptionHandlerService _exceptionHandlerService;
+        private readonly ITokenLogRepository _tokenLogRepository;
+        private readonly IPaymentService _paymentService;
 
-        public EC2InstanceService(
-            IOptions<AwsConfig> awsConfig, 
-            IExceptionHandlerService exceptionHandlerService, 
-            IAwsUserService awsUserService)
+        public Ec2InstanceService(
+            IOptions<AwsConfig> awsConfig,
+            IAwsUserService awsUserService,
+            ITokenLogRepository tokenLogRepository,
+            IPaymentService paymentService,
+            IExceptionHandlerService exceptionHandlerService)
         {
-            _exceptionHandlerService = exceptionHandlerService;
             _awsUserService = awsUserService;
+            _paymentService = paymentService;
+            _exceptionHandlerService = exceptionHandlerService;
+            _tokenLogRepository = tokenLogRepository;
 
-            try
+            var accessKey = awsConfig.Value.AccessKey;
+            var secretAccessKey = awsConfig.Value.SecretAccessKey;
+
+            _ec2Client = new AmazonEC2Client(accessKey, secretAccessKey, new AmazonEC2Config
             {
-                // Create an EC2 client
-                var accessKey = awsConfig.Value.AccessKey;
-                var SecretAccessKey = awsConfig.Value.SecretAccessKey;
-                
-                _ec2Client = new AmazonEC2Client(accessKey, SecretAccessKey);
-            }
-            catch (Exception ex)
-            {
-                _exceptionHandlerService.ReportException(ex).Send();
-            }
+                RegionEndpoint = RegionEndpoint.EUWest2
+            });
         }
-        
-        public async Task<List<Instance>> GetRunningAsync(string instanceId = null)
+
+        public async Task<Instance?> GetRunningAsync(string instanceId)
         {
             var request = new DescribeInstancesRequest();
-            
+
             return (await _ec2Client.DescribeInstancesAsync(request)).Reservations
                 .SelectMany(x => x.Instances)
-                .Where(x => x.State.Code == 16 && (instanceId == null || instanceId == x.InstanceId))
+                .FirstOrDefault(x => x.State.Code == 16 && instanceId == x.InstanceId && x.KeyName == "MidPoint");
+        }
+
+        public async Task<List<Instance>> GetAllRunningAsync()
+        {
+            var request = new DescribeInstancesRequest();
+
+            return (await _ec2Client.DescribeInstancesAsync(request)).Reservations
+                .SelectMany(x => x.Instances)
+                .Where(x => x.State.Code == 16 && x.KeyName == "MidPoint")
                 .ToList();
         }
 
-        public async Task<EC2Response> CreateAsync(string awsUid, string hostRoomId)
+        public async Task<EC2Response> CreateAsync(string? awsUid, string hostRoomId)
         {
-            var createResponse = await _ec2Client.DescribeSecurityGroupsAsync();
-
-            var Groups = new List<string>() {createResponse.SecurityGroups.First().GroupId };
-            var describeRequest = new DescribeSecurityGroupsRequest()
+            try
             {
-                GroupIds = Groups
-            };
+                var createResponse = await _ec2Client.DescribeSecurityGroupsAsync();
 
-            var describeResponse = await _ec2Client.DescribeSecurityGroupsAsync(describeRequest);
-            return await Launch(describeResponse, awsUid, hostRoomId);
+                var groups = new List<string>() { createResponse.SecurityGroups.First().GroupId };
+                var describeRequest = new DescribeSecurityGroupsRequest()
+                {
+                    GroupIds = groups
+                };
+
+                var describeResponse = await _ec2Client.DescribeSecurityGroupsAsync(describeRequest);
+                return await Launch(describeResponse, awsUid, hostRoomId);
+            }
+            catch (Exception exp)
+            {
+                _exceptionHandlerService.ReportException(exp);
+
+                return new EC2Response
+                {
+                    Message = exp.Message,
+                };
+            }
         }
 
         public async Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data)
         {
-            await _ec2Client.TerminateInstancesAsync(new TerminateInstancesRequest
+            try
             {
-                InstanceIds = data.Select(x => x.InstanceId).ToList()
-            });
+                // Terminate instance in AWS EC2
+                await _ec2Client.TerminateInstancesAsync(new TerminateInstancesRequest
+                {
+                    InstanceIds = data.Select(x => x.InstanceId).ToList()
+                });
 
-            foreach (var awsUid in data.Select(x => x.AwsUid))
+                foreach (var instance in data)
+                {
+                    // Get AWS user
+                    var user = await _awsUserService.GetAsync(instance.AwsUid);
+
+                    // Total tokens deducted for instance
+                    var totalTokenDeductions = await _tokenLogRepository.GetTotalDeductions(instance.InstanceId);
+
+                    // Deduct purchase tokens used 
+                    var calc = (user.PurchasedTokens ?? 0) - totalTokenDeductions;
+                    await _awsUserService.UpdateAsync<string>("purchasedTokens", (calc < 0 ? 0 : calc).ToString(), instance.AwsUid);
+
+                    // Set instance Id to null in Users table
+                    await _awsUserService.UpdateAsync<string>("createdInstanceId", null, instance.AwsUid);
+
+                    // Set inactive for all tokens in log 
+                    await _tokenLogRepository.SetInactiveAsync(instance.AwsUid);
+
+                    // Set purchased tokens to inactive
+                    await _paymentService.SetInactiveAsync(instance.AwsUid);
+                }
+            }
+            catch (Exception exp)
             {
-                await _awsUserService.UpdateAsync<string>("createdInstanceId", null, awsUid);
+                _exceptionHandlerService.ReportException(exp);
             }
         }
 
-        private async Task<EC2Response> Launch(DescribeSecurityGroupsResponse describeResponse, string awsUid, string hostRoomId)
+        private async Task<EC2Response> Launch(DescribeSecurityGroupsResponse describeResponse, string? awsUid,
+            string hostRoomId)
         {
             var groups = new List<string>() { describeResponse.SecurityGroups[0].GroupId };
             var launchRequest = new RunInstancesRequest()
@@ -90,7 +139,7 @@ namespace MidPoint.Library.Service
                 InstanceType = InstanceType.T2Micro,
                 MinCount = 1,
                 MaxCount = 1,
-                KeyName = "testKeyPair",
+                KeyName = "MidPoint",
                 SecurityGroupIds = groups,
                 TagSpecifications = new List<TagSpecification>
                 {
@@ -108,10 +157,10 @@ namespace MidPoint.Library.Service
 
             var launchResponse = await _ec2Client.RunInstancesAsync(launchRequest);
             var instance = launchResponse.Reservation.Instances.First();
-            
+
             await CheckState(new List<string> { instance.InstanceId });
             await _awsUserService.UpdateAsync("createdInstanceId", instance.InstanceId, awsUid);
-            
+
             return new EC2Response
             {
                 Message = launchResponse.ResponseMetadata.RequestId,
@@ -120,13 +169,13 @@ namespace MidPoint.Library.Service
                 HostRoomId = hostRoomId
             };
         }
-        
+
         // Method to wait until the instances are running (or at least not pending)
         private async Task CheckState(List<string> instanceIds)
         {
             Console.WriteLine(
-              "\nWaiting for the instances to start." +
-              "\nPress any key to stop waiting. (Response might be slightly delayed.)");
+                "\nWaiting for the instances to start." +
+                "\nPress any key to stop waiting. (Response might be slightly delayed.)");
 
             DescribeInstancesResponse responseDescribe;
             var requestDescribe = new DescribeInstancesRequest

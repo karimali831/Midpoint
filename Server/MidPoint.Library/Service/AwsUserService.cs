@@ -11,20 +11,20 @@ namespace MidPoint.Library.Service
     public interface IAwsUserService
     {
         Task<AwsUser?> GetUser();
-        Task UpdateAsync<T>(string field, T? value, string awsUid);
+        Task UpdateAsync<T>(string? field, T? value, string? awsUid);
         Task<AwsUser> GetAsync(string awsUid);
     }
-    
+
     public class AwsUserService : IAwsUserService
     {
         private readonly IDynamoDBContext _context;
         private readonly IAmazonDynamoDB _client;
         private readonly IExceptionHandlerService _exceptionHandlerService;
-        private const string TblName = "User-7mgehs52gbeipcctppznxmdqgm-dev";
+        private const string TblName = "User-2v6vouo63zfdna2aln3bca6rga-dev";
 
         public AwsUserService(
-            IDynamoDBContext context, 
-            IAmazonDynamoDB client, 
+            IDynamoDBContext context,
+            IAmazonDynamoDB client,
             IExceptionHandlerService exceptionHandlerService)
         {
             _context = context;
@@ -32,7 +32,7 @@ namespace MidPoint.Library.Service
             _exceptionHandlerService = exceptionHandlerService;
         }
 
-        public async Task UpdateAsync<T>(string field, T? value, string awsUid)
+        public async Task UpdateAsync<T>(string? field, T? value, string? awsUid)
         {
             try
             {
@@ -50,68 +50,65 @@ namespace MidPoint.Library.Service
                 {
                     attributeValue.S = value.ToString();
                 }
-                
+
                 var request = new UpdateItemRequest
                 {
                     TableName = TblName,
-                    Key = new Dictionary<string,AttributeValue>() { { "id", new AttributeValue { S = awsUid } } },
-                    ExpressionAttributeNames = new Dictionary<string,string>()
+                    Key = new Dictionary<string, AttributeValue>() { { "id", new AttributeValue { S = awsUid } } },
+                    ExpressionAttributeNames = new Dictionary<string, string?>()
                     {
-                        {"#T", field}
+                        { "#T", field }
                     },
                     ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                     {
-                        {$":{field}", attributeValue},
+                        { $":{field}", attributeValue },
                     },
                     UpdateExpression = $"SET #T = :{field}",
                     // ReturnValues = ReturnValue.ALL_NEW
                 };
-                var response = await _client.UpdateItemAsync(request);
-                
+
+                await _client.UpdateItemAsync(request);
             }
             catch (AmazonDynamoDBException e)
             {
-                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string>
+                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string?>
                 {
                     { nameof(AmazonDynamoDBException), nameof(UpdateAsync) },
                     { "Field", field },
-                    { "Value", value.ToString() },
+                    { "Value", value is null ? string.Empty : value.ToString()  },
                     { "AwsUid", awsUid }
                 }).Send();
             }
             catch (AmazonServiceException e)
             {
-                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string>
+                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string?>
                 {
                     { nameof(AmazonServiceException), nameof(UpdateAsync) },
                     { "Field", field },
-                    { "Value", value.ToString() },
+                    { "Value", value is null ? string.Empty : value.ToString()  },
                     { "AwsUid", awsUid }
                 }).Send();
             }
             catch (Exception e)
             {
-                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string>
+                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string?>
                 {
                     { nameof(Exception), nameof(UpdateAsync) },
                     { "Field", field },
-                    { "Value", value.ToString() },
+                    { "Value", value is null ? string.Empty : value.ToString() },
                     { "AwsUid", awsUid }
                 }).Send();
             }
-            
         }
 
         public async Task<AwsUser> GetAsync(string awsUid)
         {
-           
-            
             var result = await _client.ScanAsync(new ScanRequest
             {
                 TableName = TblName,
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
-                    {":id", new AttributeValue { S = awsUid }},
+                    { ":id", new AttributeValue { S = awsUid } },
                 },
                 FilterExpression = "id = :id"
             });
@@ -125,7 +122,9 @@ namespace MidPoint.Library.Service
             var fullName = user.First(x => x.Key == "fullName").Value;
             var firebaseUid = user.First(x => x.Key == "firebaseUid").Value;
             var email = user.First(x => x.Key == "email").Value;
-            var tokens = user.FirstOrDefault(x => x.Key == "purchasedTokens").Value;
+            var purchasedTokens = user.FirstOrDefault(x => x.Key == "purchasedTokens").Value;
+            var remainingTokens = user.FirstOrDefault(x => x.Key == "remainingTokens").Value;
+
 
             var awsUser = new AwsUser
             {
@@ -133,11 +132,11 @@ namespace MidPoint.Library.Service
                 FullName = fullName.S,
                 FirebaseUid = firebaseUid.S,
                 Email = email.S,
-                PurchasedToken = tokens != null ? int.Parse(tokens.N) : 0
+                PurchasedTokens = purchasedTokens.N != null ? int.Parse(purchasedTokens.N) : 0,
+                RemainingTokens = remainingTokens.N != null ? int.Parse(remainingTokens.N) : 0
             };
 
             return awsUser;
-
         }
 
         public async Task<AwsUser?> GetUser()
@@ -153,9 +152,7 @@ namespace MidPoint.Library.Service
 
                 // string tableName = _serviceConfiguration.AWS.DynamoDB.TableName;
 
-                
-                
-                
+
                 var test = _context.LoadAsync<AwsUser>("firebaseUid", firebaseId);
 
 
@@ -165,7 +162,6 @@ namespace MidPoint.Library.Service
                 var savedState = allDocs.FirstOrDefault();
 
                 return savedState;
-
             }
             catch (AmazonDynamoDBException e)
             {

@@ -1,0 +1,5 @@
+{
+  "AppSyncApiName": "midpointsite",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false
+}

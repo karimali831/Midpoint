@@ -1,0 +1,166 @@
+import CloudDoneIcon from '@mui/icons-material/CloudDoneOutlined';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOnOutlined';
+import PeopleAltIcon from '@mui/icons-material/PeopleAltOutlined';
+import WhereToVoteOutlinedIcon from '@mui/icons-material/WhereToVoteOutlined';
+import { Button } from '@mui/material';
+import { motion } from 'framer-motion';
+import React from 'react';
+import { isMobile } from 'react-device-detect';
+import { Details } from '../Details';
+import { Locations } from '../Locations';
+import { FeatureCard } from './FeatureCard';
+import { MeetTheTeam } from './Team';
+import images from '../../assets/images';
+
+export const Home = () => {
+    React.useEffect(() => { })
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
+            <div style={{
+                position: 'relative',
+                justifyContent: 'center',
+                display: 'flex',
+                marginBottom: 75
+
+            }}>
+                <img src={images.bannerImg}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        boxShadow: 'rgb(25 93 196) 0px 4px 4px -2px'
+                    }}
+                />
+                <div style={{
+                    position: 'absolute',
+                    height: 130,
+                    bottom: isMobile ? '25%' : '10%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    textAlign: 'center'
+                }}>
+                    <span style={{ fontSize: 36, fontWeight: '500' }}>MidPoint. Cloud Streaming</span>
+                    <span style={{ marginBottom: 10, flexWrap: 'wrap', fontSize: 14 }}>
+                        The future of collaborative music industry projects is in the cloud
+                    </span>
+                    <Button variant="contained" style={{ width: 170, borderRadius: 25 }}>
+                        Join the Discord!
+                    </Button>
+                </div>
+            </div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                alignItems: 'center'
+            }}>
+
+                <div style={{
+                    marginTop: 50,
+                    display: 'grid',
+                    width: '100%',
+                    gridGap: 10,
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 0fr))',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{ position: 'relative', flexDirection: 'column' }}>
+                        <span style={{
+                            fontSize: 32,
+                            position: 'absolute',
+                            top: -60
+                        }}>
+                            Main features
+                        </span>
+                        <FeatureCard
+                            icon={<WhereToVoteOutlinedIcon />}
+                            text="Geo-balanced"
+                            desc="Connect to the nearest server based on the average latency of your team"
+                        />
+
+                    </div>
+                    <FeatureCard
+                        icon={<PeopleAltIcon />}
+                        text="Collaborative"
+                        desc="Accessible and ease of use to perform B2B DJ sets,  VJs and soon XR streaming via the cloud at the comfort of your own home"
+                    />
+                    <FeatureCard
+                        icon={<CloudDoneIcon />}
+                        text="Low-Latency"
+                        desc="Super low sub-second latency with a gigabit up-link, streamed locally via the cloud without the need / use of relay servers"
+                    />
+                    <FeatureCard
+                        icon={<MonetizationOnIcon />}
+                        text="Pay for what you use"
+                        desc="No monthly commitment plans... Just hourl deductible tokens"
+                    />
+
+                </div>
+                <div style={{
+                    marginTop: 100,
+                    display: 'grid',
+                    width: '100%',
+                    gridGap: 50,
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(295px, 0fr))',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{ position: 'relative', flexDirection: 'column' }}>
+
+                        <span style={{
+                            fontSize: 32,
+                            position: 'absolute',
+                            top: -60
+                        }}>
+                            Details
+                        </span>
+                        <Details data={86} title="Registered users" desc="+6 LAST WEEK" />
+
+                    </div>
+                    <Details data={3} title="Cloud instances live now" desc="Average of 16 a week" />
+                    <Details data={"99%"} title="Uptime" />
+                </div>
+                <Locations />
+                <div style={{ marginTop: 50, flexDirection: 'column', display: 'flex', alignItems: 'center' }}>
+                    <span style={{
+                        fontSize: 32,
+                        marginBottom: 15,
+                        color: '#fff'
+                    }}>
+                        Start within minutes
+                    </span>
+                    <Button variant="contained" style={{ width: 120, borderRadius: 25 }}>
+                        Sign Up
+                    </Button>
+                </div>
+                <MeetTheTeam />
+            </div>
+
+
+            <div style={{
+                marginTop: 50,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
+                <span style={{ fontSize: 18 }}>
+                    We’d like to meet you too.
+                </span>
+                <span style={{ color: 'grey', marginTop: 5 }}>
+                    Join the <a href="" style={{ color: 'grey' }}>Discord.</a>
+                </span>
+                <Button variant="contained" style={{ width: 140, borderRadius: 25, marginTop: 30 }}>
+                    Get in touch
+                </Button>
+                <span style={{ color: 'grey', marginTop: 5 }}>
+                    Business inqueries only*
+                </span>
+            </div>
+        </motion.div>
+    )
+}

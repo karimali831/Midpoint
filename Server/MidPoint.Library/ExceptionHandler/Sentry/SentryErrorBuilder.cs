@@ -20,7 +20,7 @@ namespace MidPoint.Library.ExceptionHandler.Sentry
             return this;
         }
         
-        public IErrorBuilder AddTags(IDictionary<string, string> tags)
+        public IErrorBuilder AddTags(IDictionary<string, string?> tags)
         {
             foreach (var property in tags.Except(tags))
             {
