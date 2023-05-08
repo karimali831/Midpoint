@@ -3,6 +3,7 @@ using Amazon.EC2;
 using Amazon.EC2.Model;
 using Microsoft.Extensions.Options;
 using MidPoint.Library.Configuration;
+using MidPoint.Library.Enum;
 using MidPoint.Library.ExceptionHandler;
 using MidPoint.Library.Model;
 using MidPoint.Library.Repository;
@@ -11,10 +12,10 @@ namespace MidPoint.Library.Service
 {
     public interface IEc2InstanceService
     {
-        Task<List<Instance>> GetAllRunningAsync();
+        Task<List<Instance>> GetAllAsync(IList<Ec2InstanceStatus> statuses);
         Task<Instance?> GetRunningAsync(string instanceId);
-        Task<EC2Response> CreateAsync(string? awsUid, string hostRoomId);
-        Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data);
+        Task<EC2Response> CreateAsync(string awsUid, string customerId, string hostRoomId);
+        Task TerminateAsync(IList<(string InstanceId, string AwsUid, string CustomerId)> data);
     }
 
     public class Ec2InstanceService : IEc2InstanceService
@@ -24,17 +25,20 @@ namespace MidPoint.Library.Service
         private readonly IExceptionHandlerService _exceptionHandlerService;
         private readonly ITokenLogRepository _tokenLogRepository;
         private readonly IPaymentService _paymentService;
+        private readonly IInstanceRepository _instanceRepository;
 
         public Ec2InstanceService(
             IOptions<AwsConfig> awsConfig,
             IAwsUserService awsUserService,
             ITokenLogRepository tokenLogRepository,
             IPaymentService paymentService,
-            IExceptionHandlerService exceptionHandlerService)
+            IExceptionHandlerService exceptionHandlerService, 
+            IInstanceRepository instanceRepository)
         {
             _awsUserService = awsUserService;
             _paymentService = paymentService;
             _exceptionHandlerService = exceptionHandlerService;
+            _instanceRepository = instanceRepository;
             _tokenLogRepository = tokenLogRepository;
 
             var accessKey = awsConfig.Value.AccessKey;
@@ -55,30 +59,31 @@ namespace MidPoint.Library.Service
                 .FirstOrDefault(x => x.State.Code == 16 && instanceId == x.InstanceId && x.KeyName == "MidPoint");
         }
 
-        public async Task<List<Instance>> GetAllRunningAsync()
+        public async Task<List<Instance>> GetAllAsync(IList<Ec2InstanceStatus> statuses)
         {
             var request = new DescribeInstancesRequest();
 
             return (await _ec2Client.DescribeInstancesAsync(request)).Reservations
                 .SelectMany(x => x.Instances)
-                .Where(x => x.State.Code == 16 && x.KeyName == "MidPoint")
+                .Where(x => statuses.Contains((Ec2InstanceStatus)x.State.Code) && x.KeyName == "MidPoint")
                 .ToList();
         }
 
-        public async Task<EC2Response> CreateAsync(string? awsUid, string hostRoomId)
+        public async Task<EC2Response> CreateAsync(string awsUid, string customerId, string hostRoomId)
         {
             try
             {
                 var createResponse = await _ec2Client.DescribeSecurityGroupsAsync();
-
                 var groups = new List<string>() { createResponse.SecurityGroups.First().GroupId };
+
                 var describeRequest = new DescribeSecurityGroupsRequest()
                 {
                     GroupIds = groups
                 };
 
                 var describeResponse = await _ec2Client.DescribeSecurityGroupsAsync(describeRequest);
-                return await Launch(describeResponse, awsUid, hostRoomId);
+
+                return await Launch(describeResponse, awsUid, customerId, hostRoomId);
             }
             catch (Exception exp)
             {
@@ -91,7 +96,7 @@ namespace MidPoint.Library.Service
             }
         }
 
-        public async Task TerminateAsync(IList<(string InstanceId, string AwsUid)> data)
+        public async Task TerminateAsync(IList<(string InstanceId, string AwsUid, string CustomerId)> data)
         {
             try
             {
@@ -111,16 +116,20 @@ namespace MidPoint.Library.Service
 
                     // Deduct purchase tokens used 
                     var calc = (user.PurchasedTokens ?? 0) - totalTokenDeductions;
-                    await _awsUserService.UpdateAsync<string>("purchasedTokens", (calc < 0 ? 0 : calc).ToString(), instance.AwsUid);
+                    await _awsUserService.UpdateAsync("purchasedTokens", (calc < 0 ? 0 : calc).ToString(),
+                        instance.AwsUid);
 
                     // Set instance Id to null in Users table
                     await _awsUserService.UpdateAsync<string>("createdInstanceId", null, instance.AwsUid);
 
                     // Set inactive for all tokens in log 
-                    await _tokenLogRepository.SetInactiveAsync(instance.AwsUid);
+                    await _tokenLogRepository.SetInactiveAsync(instance.InstanceId);
 
                     // Set purchased tokens to inactive
-                    await _paymentService.SetInactiveAsync(instance.AwsUid);
+                    await _paymentService.SetInactiveAsync(instance.CustomerId);
+                    
+                    // Terminate instance in local db
+                    await _instanceRepository.SetTerminatedAsync(instance.InstanceId);
                 }
             }
             catch (Exception exp)
@@ -129,10 +138,11 @@ namespace MidPoint.Library.Service
             }
         }
 
-        private async Task<EC2Response> Launch(DescribeSecurityGroupsResponse describeResponse, string? awsUid,
-            string hostRoomId)
+        private async Task<EC2Response> Launch(DescribeSecurityGroupsResponse describeResponse, string awsUid,
+            string customerId, string hostRoomId)
         {
             var groups = new List<string>() { describeResponse.SecurityGroups[0].GroupId };
+
             var launchRequest = new RunInstancesRequest()
             {
                 ImageId = "ami-01e91a8e71e619d87",
@@ -149,6 +159,7 @@ namespace MidPoint.Library.Service
                         Tags = new List<Tag>
                         {
                             new() { Key = "AwsUid", Value = awsUid },
+                            new() { Key = "CustomerId", Value = customerId },
                             new() { Key = "HostRoomId", Value = hostRoomId }
                         }
                     }
@@ -160,6 +171,15 @@ namespace MidPoint.Library.Service
 
             await CheckState(new List<string> { instance.InstanceId });
             await _awsUserService.UpdateAsync("createdInstanceId", instance.InstanceId, awsUid);
+
+            await _instanceRepository.CreateAsync(new Model.Db.Instance
+            {
+                Id = instance.InstanceId,
+                AwsUid = awsUid,
+                Status = (Ec2InstanceStatus)launchResponse.HttpStatusCode,
+                LaunchedDate = instance.LaunchTime
+            });
+            
 
             return new EC2Response
             {

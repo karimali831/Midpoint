@@ -57,8 +57,7 @@ namespace MidPoint.Library.Repository
         }
 
         public async Task<T> QueryFirstOrDefaultAsync<T>(string query, object parameters = null)
-        {;
-
+        {
             try
             {
                 return await _dbConnection.QueryFirstOrDefaultAsync<T>(query, parameters);

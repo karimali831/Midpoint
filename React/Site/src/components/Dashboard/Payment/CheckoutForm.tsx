@@ -83,8 +83,8 @@ export const CheckoutForm = () => {
     };
 
     return (
-        <form id="payment-form" onSubmit={handleSubmit}>
-            {paymentIntentErrorMsg && <Alert severity="error">An error occurred</Alert>}
+        <form id="payment-form" onSubmit={handleSubmit} style={{ width: '100%' }}>
+            {paymentIntentErrorMsg && <Alert severity="error">{paymentIntentErrorMsg}</Alert>}
             {paymentIntentLoading ? <BarLoader color="#36d7b7" /> :
                 <>
                     <CardElement id="card-element" options={cardStyle} onChange={handleChange} />

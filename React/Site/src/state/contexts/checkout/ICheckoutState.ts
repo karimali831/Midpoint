@@ -1,9 +1,8 @@
-import { IStripePricePlan } from "../../../models/IStripePricePlan"
-
+import { IStripePricePlan } from '../../../models/IStripePricePlan'
 
 export interface ICheckoutState {
     loadingPricingPlan: boolean
-    selectedPricePlan: IStripePricePlan | null
+    basket: IStripePricePlan[]
     pricingPlan: IStripePricePlan[]
 
     paymentIntentLoading: boolean
@@ -16,9 +15,8 @@ export interface ICheckoutState {
 
 export const checkoutInitialState: ICheckoutState = {
     loadingPricingPlan: false,
-    selectedPricePlan: null,
+    basket: [],
     pricingPlan: [],
-
     paymentIntentLoading: false,
     paymentIntentErrorMsg: null,
     paymentIntentClientSecret: undefined,

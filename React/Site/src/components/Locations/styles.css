@@ -1,0 +1,17 @@
+.locations {
+    max-width: 1000px
+}
+
+.headline {
+    font-size: 32px;
+    margin-bottom: 30px
+}
+
+.locations-img {
+    width: 100%;
+    height: 100%;
+}
+
+.continents {
+    margin-top: 20px;
+}

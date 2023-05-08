@@ -1,15 +1,19 @@
 
 
   input {
-    border-radius: 6px;
+    /* border-radius: 6px; */
     margin-bottom: 6px;
-    padding: 12px;
+    padding: 12px 0;
     border: 1px solid grey;
     max-height: 44px;
     font-size: 16px;
     width: 100%;
     background: white;
     box-sizing: border-box;
+  }
+
+  input::placeholder {
+    color: white;
   }
   
   form {

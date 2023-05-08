@@ -1,35 +1,43 @@
-import React, { useState } from "react"
-import { useDispatch } from "react-redux"
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { hideLoading, showLoading } from 'react-redux-loading-bar'
-import { useSelector } from "react-redux";
-import { getLoadingBar, getStreamState } from "../../../state/contexts/stream/Selectors";
-import { SetDashboardSection, SetMidPointStep } from "../../../state/contexts/app/Actions";
-import toast from 'react-hot-toast';
-import { DashboardSection, MidPointStep } from "../../../enum/DashboardSection";
-import { GetHostRoomDataAction, MessageReceivedAction, SendMessageAction, SetConnectionStateAction, SetHostRoomAction, SetUserConnectionAction, UsersInRoomAction } from "../../../state/contexts/stream/Actions";
-import { HubConnectionState } from "@microsoft/signalr";
-import { IMessage } from "../../../interface/IMessage";
-import { IUserConnection } from "../../../interface/IUserConnection";
-import { getUserState } from "../../../state/contexts/user/Selectors";
-import { newHubConnection } from "../../../utils/HubHelper";
-import { uuidv4 } from "../../../utils/Utils";
-import { Starting } from "./Starting";
-import sounds from "../../../assets/sounds";
-// import { Howl } from "howler";
-import { CreateAction } from "../../../state/contexts/instance/Actions";
-import { getInstanceState } from "../../../state/contexts/instance/Selectors";
+import { useSelector } from 'react-redux'
+import {
+    getLoadingBar,
+    getStreamState
+} from '../../../state/contexts/stream/Selectors'
+import {
+    SetDashboardSection,
+    SetMidPointStep
+} from '../../../state/contexts/app/Actions'
+import toast from 'react-hot-toast'
+import { DashboardSection, MidPointStep } from '../../../enum/DashboardSection'
+import {
+    GetHostRoomDataAction,
+    MessageReceivedAction,
+    SendMessageAction,
+    SetConnectionStateAction,
+    SetHostRoomAction,
+    SetUserConnectionAction,
+    UsersInRoomAction
+} from '../../../state/contexts/stream/Actions'
+import { HubConnectionState } from '@microsoft/signalr'
+import { IMessage } from '../../../interface/IMessage'
+import { IUserConnection } from '../../../interface/IUserConnection'
+import { getUserState } from '../../../state/contexts/user/Selectors'
+import { newHubConnection } from '../../../utils/HubHelper'
+import { uuidv4 } from '../../../utils/Utils'
+import { Starting } from './Starting'
+import { CreateAction } from '../../../state/contexts/instance/Actions'
+import { getInstanceState } from '../../../state/contexts/instance/Selectors'
 
 export const StartStream = () => {
     const [hasEnoughTokens, setHasEnoughTokens] = useState<boolean | null>(null)
     const { user } = useSelector(getUserState)
 
-    const { 
-        selectedHostRoom, 
-        midPointJoinId 
-    } = useSelector(getStreamState)
+    const { selectedHostRoom, midPointJoinId } = useSelector(getStreamState)
 
-    if (!user || !selectedHostRoom)
-        return null;
+    if (!user || !selectedHostRoom) return null
 
     const percentage = useSelector(getLoadingBar)
     const { userConnection } = useSelector(getStreamState)
@@ -40,32 +48,33 @@ export const StartStream = () => {
     const configuration = {
         iceServers: [
             {
-                urls: 'stun:stun.l.google.com:19302',
-            },
-        ],
-    };
+                urls: 'stun:stun.l.google.com:19302'
+            }
+        ]
+    }
 
-    const minimumTokensRequired = 100
+    const minimumTokensRequired = 20
 
-    const peerConn = new RTCPeerConnection(configuration);
+    const peerConn = new RTCPeerConnection(configuration)
 
-    React.useEffect(() =>  {
-        if (user.purchasedTokens && user.purchasedTokens >= minimumTokensRequired) {
+    React.useEffect(() => {
+        if (
+            user.purchasedTokens &&
+            user.purchasedTokens >= minimumTokensRequired
+        ) {
             setHasEnoughTokens(true)
 
             if (instance == null) {
-                toast.loading("Launching new cloud instance...")
+                toast.loading('Launching new cloud instance...')
                 dispatch(CreateAction())
             }
-        }
-        else{
+        } else {
             // toast.custom("Insufficient tokens")
             dispatch(SetDashboardSection(DashboardSection.Tokens))
         }
     }, [])
 
-
-    React.useEffect(() =>  {
+    React.useEffect(() => {
         if (instance) {
             dispatch(showLoading())
             startWebRtc()
@@ -73,20 +82,20 @@ export const StartStream = () => {
     }, [instance])
 
     const startWebRtc = async () => {
-        toast.loading("Starting WebRTC...")
+        toast.loading('Starting WebRTC...')
         // await timeout(2000)
 
         if (selectedHostRoom == null) {
-            toast.error("An error occurred")
-            return;
+            toast.error('An error occurred')
+            return
         }
 
         if (userConnection != null) {
             await closeConnection()
                 .then(() => startConn())
-                .catch(() => toast.error("An error occured"))
+                .catch(() => toast.error('An error occured'))
 
-            return;
+            return
         }
 
         startConn()
@@ -94,8 +103,8 @@ export const StartStream = () => {
 
     const startConn = () => {
         if (hasEnoughTokens === false) {
-            toast.error("Not enough tokens")
-            return;
+            toast.error('Not enough tokens')
+            return
         }
 
         const uc: IUserConnection = {
@@ -108,7 +117,12 @@ export const StartStream = () => {
             roomName: selectedHostRoom.name
         }
 
-        dispatch(GetHostRoomDataAction({ roomId: selectedHostRoom.id, pageNumber: 1 }))
+        dispatch(
+            GetHostRoomDataAction({
+                roomId: selectedHostRoom.id,
+                pageNumber: 1
+            })
+        )
         dispatch(SetHostRoomAction(selectedHostRoom))
         dispatch(SetUserConnectionAction(uc))
 
@@ -126,49 +140,53 @@ export const StartStream = () => {
     // Howler.volume(1.0)
 
     const start = (userConnection: IUserConnection) => {
-        const { hubConnection } = userConnection;
+        const { hubConnection } = userConnection
 
         if (hubConnection.state === HubConnectionState.Disconnected) {
             hubConnection
                 .start()
-                .then((a) => {
-                    // grabWebCamVideo()
-                    dispatch(SetConnectionStateAction(hubConnection.state));
-                    console.log('*[Channel] Connected Id: ' + hubConnection.connectionId);
+                .then(() => {
+                    dispatch(SetConnectionStateAction(hubConnection.state))
+                    console.log(
+                        '*[Channel] Connected Id: ' + hubConnection.connectionId
+                    )
 
                     hubConnection.on('ReceiveMessage', (message: IMessage) => {
-                        if (message.isBot && message.message.includes("joined")) {
-                            SoundPlay(sounds.confirmSound)
+                        if (
+                            message.isBot &&
+                            message.message.includes('joined')
+                        ) {
+                            // SoundPlay(sounds.confirmSound)
                         }
 
                         if (message.userId === user.id) {
                             dispatch(
                                 MessageReceivedAction({
                                     message,
-                                    roomId: userConnection.roomId,
+                                    roomId: userConnection.roomId
                                 })
-                            );
+                            )
                         } else {
                             dispatch(
                                 SendMessageAction({
                                     message,
-                                    roomId: userConnection.roomId,
+                                    roomId: userConnection.roomId
                                 })
-                            );
+                            )
                         }
 
-                        createPeerConnection();
-                    });
+                        createPeerConnection()
+                    })
 
                     hubConnection.on(
                         'UsersInRoom',
                         (users: IUserConnection[]) => {
-                            dispatch(UsersInRoomAction(users));
+                            dispatch(UsersInRoomAction(users))
                         }
-                    );
+                    )
 
                     hubConnection.onclose(() => {
-                        console.log('*[CHAT] Connection closed');
+                        console.log('*[CHAT] Connection closed')
 
                         closeConnection().then(() =>
                             dispatch(
@@ -176,28 +194,28 @@ export const StartStream = () => {
                                     HubConnectionState.Disconnected
                                 )
                             )
-                        );
-                    });
+                        )
+                    })
 
                     hubConnection.onreconnecting(() => {
-                        console.log('*[CHAT] Lost connection');
+                        console.log('*[CHAT] Lost connection')
                         dispatch(
                             SetConnectionStateAction(
                                 HubConnectionState.Reconnecting
                             )
-                        );
-                    });
+                        )
+                    })
 
                     hubConnection.onreconnected(() => {
-                        console.log('*[CHAT] Re-connected');
+                        console.log('*[CHAT] Re-connected')
                         dispatch(
                             SetConnectionStateAction(
                                 HubConnectionState.Connected
                             )
-                        );
-                    });
+                        )
+                    })
 
-                    hubConnection.invoke('JoinRoom', userConnection);
+                    hubConnection.invoke('JoinRoom', userConnection)
                 })
                 .catch((error) => toast.error(error.message))
                 .finally(() => {
@@ -205,14 +223,19 @@ export const StartStream = () => {
                     dispatch(hideLoading())
 
                     // toast.success("You're all set!")
-                    dispatch(SetMidPointStep(!!midPointJoinId ? MidPointStep.Stream : MidPointStep.Welcome))
+                    dispatch(
+                        SetMidPointStep(
+                            !!midPointJoinId
+                                ? MidPointStep.Stream
+                                : MidPointStep.Welcome
+                        )
+                    )
                 })
         }
-    };
+    }
 
     const createPeerConnection = () => {
-        if (selectedHostRoom == null)
-            return;
+        if (selectedHostRoom == null) return
 
         peerConn.onicecandidate = (event) => {
             if (event.candidate) {
@@ -224,33 +247,30 @@ export const StartStream = () => {
                     message: peerConn.localDescription?.toJSON(),
                     createdAt: new Date().toDateString(),
                     roomId: selectedHostRoom.id,
-                    name: "System"
-                };
+                    name: 'System'
+                }
 
                 dispatch(
                     SendMessageAction({ message, roomId: selectedHostRoom.id })
-                );
+                )
             }
-        };
-    };
+        }
+    }
 
     const closeConnection = async () => {
         if (!!userConnection?.hubConnection) {
             await userConnection.hubConnection
                 .stop()
-                .then(() => { 
+                .then(() => {
                     dispatch(SetUserConnectionAction(null))
                     dispatch(SetHostRoomAction(null))
-                    // dispatch(SetDashboardSection(DashboardSection.Overview))
                 })
                 .catch((err) => {
-                    console.error(err);
+                    console.error(err)
                     toast.error(err.message)
-                });
+                })
         }
-    };
-
+    }
 
     return <Starting />
-
 }

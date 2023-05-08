@@ -12,25 +12,16 @@ interface IOwnProps {
 
 export const PersonCard: React.FC<IOwnProps> = (props) => {
     return (
-        <div style={{
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            width: 220,
-            marginRight: 20,
-            borderRadius: 5
-        }}>
-            <img src={images.adamProfilePic} style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 5,
-                boxShadow: '7px 8px #195DC4'
-            }} />
+        <div className='person-container'>
+            <img src={images.adamProfilePic} className='person-img' />
 
-            <span style={{ color: '#fff', fontWeight: "700", marginTop: 15 }}>{props.name}</span>
-            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12, marginTop: 5 }}>
+            <span className='person-name'>
+                {props.name}
+            </span>
+            <span className='secondary fs12 mt5'>
                 {props.title}
             </span>
-            <div style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+            <div className='align-2 mt10'>
                 <TwitterIcon style={{ fontSize: 20, marginRight: 10 }} />
                 <FacebookIcon style={{ fontSize: 20, marginRight: 10 }} />
                 <InstagramIcon style={{ fontSize: 20, marginRight: 10 }} />

@@ -1,11 +1,13 @@
-import { all, fork } from 'redux-saga/effects';
-import chatApiSaga from './api/chatApiSaga';
-import ec2InstanceSaga from './api/ec2InstanceSaga';
-import hostApiSaga from './api/hostApiSaga';
-import stripeApiSaga from './api/stripeApiSaga';
-import userApiSaga from './api/userApiSaga';
-import appSaga from './appSaga';
-import navigationSaga from './navigationSaga';
+import { all, fork } from 'redux-saga/effects'
+import chatApiSaga from './api/chatApiSaga'
+import ec2InstanceSaga from './api/ec2InstanceSaga'
+import hostApiSaga from './api/hostApiSaga'
+import stripeApiSaga from './api/stripeApiSaga'
+import userApiSaga from './api/userApiSaga'
+import appSaga from './appSaga'
+import navigationSaga from './navigationSaga'
+import promotionApiSaga from './api/promotionApiSaga'
+import paymentApiSaga from './api/paymentApiSaga'
 
 // We `fork()` these tasks so they execute in the background.
 export function* rootSaga() {
@@ -19,6 +21,8 @@ export function* rootSaga() {
         fork(chatApiSaga),
         fork(hostApiSaga),
         fork(ec2InstanceSaga),
-        fork(stripeApiSaga)
-    ]);
+        fork(stripeApiSaga),
+        fork(promotionApiSaga),
+        fork(paymentApiSaga)
+    ])
 }

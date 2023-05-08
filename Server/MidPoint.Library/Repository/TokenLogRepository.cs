@@ -7,7 +7,7 @@ namespace MidPoint.Library.Repository
     {
         Task<bool> AddAsync(TokenLog model);
         Task<int> GetTotalDeductions(string instanceId);
-        Task SetInactiveAsync(string awsUid);
+        Task SetInactiveAsync(string instanceId);
     }
 
     public class TokenLogRepository : DapperBaseRepository, ITokenLogRepository
@@ -34,13 +34,18 @@ namespace MidPoint.Library.Repository
         
         public async Task<int> GetTotalDeductions(string instanceId)
         {
-            return await ExecuteScalarAsync<int>($"{DapperHelper.SUM(Table, "Deducted")} WHERE Ec2InstanceId = @instanceId", 
+            return await ExecuteScalarAsync<int>($"{DapperHelper.SUM(Table, "Deducted")} WHERE Ec2InstanceId = @instanceId AND Active = 1", 
                 new { instanceId });
         }
 
-        public async Task SetInactiveAsync(string awsUid)
+        public async Task SetInactiveAsync1(string awsUid)
         {
             await ExecuteAsync($"UPDATE {Table} SET Active = 0 WHERE AwsUid = @awsUid AND Created < GETDATE() AND Active = 1", new { awsUid });
+        }
+
+        public async Task SetInactiveAsync(string instanceId)
+        {
+            await ExecuteAsync($"UPDATE {Table} SET Active = 0 WHERE Ec2InstanceId = @instanceId AND Active = 1", new { instanceId });
         }
     }
 }

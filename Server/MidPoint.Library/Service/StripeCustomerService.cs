@@ -6,8 +6,9 @@ namespace MidPoint.Library.Service
     public interface IStripeCustomerService
     {
         Task<Customer> GetAsync(string customerId);
-        Task<Customer> GetOrCreateAsync(string awsUid);
+        Task<Customer> CreateAsync(string awsUid);
         Task<Customer?> GetByEmailAsync(string email);
+        Task<PaymentMethod?> GetLatestPaymentMethodAsync(string customerId);
     }
     
     public class StripeCustomerService : IStripeCustomerService
@@ -16,7 +17,9 @@ namespace MidPoint.Library.Service
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IAwsUserService _awsUserService;
         
-        public StripeCustomerService(IHostEnvironment hostEnvironment, IAwsUserService awsUserService)
+        public StripeCustomerService(
+            IHostEnvironment hostEnvironment, 
+            IAwsUserService awsUserService)
         {
             _hostEnvironment = hostEnvironment;
             _awsUserService = awsUserService;
@@ -28,15 +31,15 @@ namespace MidPoint.Library.Service
             return await _customerService.GetAsync(customerId);
         }
 
-        public async Task<Customer> GetOrCreateAsync(string awsUid)
+        public async Task<PaymentMethod?> GetLatestPaymentMethodAsync(string customerId)
+        {
+            return (await _customerService.ListPaymentMethodsAsync(customerId))
+                .MaxBy(x => x.Created);
+        }
+
+        public async Task<Customer> CreateAsync(string awsUid)
         {
             var user = await _awsUserService.GetAsync(awsUid);
-            
-            // Create new customer in Stripe if doesn't exist
-            var customer = await GetByEmailAsync(user.Email);
-
-            if (customer != null) 
-                return customer;
             
             var options = new CustomerCreateOptions
             {
@@ -48,10 +51,10 @@ namespace MidPoint.Library.Service
                     { "Environment", _hostEnvironment.EnvironmentName }
                 }
             };
-            
+
             return await _customerService.CreateAsync(options);
         }
-        
+
         public async Task<Customer?> GetByEmailAsync(string email)
         {
             return (await _customerService.SearchAsync(new CustomerSearchOptions

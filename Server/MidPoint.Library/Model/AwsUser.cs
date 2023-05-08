@@ -14,5 +14,6 @@ namespace MidPoint.Library.Model
         public string DisplayName { get; set; }
         public int? PurchasedTokens { get; set; }
         public int? RemainingTokens { get; set; }
+        public string? CreatedInstanceId { get; set; }
     }
 }

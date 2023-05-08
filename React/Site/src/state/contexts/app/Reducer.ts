@@ -1,4 +1,4 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit'
 import {
     SetAppFocusedAction,
     SetAppReadyAction,
@@ -6,33 +6,34 @@ import {
     SetMidPointStep,
     SetOnConfirmLoadingAction,
     SetRegisteringAction,
+    SetSettingAction,
     SetSoftwareAction,
     ShowScreenAction
-} from './Actions';
-import { appInitialState } from './IAppState';
+} from './Actions'
+import { appInitialState } from './IAppState'
 
 export const appReducer = createReducer(appInitialState, (builder) => {
     builder
         .addCase(SetAppFocusedAction, (state, action) => {
-            state.appFocused = action.payload;
+            state.appFocused = action.payload
         })
         .addCase(SetAppReadyAction, (state, action) => {
-            const modify = [...state.appReady];
+            const modify = [...state.appReady]
             modify.map((x) => {
                 if (x.name === action.payload) {
-                    x.loaded = true;
+                    x.loaded = true
                 }
-            });
+            })
 
-            state.appReady = modify;
+            state.appReady = modify
         })
 
         .addCase(ShowScreenAction, (state, action) => {
-            state.currentScreen = action.payload.screen;
+            state.currentScreen = action.payload.screen
         })
         .addCase(SetOnConfirmLoadingAction, (state, action) => {
-            state.modalOnConfirmLoading = action.payload;
-            state.showModal = action.payload;
+            state.modalOnConfirmLoading = action.payload
+            state.showModal = action.payload
         })
         .addCase(SetSoftwareAction, (state, action) => {
             state.selectedSoftware = action.payload
@@ -47,5 +48,8 @@ export const appReducer = createReducer(appInitialState, (builder) => {
         .addCase(SetRegisteringAction, (state, action) => {
             state.registering = action.payload
         })
-});
 
+        .addCase(SetSettingAction, (state, action) => {
+            state.setting = action.payload
+        })
+})

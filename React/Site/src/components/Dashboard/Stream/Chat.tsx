@@ -66,23 +66,23 @@ export const StreamChat = () => {
     const messages = data?.messages.filter(x => !x.isBot) ?? []
 
     return (
-        <div style={{ position: 'relative', width: '100%' }}>
-
-            <div ref={chatWindowRef} style={{  overflowY: 'auto', maxHeight: 300 }}>
+        <div className='align-11'>
+            <div ref={chatWindowRef} className='chat-window'>
                 {
                     messages.length > 0 ? messages.reverse().map(message => 
                         <ChatMessage message={message} key={message.id} />
                     )
 
                     :
-                        <div style={{ textAlign: 'center', marginTop: '20%' }}>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Keep your team updated during the stream.</span>
+                        <div className='chat-info center'>
+                            <span className='secondary'>
+                                Keep your team updated during the stream.
+                            </span>
                         </div> 
-                    
                 }
             </div>
 
-            <div style={{ display: 'flex', position: 'absolute', bottom: -10, width: '100%' }}>
+            <div className='input-container'>
            
                     <input 
                         className='chat-input' 
@@ -92,16 +92,8 @@ export const StreamChat = () => {
                         value={message}
                     />
                     
-                    <div 
-                        onClick={() => sendMessage()}  
-                        style={{ 
-                            position: 'absolute', 
-                            right: 0, 
-                            bottom: 20,
-                            cursor: 'pointer'
-                        }}
-                    >
-                        <ArrowForwardIcon style={{ fontSize: 20 }} />
+                    <div className='send-arrow' onClick={() => sendMessage()}   >
+                        <ArrowForwardIcon className='fs20' style={{ fontSize: 20 }} />
                     </div>
        
             </div>

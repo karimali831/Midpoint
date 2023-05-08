@@ -1,13 +1,19 @@
-import { IUser } from '../../../models/IUser';
+import { IPayment } from '../../../models/IPayment'
+import { IPromotion } from '../../../models/IPromotion'
+import { IUser } from '../../../models/IUser'
 
 export interface IUserState {
     user: IUser | null
-    signingIn: boolean;
-    authSuccess: boolean;
-    camOn: boolean;
-    djReady: boolean;
+    signingIn: boolean
+    authSuccess: boolean
+    camOn: boolean
+    djReady: boolean
     defaultController: string | null
     firebaseUid: string | null
+    promotions: IPromotion[]
+    payments: IPayment[]
+    loadingPromoCodes: boolean
+    loadingPayments: boolean
 }
 
 export const userInitialState: IUserState = {
@@ -17,5 +23,9 @@ export const userInitialState: IUserState = {
     camOn: false,
     djReady: false,
     defaultController: null,
-    firebaseUid: null
-};
+    firebaseUid: null,
+    promotions: [],
+    payments: [],
+    loadingPromoCodes: false,
+    loadingPayments: false
+}

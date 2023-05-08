@@ -103,7 +103,9 @@ export const Chat: React.FC = () => {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton edge="end" color="primary">
-                                    <Button onClick={sendMessage} disabled={message === ""}>Send</Button>
+                                    <Button onClick={sendMessage} disabled={message === ""}>
+                                        Send
+                                    </Button>
                                 </IconButton>
                             </InputAdornment>
                         ),

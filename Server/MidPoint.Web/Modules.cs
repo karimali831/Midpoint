@@ -23,15 +23,25 @@ namespace MidPoint.Web
 
             services.AddSingleton<IStripeProductService, StripeProductService>();
             services.AddSingleton<IAwsUserService, AwsUserService>();
+            
             services.AddScoped<IStripePaymentService, StripePaymentService>();
             services.AddScoped<IStripePriceService, StripePriceService>();
             services.AddScoped<IStripeCustomerService, StripeCustomerService>();
-            services.AddScoped<IStripeDiscountService, StripeDiscountService>();
+            services.AddScoped<IStripePaymentMethodService, StripePaymentMethodService>();
+            
+            services.AddScoped<ICouponService, CouponService>();
+            services.AddScoped<IBillingCustomerService, BillingCustomerService>();
+            services.AddScoped<IPromotionService, PromotionService>();
             services.AddSingleton<IPaymentService, PaymentService>();
             
             // repositories
             services.AddSingleton<ITokenLogRepository, TokenLogRepository>();
             services.AddSingleton<IPaymentRepository, PaymentRepository>();
+            services.AddSingleton<IInstanceRepository, InstanceRepository>();
+            
+            services.AddScoped<IBillingCustomerRepository, BillingCustomerRepository>();
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<ICouponRepository, CouponRepository>();
 
             return services;
         }

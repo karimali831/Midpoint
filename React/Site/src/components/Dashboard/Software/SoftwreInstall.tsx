@@ -9,6 +9,7 @@ import { SetMidPointStep } from '../../../state/contexts/app/Actions';
 import { getAppState } from '../../../state/contexts/app/Selectors';
 import { SoftwareCard } from './SoftwareCard';
 import { Button } from '@mui/material';
+import { MainButton } from '../../Buttons/MainButton';
 
 export const SoftwareInstall = () => {
 
@@ -70,17 +71,11 @@ export const SoftwareInstall = () => {
                         <ArrowBackIcon />
                         <span style={{ marginLeft: 10 }}>Go back</span>
                     </div>
-                    <Button
+                    <MainButton
                         onClick={() => dispatch(SetMidPointStep(MidPointStep.Stream))}
-                        style={{
-                            borderRadius: 25,
-                            backgroundColor: '#195DC4',
-                            height: 30,
-                        }}
-                        startIcon={<ArrowForwardIcon />}
-                    >
-                        Continue
-                    </Button>
+                        text='Continue'
+                        icon={<ArrowForwardIcon />}
+                    />
                 </div>
             </div>
         </motion.div>

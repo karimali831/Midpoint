@@ -3,7 +3,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useDispatch } from 'react-redux';
 import { MidPointStep } from '../../enum/DashboardSection';
 import { SetMidPointStep } from '../../state/contexts/app/Actions';
-import { Button } from '@mui/material';
+import { MainButton } from '../Buttons/MainButton';
 
 
 export const Welcome = () => {
@@ -30,19 +30,13 @@ export const Welcome = () => {
                 <span style={{ margin: "10px 30px", color: 'rgba(255, 255, 255, 0.6)', flexWrap: 'wrap' }}>
                     In 10 minutes, you will start paying with your tokens. This will give you enough time to set everything up.
                 </span>
-                <Button
-                    onClick={() => dispatch(SetMidPointStep(MidPointStep.ConnectedMidi))}
-                    style={{
-                        borderRadius: 25,
-                        backgroundColor: '#195DC4',
-                        height: 30,
-                        marginTop: 30
-                    }}
-                    // colorScheme="cyan"
-                    startIcon={<ArrowForwardIcon />}
-                >
-                    Continue
-                </Button>
+                <div className='mt30'>
+                    <MainButton
+                        onClick={() => dispatch(SetMidPointStep(MidPointStep.ConnectedMidi))}
+                        text='Continue'
+                        icon={<ArrowForwardIcon />}
+                    />
+                </div>
             </div>
         </motion.div>
     )

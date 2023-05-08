@@ -4,6 +4,7 @@ export enum DashboardSection {
     Payment,
     PaymentSuccessful,
     Statistics,
+    Promotions,
     Settings,
     Connect,
     Start,
@@ -15,5 +16,13 @@ export enum MidPointStep {
     ConnectedMidi,
     SoftwareSelect,
     SoftwareInstall,
-    Stream
+    Stream,
+    WebRTC
+}
+
+export enum Setting {
+    Account,
+    Security,
+    Payments,
+    Language
 }

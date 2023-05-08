@@ -10,7 +10,6 @@ namespace MidPoint.Library.Service
 {
     public interface IAwsUserService
     {
-        Task<AwsUser?> GetUser();
         Task UpdateAsync<T>(string? field, T? value, string? awsUid);
         Task<AwsUser> GetAsync(string awsUid);
     }
@@ -100,7 +99,6 @@ namespace MidPoint.Library.Service
                 }).Send();
             }
         }
-
         public async Task<AwsUser> GetAsync(string awsUid)
         {
             var result = await _client.ScanAsync(new ScanRequest
@@ -124,59 +122,18 @@ namespace MidPoint.Library.Service
             var email = user.First(x => x.Key == "email").Value;
             var purchasedTokens = user.FirstOrDefault(x => x.Key == "purchasedTokens").Value;
             var remainingTokens = user.FirstOrDefault(x => x.Key == "remainingTokens").Value;
+            var createdInstanceId = user.FirstOrDefault(x => x.Key == "createdInstanceId").Value;
 
-
-            var awsUser = new AwsUser
+            return new AwsUser
             {
                 Id = id.S,
                 FullName = fullName.S,
                 FirebaseUid = firebaseUid.S,
                 Email = email.S,
                 PurchasedTokens = purchasedTokens.N != null ? int.Parse(purchasedTokens.N) : 0,
-                RemainingTokens = remainingTokens.N != null ? int.Parse(remainingTokens.N) : 0
+                RemainingTokens = remainingTokens.N != null ? int.Parse(remainingTokens.N) : 0,
+                CreatedInstanceId = createdInstanceId?.S
             };
-
-            return awsUser;
-        }
-
-        public async Task<AwsUser?> GetUser()
-        {
-            try
-            {
-                var firebaseId = "dDt7QZiV0TYwyGAxOEF0JUOioBQ2";
-
-
-                var tableResponse = await _client.ListTablesAsync();
-
-                // var user = await _context.QueryAsync<AwsUser>(firebaseId).GetRemainingAsync();
-
-                // string tableName = _serviceConfiguration.AWS.DynamoDB.TableName;
-
-
-                var test = _context.LoadAsync<AwsUser>("firebaseUid", firebaseId);
-
-
-                var conditions = new List<ScanCondition>
-                    { new ScanCondition("FirebaseUid", ScanOperator.Equal, firebaseId) };
-                var allDocs = await _context.ScanAsync<AwsUser>(conditions).GetRemainingAsync();
-                var savedState = allDocs.FirstOrDefault();
-
-                return savedState;
-            }
-            catch (AmazonDynamoDBException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (AmazonServiceException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            return null;
         }
     }
 }

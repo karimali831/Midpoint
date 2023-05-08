@@ -1,15 +1,19 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit'
 import {
     CamToggleAction,
     DJReadyAction,
     FirebaseAuthEmptyAction,
+    GetPaymentsAction,
+    GetPaymentsSuccessAction,
+    GetPromotionsAction,
+    GetPromotionsSuccessAction,
     GetUserSuccessAction,
     LoginSuccessAction,
     SetFirebaseUidAction,
     SigninLoadingAction,
     UpdateUserInfoSuccessAction
-} from './Actions';
-import { userInitialState } from './IUserState';
+} from './Actions'
+import { userInitialState } from './IUserState'
 export const userReducer = createReducer(userInitialState, (builder) => {
     builder
         .addCase(SigninLoadingAction, (state, action) => {
@@ -17,15 +21,15 @@ export const userReducer = createReducer(userInitialState, (builder) => {
         })
         .addCase(LoginSuccessAction, (state, action) => {
             state.user = action.payload
-            state.signingIn = false;
-            state.authSuccess = true;
+            state.signingIn = false
+            state.authSuccess = true
         })
         .addCase(GetUserSuccessAction, (state, action) => {
             state.user = action.payload
 
-             // if (!!state.user) {
+            // if (!!state.user) {
             //     const user: IUser = {
-            //         ...state.user, 
+            //         ...state.user,
             //         purchasedTokens: action.payload
             //     }
 
@@ -37,12 +41,12 @@ export const userReducer = createReducer(userInitialState, (builder) => {
         })
         .addCase(UpdateUserInfoSuccessAction, (state, action) => {
             state.user = Object.assign({}, state.user, {
-                [action.payload.updatedKey]: action.payload.updatedValue,
-            });
+                [action.payload.updatedKey]: action.payload.updatedValue
+            })
         })
         .addCase(FirebaseAuthEmptyAction, (state) => {
-            state.user = null;
-            state.authSuccess = false;
+            state.user = null
+            state.authSuccess = false
         })
         .addCase(CamToggleAction, (state) => {
             state.camOn = !state.camOn
@@ -50,4 +54,18 @@ export const userReducer = createReducer(userInitialState, (builder) => {
         .addCase(DJReadyAction, (state, action) => {
             state.djReady = action.payload
         })
-});
+        .addCase(GetPromotionsSuccessAction, (state, action) => {
+            state.promotions = action.payload
+            state.loadingPromoCodes = false
+        })
+        .addCase(GetPromotionsAction, (state) => {
+            state.loadingPromoCodes = true
+        })
+        .addCase(GetPaymentsSuccessAction, (state, action) => {
+            state.payments = action.payload
+            state.loadingPayments = false
+        })
+        .addCase(GetPaymentsAction, (state) => {
+            state.loadingPayments = true
+        })
+})

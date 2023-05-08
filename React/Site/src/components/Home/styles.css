@@ -1,0 +1,117 @@
+.container {
+    position: relative;
+    justify-content: center;
+    display: flex;
+    margin-bottom: 75px;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    box-shadow: rgb(25 93 196) 0px 4px 4px -2px;
+}
+
+.join-discord {
+    position: absolute;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center
+
+}
+
+.title {
+    font-size: 36px;
+    font-weight: 500;
+}
+
+.sub-title {
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.grid-1 {
+    margin-top: 50px;
+    display: grid;
+    width: 100%;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 0fr));
+    justify-content: center;
+}
+
+.grid-2 {
+    display: grid;
+    width: 100%;
+    grid-gap: 50px;
+    grid-template-columns: repeat(auto-fit, minmax(295px, 0fr));
+    justify-content: center
+}
+
+.headline {
+    font-size: 32px;
+    position: absolute;
+    top: -60px
+}
+
+.headline-2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #fff
+}
+
+.separate-margin {
+    margin-top: 100px;
+}
+
+.separate-margin2 {
+    margin-top: 150px;
+}
+
+
+.meet-team-container {
+    display: grid;
+    width: 100%;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 0fr));
+    justify-content: center
+}
+
+.meet-team {
+    position: relative;
+    flex-direction: column;
+}
+
+.meet-team-txt {
+    font-size: 20px;
+}
+
+.person-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 220px;
+    margin-right: 20px;
+    border-radius: 5px;
+}
+
+.person-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    box-shadow: 7px 8px #195DC4
+}
+
+.person-name {
+    color: #fff;
+    font-weight: 700;
+    margin-top: 25px
+}
+
+.social-media-icon {
+    font-size: 20px;
+    margin-right: 10px
+}

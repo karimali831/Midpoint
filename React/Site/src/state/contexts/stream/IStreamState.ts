@@ -1,8 +1,7 @@
-import { HostRoom } from "../../../graphql/types";
-import { IChannel } from "../../../interface/IChannel";
-import { IChannelData } from "../../../interface/IChannelData";
-import { IUserConnection } from "../../../interface/IUserConnection";
-
+import { HostRoom } from '../../../API'
+import { IChannel } from '../../../interface/IChannel'
+import { IChannelData } from '../../../interface/IChannelData'
+import { IUserConnection } from '../../../interface/IUserConnection'
 
 export interface IStreamState {
     userConnection: IUserConnection | null
@@ -35,5 +34,5 @@ export const streamInitialState: IStreamState = {
     selectedHostRoom: null,
     userCreatedHostRooms: [],
     timeLiveDuration: null,
-    timeLiveStr: "0m 0s"
+    timeLiveStr: '0m 0s'
 }

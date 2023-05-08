@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using MidPoint.Library.Enum;
 using MidPoint.Library.Model.Db;
 using MidPoint.Library.Repository;
 using Newtonsoft.Json;
@@ -17,12 +18,12 @@ namespace MidPoint.Library.Service
         private readonly ITokenLogRepository _tokenLogRepository;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IPaymentService _paymentService;
-        
+
         public TokenJobService(
             IAwsUserService awsUserService,
             IEc2InstanceService ec2InstanceService,
-            ITokenLogRepository tokenLogRepository, 
-            IHostEnvironment hostEnvironment, 
+            ITokenLogRepository tokenLogRepository,
+            IHostEnvironment hostEnvironment,
             IPaymentService paymentService)
         {
             _awsUserService = awsUserService;
@@ -31,11 +32,15 @@ namespace MidPoint.Library.Service
             _hostEnvironment = hostEnvironment;
             _paymentService = paymentService;
         }
-        
+
         public async Task UpdateAsync()
         {
-            var runningInstances = await _ec2InstanceService.GetAllRunningAsync();
-            var terminateInstanceIds = new List<(string InstanceId, string AwsUid)>();
+            var runningStatus = new List<Ec2InstanceStatus> {
+                Ec2InstanceStatus.Running
+            };
+
+            var runningInstances = await _ec2InstanceService.GetAllAsync(runningStatus);
+            var terminateInstanceIds = new List<(string InstanceId, string AwsUid, string CustomerId)>();
 
             // Deduct 125 tokens every 15 minutes  
             // works out deducting 8.34 tokens every minute used
@@ -44,12 +49,6 @@ namespace MidPoint.Library.Service
             const double deductTokens = (double)defaultTokens / 60;
 
             static int ConvertToInt(double value) => Convert.ToInt32(Math.Floor(value));
-
-            // local environment otherwise .UtcNow on remote env.
-            //var nowDate = _hostEnvironment.EnvironmentName == "Development"
-            //    ? DateHelper.ConvertUtcToZone(DateTime.UtcNow, "Europe/London")
-            //    : DateTime.UtcNow;
-
 
             foreach (var instance in runningInstances)
             {
@@ -61,16 +60,21 @@ namespace MidPoint.Library.Service
                     return;
 
                 var awsUid = instance.Tags.First(x => x.Key == "AwsUid").Value;
+                var customerId = instance.Tags.First(x => x.Key == "CustomerId").Value;
+
                 var user = await _awsUserService.GetAsync(awsUid);
                 var preTokens = user.RemainingTokens ?? 0;
-                var purchasedTokens = await _paymentService.GetTotalPurchasedTokens(awsUid);
+                var purchasedTokens = await _paymentService.GetTotalPurchasedTokens(customerId);
+
+                //var purchasedTokens = user.PurchasedTokens ?? 0;
+
                 var tokensByMinutesUsed = deductTokens * (timeUsed.TotalMinutes - leeWayMinutes);
                 var tokens = ConvertToInt(purchasedTokens - tokensByMinutesUsed);
                 var secondsUsed = ConvertToInt(timeUsed.TotalSeconds - (leeWayMinutes * 60));
                 var deducted = preTokens - tokens;
 
                 if (tokens <= 0)
-                    terminateInstanceIds.Add((instance.InstanceId, awsUid));
+                    terminateInstanceIds.Add((instance.InstanceId, awsUid, customerId));
 
                 // Can occur if topping up tokens
                 if (deducted <= 0)
@@ -86,14 +90,12 @@ namespace MidPoint.Library.Service
                     leeWayMinutes,
                     purchasedTokens,
                     tokensByMinutesUsed,
-
                 };
 
                 await _tokenLogRepository.AddAsync(new TokenLog
                 {
                     Id = Guid.NewGuid(),
                     Ec2InstanceId = instance.InstanceId,
-                    AwsUid = awsUid,
                     PreTokens = preTokens,
                     PostTokens = tokens,
                     SecondsUsed = secondsUsed,

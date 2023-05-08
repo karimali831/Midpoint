@@ -1,66 +1,37 @@
-import React from "react"
 import LoadingBar from 'react-redux-loading-bar'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SetDashboardSection } from "../../../state/contexts/app/Actions";
 import { DashboardSection } from "../../../enum/DashboardSection";
 import { useDispatch } from "react-redux";
-
+import { TerminateAction } from "../../../state/contexts/instance/Actions";
 
 export const Starting = () => {
-
-    React.useEffect(() => {}, [])
     const dispatch = useDispatch()
 
+    const cancel = () => {
+        dispatch(TerminateAction())
+        dispatch(SetDashboardSection(DashboardSection.Overview))
+    }
+
     return (
-        <div
-            style={{
-                margin: '0 auto',
-                width: 400,
-                marginTop: 140,
-            }}
-        >
-            <div
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    position: 'relative'
-                }}
-            >
-                <span style={{ fontSize: 40 }}>MidPoint.</span>
-                <span
-                    style={{
-                        marginTop: 5,
-                        color: 'rgba(255, 255, 255, 0.6)',
-                    }}
-                >
+        <div className='starting-container'>
+            <div className='align-3 starting' >
+                <span className='fs40'>MidPoint.</span>
+                <span className='mt5 secondary'>
                     Please be patient
                 </span>
-                <div style={{ display: 'flex', alignItems: 'center', width: 400, margin: 20 }}>
+                <div className='align-9 starting-loading'>
                     <LoadingBar
                         updateTime={100}
                         maxProgress={100} 
                         progressIncrease={1}
-                        style={{
-                            height: 2,
-                            backgroundColor: "#19C45D"
-                        }}
+                        style={{ height: 2, background: '#19C45D' }}
                     />
         
                 </div>
-                <div
-                    onClick={() => dispatch(SetDashboardSection(DashboardSection.Overview))}
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer'
-                    }}
-                >
+                <div className='align-12 link'onClick={cancel}>
                     <ArrowBackIcon />
-                    <span style={{ marginLeft: 10 }}>Cancel</span>
+                    <span className='ml10'>Cancel</span>
                 </div>
             </div>
         </div>

@@ -10,6 +10,7 @@ import { getUserState } from '../../../state/contexts/user/Selectors';
 import { FormInput } from '../../Form/input';
 import { Button } from '@mui/material';
 import { FormValidation } from '../../Login';
+import { MainButton } from '../../Buttons/MainButton';
 
 
 export const Connect = () => {
@@ -94,20 +95,12 @@ export const Connect = () => {
                         <ArrowBackIcon />
                         <span style={{ marginLeft: 10 }}>Go back</span>
                     </div>
-                    <Button
+                    <MainButton
                         disabled={midPointJoinId.value === ''}
                         onClick={onSubmit}
-                        style={{
-                            borderRadius: 25,
-                            backgroundColor:
-                                midPointJoinId.value === '' ? 'grey' : '#195DC4',
-                        }}
-                        // isLoading={loading}
-                        // isLoadingText="Initialising..."
-                        startIcon={<PeopleAltOutlinedIcon />}
-                    >
-                        Join MidPoint.
-                    </Button>
+                        text='Join MidPoint.'
+                        icon={<PeopleAltOutlinedIcon />}
+                    />
                 </div>
             </motion.form>
         </div>

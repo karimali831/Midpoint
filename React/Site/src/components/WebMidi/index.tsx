@@ -103,7 +103,7 @@ const WebMIDI: React.FC<IOwnProps> = (props) => {
                     }
                 </div>
                 <div id='inputs'>
-                    <h4>MIDI Inputs</h4>
+                    <h4>MIDI inputs</h4>
                     <div className="info">
                         {
                             inputs.length === 0 ?
@@ -136,7 +136,7 @@ const WebMIDI: React.FC<IOwnProps> = (props) => {
                     </div>
                 </div>
                 <div id='outputs'>
-                    <h4>MIDI Outputs:</h4>
+                    <h4>MIDI outputs:</h4>
                     <div className="info">
                         {
                             outputs.length === 0 ?

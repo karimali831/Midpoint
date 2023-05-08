@@ -1,73 +1,58 @@
 import React from "react"
 import images from "../../assets/images"
 import { isMobile } from "react-device-detect"
+import './styles.css'
 
 export const Locations = () => {
-    React.useEffect(() => { })
-
     return (
-        <div style={{
-            marginTop: 50,
-            maxWidth: 1000,
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column'
-        }}>
-            <span style={{
-                fontSize: 32,
-                marginBottom: 30,
-            }}>
+        <div className="locations align-3 separate-margin">
+            <span className="headline">
                 Current locations served
             </span>
             {
                 !isMobile ?
-                    <img src={images.mapImg} width="100%" height="100%" />
+                    <img src={images.mapImg} className="locations-img"/>
                     :
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        width: '100%'
-                    }}>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ color: '#eee' }}>Europe</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Frankfurt (Germany)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Ireland</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>London (United Kingdom)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Paris (France)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Stockholm (Sweden)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Milan (Italy)</span>
+                    <div className="align-5">
+                        <div className="align-4">
+                            <span className='tertiary'>Europe</span>
+                            <span className='secondary fs12'>Frankfurt (Germany)</span>
+                            <span className='secondary fs12'>Ireland</span>
+                            <span className='secondary fs12'>London (United Kingdom)</span>
+                            <span className='secondary fs12'>Paris (France)</span>
+                            <span className='secondary fs12'>Stockholm (Sweden)</span>
+                            <span className='secondary fs12'>Milan (Italy)</span>
 
-                            <span style={{ color: '#eee', marginTop: 20 }}>USA East</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>North Virginia</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Ohio</span>
+                            <span className="tertiary continents">USA East</span>
+                            <span className='secondary fs12'>North Virginia</span>
+                            <span className='secondary fs12'>Ohio</span>
 
-                            <span style={{ color: '#eee', marginTop: 20 }}>USA West</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Northern California</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Oregon</span>
+                            <span className="tertiary continents">USA West</span>
+                            <span className='secondary fs12'>Northern California</span>
+                            <span className='secondary fs12'>Oregon</span>
 
-                            <span style={{ color: '#eee', marginTop: 20 }}>South America</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>São Paulo (Brazil)</span>
+                            <span className="tertiary continents">South America</span>
+                            <span className='secondary fs12'>São Paulo (Brazil)</span>
 
-                            <span style={{ color: '#eee', marginTop: 20 }}>Canada</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Central Canada</span>
+                            <span className="tertiary continents">Canada</span>
+                            <span className='secondary fs12'>Central Canada</span>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ color: '#eee' }}>Asia Pacific</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Hong Kong</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Mumbai (India)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Osaka (Japan)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Seoul (South Korea)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Singapore</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Sydney (Australia)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Jakarta (Indonesia)</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Tokyo (Japan)</span>
+                        <div className="align-4">
+                            <span className='tertiary'>Asia Pacific</span>
+                            <span className='secondary fs12'>Hong Kong</span>
+                            <span className='secondary fs12'>Mumbai (India)</span>
+                            <span className='secondary fs12'>Osaka (Japan)</span>
+                            <span className='secondary fs12'>Seoul (South Korea)</span>
+                            <span className='secondary fs12'>Singapore</span>
+                            <span className='secondary fs12'>Sydney (Australia)</span>
+                            <span className='secondary fs12'>Jakarta (Indonesia)</span>
+                            <span className='secondary fs12'>Tokyo (Japan)</span>
 
-                            <span style={{ color: '#eee', marginTop: 20 }}>Africa</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Cape Town (South Africa)</span>
+                            <span className="tertiary continents">Africa</span>
+                            <span className='secondary fs12'>Cape Town (South Africa)</span>
 
-                            <span style={{ color: '#eee', marginTop: 20 }}>Middle East</span>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>Bahrain</span>
+                            <span className="tertiary continents">Middle East</span>
+                            <span className='secondary fs12'>Bahrain</span>
                         </div>
                     </div>
             }

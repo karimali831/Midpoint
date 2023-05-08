@@ -9,6 +9,7 @@ import { MidPointStep } from '../../enum/DashboardSection';
 import { useDispatch } from 'react-redux';
 import { getUserState } from '../../state/contexts/user/Selectors';
 import { Button } from '@mui/material';
+import { MainButton } from '../Buttons/MainButton';
 
 export const ConnectedMidi = () => {
     React.useEffect(() => { }, [])
@@ -54,19 +55,11 @@ export const ConnectedMidi = () => {
                         <ArrowBackIcon />
                         <span style={{ marginLeft: 10 }}>Go back</span>
                     </div>
-                    <Button
+                    <MainButton
                         onClick={() => dispatch(SetMidPointStep(MidPointStep.SoftwareSelect))}
-                        style={{
-                            borderRadius: 25,
-                            backgroundColor: '#195DC4',
-                            height: 30,
-                            
-                        }}
-                        // colorScheme="cyan"
-                        startIcon={<ArrowForwardIcon />}
-                    >
-                        Continue
-                    </Button>
+                        text='Continue'
+                        icon={<ArrowForwardIcon />}
+                    />
                 </div>
             </div>
         </motion.div>

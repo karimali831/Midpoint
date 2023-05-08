@@ -6,26 +6,23 @@ namespace MidPoint.Library.Service
 {
     public interface IStripePaymentService
     {
-        Task<PaymentIntentResponse> CreatePaymentIntent(string priceId, string awsUid, Coupon? coupon = null);
+        Task<PaymentIntentResponse> CreatePaymentIntent(string priceId, string customerId,
+            Model.Db.Coupon? coupon = null, string? promoCode = null);
     }
 
     public class StripePaymentService : IStripePaymentService
     {
         private readonly PaymentIntentService _paymentIntentService;
-        private readonly IStripeCustomerService _stripeCustomerService;
         private readonly IStripePriceService _stripePriceService;
 
-        public StripePaymentService(
-            IStripeCustomerService stripeCustomerService,
-            IStripePriceService stripePriceService)
+        public StripePaymentService(IStripePriceService stripePriceService)
         {
-            _stripeCustomerService = stripeCustomerService;
             _stripePriceService = stripePriceService;
             _paymentIntentService = new PaymentIntentService();
         }
 
-        public async Task<PaymentIntentResponse> CreatePaymentIntent(string priceId, string awsUid,
-            Coupon? coupon = null)
+        public async Task<PaymentIntentResponse> CreatePaymentIntent(string priceId,
+            string customerId, Model.Db.Coupon? coupon = null, string? promoCode = null)
         {
             var price = await _stripePriceService.GetAsync(priceId);
             var amount = price.UnitAmount ?? 0;
@@ -38,32 +35,37 @@ namespace MidPoint.Library.Service
             {
                 if (coupon.PercentOff > 0)
                 {
-                    discountedAmount = amount * (long)coupon.PercentOff.Value / 100;
+                    discountedAmount = amount * coupon.PercentOff.Value / 100;
                     amount -= amount * (long)coupon.PercentOff.Value / 100;
                 }
 
-                if (coupon.AmountOff is > 0)
+                if (coupon.FixedAmountOff is > 0)
                 {
-                    amount -= coupon.AmountOff.Value;
+                    amount -= (long)coupon.FixedAmountOff.Value * 100;
                 }
             }
 
-            var customer = await _stripeCustomerService.GetOrCreateAsync(awsUid);
-
             try
             {
+                var metaData = new Dictionary<string, string>
+                {
+                    { "Tokens", price.TransformQuantity.DivideBy.ToString() }
+                };
+
+                if (promoCode is not null)
+                {
+                    metaData.Add( "PromoCode", promoCode );
+                }
+                
                 var create = await _paymentIntentService.CreateAsync(
                     new PaymentIntentCreateOptions
                     {
                         Amount = amount,
-                        Customer = customer.Id,
+                        Customer = customerId,
                         Currency = "gbp",
-                        Metadata = new Dictionary<string, string>
-                        {
-                            { "Tokens", price.TransformQuantity.DivideBy.ToString() }
-                        }
+                        Metadata = metaData
                     });
-
+                
                 return new PaymentIntentResponse
                 {
                     ClientSecret = create.ClientSecret,

@@ -36,7 +36,7 @@ export const ChatMessage: React.FC<IOwnProps> = (props) => {
             <div style={{ display: 'flex', flexDirection: 'column'  }}>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <span style={{ marginRight: 15 }}>{user?.displayName ?? name}</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>
+                    <span className='secondary fs12'>
                         {createdAt}
                     </span>
                 </div>

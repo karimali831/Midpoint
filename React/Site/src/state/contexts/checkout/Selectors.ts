@@ -1,6 +1,5 @@
+import { IStoreState } from '../../IStoreState'
 
-import { IStoreState } from "../../IStoreState";
+export const getCheckoutState = (state: IStoreState) => state.checkout
 
-export const getCheckoutState = (state: IStoreState) => state.checkout;
-
-export const getSelectedPricePlan = (state: IStoreState) => state.checkout.selectedPricePlan
+export const getBasket = (state: IStoreState) => state.checkout.basket

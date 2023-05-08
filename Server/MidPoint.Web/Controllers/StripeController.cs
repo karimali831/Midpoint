@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using MidPoint.Library.ExceptionHandler;
 using MidPoint.Library.Model.Db;
 using Stripe;
+using MidPoint.Library.Repository;
 
 namespace MidPoint.Web.Controllers
 {
@@ -13,22 +14,31 @@ namespace MidPoint.Web.Controllers
     {
         private readonly IOptions<StripeConfig> _stripeConfig;
         private readonly IAwsUserService _awsUserService;
-        private readonly IStripeCustomerService _stripeCustomerService;
         private readonly IPaymentService _paymentService;
+        private readonly ITokenLogRepository _tokenLogRepository;
         private readonly IExceptionHandlerService _exceptionHandlerService;
+        private readonly IPromotionService _promotionService;
+        private readonly IBillingCustomerService _billingCustomerService;
+        private readonly IStripePaymentMethodService _stripePaymentMethodService;
 
         public StripeController(
-            IOptionsSnapshot<StripeConfig> stripeConfig, 
+            IOptions<StripeConfig> stripeConfig, 
             IAwsUserService awsUserService, 
-            IStripeCustomerService stripeCustomerService, 
-            IExceptionHandlerService exceptionHandlerService, 
-            IPaymentService paymentService)
+            IExceptionHandlerService exceptionHandlerService,
+            ITokenLogRepository tokenLogRepository,
+            IPaymentService paymentService, 
+            IBillingCustomerService billingCustomerService, 
+            IPromotionService promotionService,
+            IStripePaymentMethodService stripePaymentMethodService)
         {
             _stripeConfig = stripeConfig;
             _awsUserService = awsUserService;
-            _stripeCustomerService = stripeCustomerService;
             _exceptionHandlerService = exceptionHandlerService;
+            _tokenLogRepository = tokenLogRepository;
             _paymentService = paymentService;
+            _billingCustomerService = billingCustomerService;
+            _promotionService = promotionService;
+            _stripePaymentMethodService = stripePaymentMethodService;
         }
         
         [HttpPost]
@@ -39,8 +49,6 @@ namespace MidPoint.Web.Controllers
 
             try
             {
-
-
                 var stripeEvent = EventUtility.ConstructEvent(json,
                     Request.Headers["Stripe-Signature"],
                     _stripeConfig.Value.WebhookSecret
@@ -54,6 +62,14 @@ namespace MidPoint.Web.Controllers
                         // Attach to customer entity first before updating Subscription default payment method
                     }
                 }
+             
+                if (stripeEvent.Data.Object is Customer customer)
+                {
+                    if (stripeEvent.Type == Events.CustomerDeleted)
+                    {
+                        await _billingCustomerService.SetInactiveAsync(customer.Id);
+                    }
+                }
                 
                 if (stripeEvent.Data.Object is PaymentIntent paymentIntent)
                 {
@@ -61,31 +77,65 @@ namespace MidPoint.Web.Controllers
                     {
                         try
                         {
-                            var customer = await _stripeCustomerService.GetAsync(paymentIntent.CustomerId);
-                            var awsUid = customer.Metadata.FirstOrDefault(x => x.Key == "AwsUid").Value;
-                            var purchasedTokens = paymentIntent.Metadata.FirstOrDefault(x => x.Key == "Tokens").Value;
-
-                            var user = await _awsUserService.GetAsync(awsUid);
+                            var billingCustomer =
+                                await _billingCustomerService.GetByCustomerIdAsync(paymentIntent.CustomerId);
+                            
+                            var purchasedTokens = paymentIntent.Metadata.First(x => x.Key == "Tokens").Value;
+                           
+                            var user = await _awsUserService.GetAsync(billingCustomer.AwsUid);
                             var preTokens = user.RemainingTokens ?? 0;
                             var tokens = int.Parse(purchasedTokens) + preTokens;
-             
-                            // await _tokenLogRepository.SetInactiveAsync(awsUid);
+
+                            var liveInstanceTotalDeductions = 0;
+                            if (user.CreatedInstanceId is not null)
+                            {
+                                liveInstanceTotalDeductions = await _tokenLogRepository.GetTotalDeductions(user.CreatedInstanceId);
+                                await _tokenLogRepository.SetInactiveAsync(user.CreatedInstanceId);
+                            }
+
+                            var calcTokens = tokens - liveInstanceTotalDeductions;
+                            var paymentMethod = await _stripePaymentMethodService.GetAsync(paymentIntent.PaymentMethodId);
 
                             await _paymentService.AddAsync(new Payment
                             {
                                 Id = paymentIntent.Id,
                                 CustomerId = paymentIntent.CustomerId,
-                                AwsUid = awsUid,
-                                Tokens = tokens,
+                                //PurchasedTokens = tokens,
+                                PurchasedTokens = int.Parse(purchasedTokens),
+                                RemainingTokens = calcTokens,
                                 Amount = paymentIntent.Amount,
-                                Status = paymentIntent.Status
+                                Status = paymentIntent.Status,
+                                CardBrand = paymentMethod.Card.Brand,
+                                CardLast4 = paymentMethod.Card.Last4,
+                                Created = DateTime.UtcNow
                             });
 
-                            var total = await _paymentService.GetTotalPurchasedTokens(awsUid);
+                            //var total = await _paymentService.GetTotalPurchasedTokens(awsUid)
+                            //total - liveInstanceTotalDeductions
 
-                            await _awsUserService.UpdateAsync("purchasedTokens", total, awsUid);
-                            await _awsUserService.UpdateAsync("remainingTokens", tokens, awsUid);
+                            //var total = await _paymentService.GetTotalPurchasedTokens(billingCustomer.CustomerId);
 
+                            await _awsUserService.UpdateAsync("purchasedTokens", tokens, billingCustomer.AwsUid);
+                            await _awsUserService.UpdateAsync("remainingTokens", calcTokens, billingCustomer.AwsUid);
+                            
+                            var promoCode = paymentIntent.Metadata.FirstOrDefault(x => x.Key == "PromoCode").Value;
+
+                            if (promoCode is not null)
+                            {
+                                var promotion = await _promotionService.GetByPromoCodeAsync(promoCode, activeOnly: true);
+                            
+                                if (promotion is not null)
+                                {
+                                    if (promotion.ReceiverCustomerId is null)
+                                    {
+                                        await _promotionService.ReceiverClaimPromoCode(promoCode, paymentIntent.CustomerId, billingCustomer.AwsUid);
+                                    }
+                                    else
+                                    {
+                                        await _promotionService.CreatorClaimPromoCode(promoCode, billingCustomer.AwsUid);
+                                    }
+                                }
+                            }
                         }
                         catch (Exception exp)
                         {

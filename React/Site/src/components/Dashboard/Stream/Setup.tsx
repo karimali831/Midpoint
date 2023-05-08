@@ -14,7 +14,11 @@ import { getUserState } from '../../../state/contexts/user/Selectors';
 // import {Howl, Howler} from 'howler'
 import sounds from '../../../assets/sounds';
 
-export const StreamSetup = () => {
+interface IOwnProps {
+    camOn: boolean
+}
+
+export const StreamSetup = (props: IOwnProps) => {
     const { 
         activeInput, 
         inputs, 
@@ -58,7 +62,7 @@ export const StreamSetup = () => {
             dispatch(SetActiveMidiInputAction(input)) 
             setExpand(false)
 
-            SoundPlay(sounds.confirmSound)
+            // SoundPlay(sounds.confirmSound)
         }
 
         dispatch(UpdateUserInfoAction({ 
@@ -94,73 +98,74 @@ export const StreamSetup = () => {
 
     // Howler.volume(1.0)
 
+    
+
     return (
-        <div style={{ }}>
-            <span style={{ fontSize: 14 }}>Set Controller</span>
-            <div className='controller-set-container' style={{ background: expand ? '#253856' : 'transparent' }}>
+        <div className={`align-${props.camOn ? 8 : 5}`}>
+            {
+                !props.camOn &&
+                <div className=''>
+                    <span>Set controller</span>
+                    <div className='align-10 controller-set-container' style={{ 
+                        background: expand ? '#253856' : 'transparent',
+                        padding: expand ? '5px 10px' : 0
+                    }}>
 
-                <div onClick={() => setExpand(!expand)} className='controller-set-expand'>
-                    {expand ? 
-                        <ExpandLessIcon className='controller-set-expandicon' />
-                    :
-                        <ExpandMoreIcon className='controller-set-expandicon' />
-                    }
-                            
-                    <span className='controller-set-select-txt'>
-                        {!!activeInput ?
-                            activeInput.name : 'Select device'
-                        }
-                    </span>
-                </div>
-                <Collapse in={expand} >
-                    <hr className='controllet-set-divider' />
-                    {
-                        connectedDevices.length == 0 ?
-                        <span className='controllet-set-status'>
-                            No connected inputs found, check your Midi device is in a connected state.
-                        </span>
+                        <div onClick={() => setExpand(!expand)} className='set-controller align-1'>
+                            {expand ?  <ExpandLessIcon className='secondary mr5' /> : <ExpandMoreIcon className='secondary mr5' />}
+                            <span className='fs14 secondary link'>
+                                {!!activeInput ?
+                                    activeInput.name : 'Select device'
+                                }
+                            </span>
+                        </div>
+                        <Collapse in={expand} >
+                            <hr className='b3 controllet-set-divider' />
+                            {
+                                connectedDevices.length == 0 ?
+                                <span className='controllet-set-status'>
+                                    No connected inputs found, check your Midi device is in a connected state.
+                                </span>
 
-                    :
-                        connectedDevices.map(input => {
-                            return ( 
-                                <React.Fragment key={input.id}>
-                            
-                                    <div 
-                                        onClick={() => setDefaultDevice(input)}
-                                        className='controllet-set-select'
-                                    >
+                            :
+                                connectedDevices.map(input => {
+                                    return ( 
+                                        <React.Fragment key={input.id}>
+                                            <div 
+                                                onClick={() => setDefaultDevice(input)}
+                                                className='controllet-set-select'
+                                            >
 
-                                        <div 
-                                            className='controllet-set-input'
-                                            style={{
-                                                background: activeInput?.id == input.id ? '#45C419' : 'rgb(196, 25, 25)'
-                                            }}
-                                        />
-                                        <span className='controllet-set-input-text'>
-                                            {input.name}
-                                        </span>
-                                    </div>
-                                </React.Fragment>
-                            )
-                    })}
-                </Collapse>
-            </div>
-            {   
-                !expand && 
-                <>
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span>Video on</span>
-                        <Switch
-                            edge="end"
-                            onChange={handleToggle('cam')}
-                            checked={checked.indexOf('cam') !== -1}
-                            inputProps={{
-                                'aria-labelledby': 'switch-list-label-cam',
-                            }}
-                        />
+                                                <div 
+                                                    className='controllet-set-input'
+                                                    style={{
+                                                        background: activeInput?.id == input.id ? '#45C419' : 'rgb(196, 25, 25)'
+                                                    }}
+                                                />
+                                                <span className='controllet-set-input-text'>
+                                                    {input.name}
+                                                </span>
+                                            </div>
+                                        </React.Fragment>
+                                    )
+                            })}
+                        </Collapse>
                     </div>
-                </>
-            }
+                </div>
+            }     
+            <div className='vid-container'>
+                <div className='align-1'>
+                    <span>Video</span>
+                    <Switch
+                        edge="end"
+                        onChange={handleToggle('cam')}
+                        checked={checked.indexOf('cam') !== -1}
+                        inputProps={{
+                            'aria-labelledby': 'switch-list-label-cam',
+                        }}
+                    />
+                </div>
+            </div>
         </div>
     );
 };

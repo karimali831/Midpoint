@@ -1,80 +1,58 @@
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import React, { ReactElement, useState } from 'react';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import { StreamCardType } from '../../../enum/StreamCardType';
+import React, { ReactElement, useState } from 'react'
+import OpenInFullIcon from '@mui/icons-material/OpenInFull'
+import FullscreenIcon from '@mui/icons-material/Fullscreen'
+import { StreamCardType } from '../../../enum/StreamCardType'
+import { SecondaryButton } from '../../Buttons/SecondaryButton'
 
 interface IOwnProps {
-    title: string;
+    title: string
     height: number
-    size: 'small' | 'large';
-    icon: ReactElement;
-    children: ReactElement;
+    size: 'small' | 'large'
+    icon: ReactElement
+    children: ReactElement
     maximiseCard: StreamCardType | null
+    webRtcCard?: boolean
     onOpenInFull: () => void
 }
 
-
 export const StreamCard: React.FC<IOwnProps> = (props) => {
-    const [width, setWidth] = useState<string>(props.size == 'large' ? '65%' : '35%')
-
+    const [width, setWidth] = useState<string>(
+        props.size == 'large' ? '65%' : '35%'
+    )
 
     React.useEffect(() => {
-
-
         if (props.maximiseCard) {
             setWidth('100%')
-        }
-        else{
+        } else {
             setWidth(props.size == 'large' ? '65%' : '35%')
         }
-    }, [props.maximiseCard]);
+    }, [props.maximiseCard])
 
     return (
-        <div
-            className='stream-card'
-            style={{
-                width: width
-            }}
-        >
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    background: '#154C9F',
-                    height: 25,
-                    padding: 10,
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-                }}
-            >
-                {props.icon}
-                <div
-                    style={{
-                        display: 'flex',
-                        width: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <span style={{ marginLeft: 10 }}>{props.title}</span>
-                    <div onClick={props.onOpenInFull} style={{ cursor: 'pointer' }}>
-                        {/* <InfoOutlinedIcon style={{ fontSize: 16, marginRight: 10 }} /> */}
+        <div className="stream-card-container" style={{ width }}>
+            <div className="align-1 stream-card">
+                <div className="align-1">
+                    {props.icon}
+                    <span className="ml10">{props.title}</span>
+                </div>
+                {props.webRtcCard ? (
+                    <SecondaryButton
+                        text="Enlarge"
+                        icon={<FullscreenIcon />}
+                        onClick={props.onOpenInFull}
+                    />
+                ) : (
+                    <div onClick={props.onOpenInFull} className="align-8 link">
                         <OpenInFullIcon style={{ fontSize: 16 }} />
                     </div>
-                </div>
+                )}
             </div>
             <div
-                style={{
-                    background: 'rgba(25, 93, 196, 0.15)',
-                    display: 'flex',
-                    padding: 15,
-                    height: props.height,
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10,
-                }}
+                className="stream-card-content"
+                style={{ height: props.height }}
             >
                 {props.children}
             </div>
         </div>
-    );
-};
+    )
+}

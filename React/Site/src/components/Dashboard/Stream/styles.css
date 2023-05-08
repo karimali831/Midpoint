@@ -1,45 +1,32 @@
 /* setup */
 .controller-set-container {
     border-radius: 10px;
-    margin: 10px 0;
-    padding: 5px 25px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    width: 200px
+    margin-bottom: 25px;
+}
+
+.set-controller {
+    margin: 5px -5px;
 }
 
 .controller-set-expand {
     cursor: pointer;
-    margin: 5px 0
-}
-
-.controller-set-expandicon {
-    position: absolute;
-    top: 8px;
-    left: 3px
-}
-
-.controller-set-select-txt {
-    font-size: 14px;
-    padding: 5px
+    margin: 5px 0;
 }
 
 .controllet-set-divider {
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    margin: 5px 0
+    margin: 5px 0;
 }
 
 .controllet-set-status {
     font-size: 14px;
     padding: 5px;
-    color: rgb(196, 25, 25)
+    color: rgb(196, 25, 25);
 }
 
 .controllet-set-select {
     padding: 5px;
     cursor: pointer;
-    position: relative
+    position: relative;
 }
 
 .controllet-set-input {
@@ -48,25 +35,39 @@
     border-radius: 50px;
     position: absolute;
     top: 12px;
-    left: -12px
+    left: -12px;
 }
 
 .controllet-set-input-text {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.6)
+    color: rgba(255, 255, 255, 0.6);
 }
 
 /* the lobby */
-
 .stream-row {
     display: flex;
-    flex-direction: row
+    flex-direction: row;
 }
 
-.stream-card {
+.stream-card-container {
     margin-right: 30px;
     margin-bottom: 20px;
     border-radius: 10px 0;
+}
+
+.stream-card {
+    background: #154c9f;
+    height: 30px;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.stream-card-content {
+    background: rgba(25, 93, 196, 0.15);
+    padding: 15px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .lobby-header {
@@ -74,30 +75,87 @@
     align-items: center;
     flex-direction: row;
     margin: 15px 0;
-    /* width: 270px; */
-    /* justify-content: space-between */
 }
 
 /* chat */
+.chat-info {
+    margin-top: 25%;
+}
+
+.chat-window {
+    overflow-y: auto;
+    /* min-height: 300px; */
+    height: 250px;
+    margin-bottom: 10px;
+}
+
 .chat-input {
-    width: 100%; 
-    background: transparent; 
+    width: 100%;
+    background: transparent;
     border: none;
     color: #fff;
     width: 100%;
-
-    /* margin: 30px 0 15px 0; */
     padding-bottom: 10px;
     border-bottom: 1px #fff solid;
+}
+
+.chat-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .chat-input:focus {
     outline: none;
 }
 
+.input-container {
+    position: relative;
+}
 
-@media only screen and (max-width: 950px)  {
+.send-arrow {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    cursor: pointer;
+}
 
+/* video */
+.vid-container {
+    z-index: 10;
+}
+
+.video {
+    position: absolute;
+    left: -200px;
+    top: -50px;
+}
+
+#localVideo {
+    height: 270px;
+    width: 740px;
+}
+
+#remoteVideo {
+    height: 270px;
+    width: 740px;
+}
+
+/* starting screen */
+.starting-container {
+    margin: 0 auto;
+    width: 400px;
+    margin-top: 140px;
+}
+
+.starting {
+    position: relative;
+}
+
+.starting-loading {
+    width: 400px;
+    margin: 20px;
+}
+
+@media only screen and (max-width: 950px) {
     .lobby-header {
         margin-left: 220px;
     }
@@ -106,12 +164,12 @@
         margin-left: 220px;
     }
 
-   .stream-row {
+    .stream-row {
         flex-direction: column;
         margin-left: 220px;
-   }
+    }
 
-   .stream-card {
+    .stream-card-container {
         width: 64% !important;
-   }
+    }
 }

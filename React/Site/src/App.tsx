@@ -11,6 +11,7 @@ import Navigation from './navigation/NavigationContainer.js';
 import { AnimatedRoutes } from './navigation/AnimatedRoutes.js';
 import { Footer } from './components/Footer/index.js';
 import firebase from './config/firebase.js';
+import { Box } from '@mui/material';
 
 const persistor = persistStore(store);
 
@@ -38,12 +39,14 @@ export function App() {
         <Provider store={store}>
             <PersistGate persistor={persistor}>
                 <ReactReduxFirebaseProvider {...rrfProps}>
-                    <div className="App wrapper">
+                    <Box className="app">
                         <Toaster position="top-right" />
                         <Navigation />
-                        <AnimatedRoutes />
-                        <Footer />
-                      </div>
+                        <Box className="content-wrapper">
+                            <AnimatedRoutes /> 
+                            <Footer />
+                        </Box>
+                      </Box>
                 </ReactReduxFirebaseProvider>
             </PersistGate>
         </Provider>

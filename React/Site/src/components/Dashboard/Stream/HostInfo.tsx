@@ -27,24 +27,20 @@ export const StreamHostInfo = () => {
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <MainButton 
-                    text="Info" 
-                    width={80} 
-                    onClick={() => setShowUsers(false)}
-                    outline={showUsers}
-                />
+            <div className='align-2'>
+                <div className='mr5'>
+                    <MainButton 
+                        text="Info" 
+                        secondary={true}
+                        onClick={() => setShowUsers(false)}
+                        outline={showUsers}
+                    />
+                </div>
                 <MainButton
                     onClick={() => setShowUsers(true)}
                     text={`${onlineUsers.length} Connected`}
                     outline={!showUsers}
-                    width={100}
+                    secondary={true}
                 />
             </div>
             <hr
@@ -86,7 +82,7 @@ export const StreamHostInfo = () => {
                                 <div key={message.id} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                     <PermIdentityIcon style={{  marginRight: 15 }} />
                                     <span style={{ marginRight: 15 }}>{message.message}</span>
-                                    <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12 }}>
+                                    <span className='secondary fs12'>
                                         {message.createdAt}
                                     </span>
                                 </div>

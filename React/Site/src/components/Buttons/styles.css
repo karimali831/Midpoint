@@ -1,0 +1,13 @@
+.button-1 {
+    border-radius: 19.5px;
+    padding: 5px 15px;
+    height: 22.5px;
+}
+
+.button-2 {
+    border-radius: 17px;
+    background: #5892ea;
+    padding: 0 15px;
+    height: 30px;
+    cursor: pointer;
+}

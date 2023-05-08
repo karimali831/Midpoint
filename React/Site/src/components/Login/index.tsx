@@ -21,6 +21,8 @@ import { LoginHighlight } from './Highlight';
 import { Button, Link } from '@mui/material';
 import { Loader } from '../Loader';
 import { browserLocalPersistence, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import './styles.css'
+import { MainButton } from '../Buttons/MainButton';
 
 export type FormValidation = {
     value: string
@@ -115,7 +117,6 @@ export function Login() {
     const handleLogin = () => {
         dispatch(SigninLoadingAction(true))
 
-        // var user = firebase.auth().currentUser;
 
         auth.setPersistence(browserLocalPersistence)
             .then(() => {
@@ -133,10 +134,6 @@ export function Login() {
     }
 
     const handleSignUp = () => {
-
-        // so here if you try to submit the form the fields with required validation
-        // it doesn't show the errors
-
         dispatch(SigninLoadingAction(true))
 
         createUserWithEmailAndPassword(auth, email.value, password.value)
@@ -183,7 +180,7 @@ export function Login() {
 
     }
 
-    const checkPasswordMismatch = (text: string) => {
+    const checkPasswordMismatch = () => {
         const code = IFormMessageCode.PasswowrdsMismatched
         const errorExists = messages.some(x => x.code === code)
 
@@ -215,36 +212,16 @@ export function Login() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{
-                height: '100%',
-                marginTop: 100,
-                display: 'flex',
-                width: '100%',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'space-evenly'
-            }}>
-
+            className='login-container'
+        >
             <div style={{ width: isMobile ? '90%' : 380 }}>
-                <div style={{
-                    padding: '15px 0',
-                    backgroundColor: '#195DC4',
-                    borderRadius: 5,
-                    textAlign: 'center',
-                    boxShadow: '0px -2px 20px 2px rgba(0, 0, 0, 0.4)'
-                }}>
+                <div className='future-box'>
                     <span style={{ fontSize: 22 }}>
                         The future of collaborative music industry projects is in the cloud.
                     </span>
                 </div>
 
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    flexDirection: 'column',
-                    marginTop: 20,
-                    height: 260
-                }}>
+                <div className='align-7 login-left-info'>
                     <LoginHighlight
                         icon={<AccessTimeIcon />}
                         title="Start within minutes"
@@ -263,13 +240,8 @@ export function Login() {
                 </div>
             </div>
             <form
-                className='midpoint-form'
-                style={{
-                    width: isMobile ? '90%' : 380,
-                    display: 'flex',
-                    flexDirection: 'column'
-                }}>
-                <span style={{ marginBottom: 15, fontWeight: 500, fontSize: 36 }}>
+                style={{  width: isMobile ? '90%' : 380 }}>
+                <span className='title-right'>
                     {registering ? "Sign up" : "Sign In"}
                 </span>
                 {
@@ -320,70 +292,55 @@ export function Login() {
                 }
                 {!!formMessage && <FormMessage message={formMessage} />}
 
-                <div style={{ alignSelf: 'flex-end', marginBottom: 15 }}>
+                <div style={{ marginBottom: 15 }}>
                     {
                         registering ?
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                    <input type="checkbox" style={{ marginRight: 10 }} />
-                                    <span style={{ marginTop: 15, fontSize: 14 }}>By creating an account you agree with the <a href="#" >Terms of Service</a> and the <a href="">Privacy Policy</a>.</span>
+                            <>
+                                <div className='align-2'>
+                                    <input type="checkbox" className='mr10' />
+                                    <span className='mt15 fs14'>
+                                        By creating an account you agree with the &nbsp;
+                                        <a href="#" >Terms of Service</a> and the &nbsp;
+                                        <a href="">Privacy Policy</a>.
+                                    </span>
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                    <input type="checkbox" style={{ marginRight: 10 }} />
-                                    <span style={{ marginTop: 15, fontSize: 14 }}>Please verify yourself.</span>
+                                <div className='align-2'>
+                                    <input type="checkbox" className='mr10'  />
+                                    <span className='mt15 fs14'>
+                                        Please verify yourself.
+                                    </span>
                                 </div>
-                            </div>
+                            </>
                             :
-                            <Link
-                                onClick={sendForgotPassword}
-                                // _text={{
-                                //     color: "warmGray.200",
-                                //     fontSize: "sm",
-                                //     textDecoration: 'underline'
-                                // }} 
-                                href="#"
-                            >
-                                Forgot password?
-                            </Link>
+                                <div className='align-8 mtb10'>
+                                    <Link onClick={sendForgotPassword} href="#">
+                                        <span className='secondary'>
+                                            Forgot password?
+                                        </span>
+                                    </Link>
+                                </div>
                     }
                 </div>
-
-                <Button 
-                    style={{
-                        borderRadius: 25,
-                        backgroundColor: (authSuccess ? '#4DD181' : '#195DC4')
-
-                    }}
+                <MainButton 
+                    icon={signingIn ? <Loader />  : authSuccess ? <CheckCircleIcon /> : undefined} 
+                    text={registering ? "Create account" : "Login"} 
+                    success={authSuccess}
                     onClick={() => registering ? handleSignUp() : handleLogin()}
-                    startIcon={authSuccess ? <CheckCircleIcon /> : <CloseIcon />}
-                >
-                    {
-                        signingIn 
-                        ? <Loader /> 
-                        : registering ? "Create account" : "Login"
-                    }
-                </Button>
+                />
 
-                <div style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 15 }}>
-                    {/* <Text fontSize="sm" color="coolGray.500" _dark={{
-                        color: "warmGray.200"
-                    }}> */}
-                    <span>
-                        {registering ? "Already have an account?" : "Don't have an account?"} {" "}
+                <div className='align-6 mt15'>
+                    <span className='secondary'>
+                        {registering ? "Already have an account?" : "Don't have an account?"} &nbsp;
                     </span>
                     <Link
+                        color='#fff'
                         onClick={() => {
                             setMessages([])
                             dispatch(SetRegisteringAction(!registering))
                         }}
-                        // _text={{
-                        //     color: "#fff",
-                        //     fontWeight: "medium",
-                        //     fontSize: "sm",
-                        //     textDecoration: 'underline'
-                        // }} 
-                        href="#">
-                        {registering ? "Login" : "Sign up"}
+                        href="#"
+                    >
+                        {registering ? "Login" : " Sign up"}
                     </Link>
                 </div>
             </form>

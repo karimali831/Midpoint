@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using MidPoint.Library.Enum;
 using MidPoint.Library.Model;
 using MidPoint.Library.Service;
 
@@ -11,17 +12,14 @@ namespace MidPoint.Web.Controllers.Api
     public class EC2InstanceController : ControllerBase
     {
         private readonly IEc2InstanceService _ec2InstanceService;
-        private readonly ITokenJobService _tokenJobService;
-        private readonly IAwsUserService _awsUserService;
-        
+        private readonly IBillingCustomerService _billingCustomerService;
+
         public EC2InstanceController(
-            IEc2InstanceService ec2InstanceService, 
-            ITokenJobService tokenJobService,
-            IAwsUserService awsUserService)
+            IEc2InstanceService ec2InstanceService,
+            IBillingCustomerService billingCustomerService)
         {
             _ec2InstanceService = ec2InstanceService;
-            _tokenJobService = tokenJobService;
-            _awsUserService = awsUserService;
+            _billingCustomerService = billingCustomerService;
         }
 
         [HttpGet("get/{instanceId}/{awsUid}")]
@@ -48,18 +46,40 @@ namespace MidPoint.Web.Controllers.Api
         }
 
         [HttpGet("start/{awsUid}/{hostRoomId}")]
-        public async Task<EC2Response> Create(string? awsUid, string hostRoomId)
+        public async Task<EC2Response> Create(string awsUid, string hostRoomId)
         {
-            return await _ec2InstanceService.CreateAsync(awsUid, hostRoomId);
+            var customerId = (await _billingCustomerService.GetByAwsUidAsync(awsUid))?.CustomerId;
+
+            if (customerId is null)
+                throw new NullReferenceException($"Billing customer is null: customerId: {customerId}");
+
+            return await _ec2InstanceService.CreateAsync(awsUid, customerId, hostRoomId);
         }
-        
+
         [HttpGet("terminate/{awsUid}")]
         public async Task Terminate(string awsUid)
         {
-            var instance = (await _ec2InstanceService.GetAllRunningAsync())
-                .First(x => awsUid == x.Tags.First(tag => tag.Key == "AwsUid").Value);
+            var statuses = new List<Ec2InstanceStatus> { 
+                Ec2InstanceStatus.Running, 
+                Ec2InstanceStatus.Pending 
+            };
+
+            var instance = (await _ec2InstanceService.GetAllAsync(statuses))
+                .FirstOrDefault(x => awsUid == x.Tags.FirstOrDefault(tag => tag.Key == "AwsUid")?.Value);
+
+            if (instance is null)
+                return;
+
+            var customer = await _billingCustomerService.GetByAwsUidAsync(awsUid);
             
-            var data = new List<(string InstanceId, string AwsUid)> { (instance.InstanceId, awsUid) };
+            if (customer is null)
+                throw new NullReferenceException($"Billing customer is null: customerId: {customer}");
+
+            var data = new List<(string InstanceId, string AwsUid, string CustomerId)>
+            {
+                (instance.InstanceId, awsUid, customer.CustomerId)
+            };
+
             await _ec2InstanceService.TerminateAsync(data);
         }
     }
