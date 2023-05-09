@@ -1,69 +1,64 @@
-import { PayloadAction } from '@reduxjs/toolkit';
-import { put, select, takeLatest } from 'redux-saga/effects';
-import { AppScreen } from '../../../enum/AppScreen';
+import { put, select, takeLatest } from 'redux-saga/effects'
+import { Page } from '../../../enum/Page'
 import { toast } from 'react-hot-toast'
-import { Routes } from '../../../router/Routes';
+import { Routes } from '../../../router/Routes'
 import { history } from '../../../state/InitialiseStore'
 import {
     GoBackAction,
     LocationChangeAction,
-    ShowScreenAction,
-    ShowScreenType
-} from '../../contexts/app/Actions';
-import { getCurrentScreen } from '../../contexts/app/Selectors';
-import { getUserAuth } from '../../contexts/user/Selectors';
+    ShowPageAction
+} from '../../contexts/app/Actions'
+import { getpage } from '../../contexts/app/Selectors'
+import { getUserAuth } from '../../contexts/user/Selectors'
+import { PayloadAction } from '@reduxjs/toolkit'
 
 export default function* navigationSaga() {
-    yield takeLatest(ShowScreenAction.type, navigateToScreen);
-    yield takeLatest(GoBackAction.type, navigatePreviousScreen);
+    yield takeLatest(ShowPageAction.type, navigateToScreen)
+    yield takeLatest(GoBackAction.type, navigatePreviousScreen)
     yield takeLatest(LocationChangeAction.type, locationChange)
 }
 
-
-
 export function* locationChange() {
-
-    const currentScreen: AppScreen = yield select(getCurrentScreen)
-    const currentLocation = history.location.pathname;
-    const currentRoute = Routes.filter((x) => x.url === currentLocation.toLowerCase())[0];
+    const page: Page = yield select(getpage)
+    const currentLocation = history.location.pathname
+    const currentRoute = Routes.filter(
+        (x) => x.url === currentLocation.toLowerCase()
+    )[0]
 
     // user accessing app from non default screen for first time
-    if (currentRoute != null && currentScreen !== currentRoute.screen) {
-        yield put(ShowScreenAction({
-            screen: currentRoute.screen,
-            replace: true
-        }))
+    if (currentRoute != null && page !== currentRoute.page) {
+        yield put(ShowPageAction(currentRoute.page))
     }
 }
 
-export function* navigateToScreen(route: PayloadAction<ShowScreenType>) {
+export function* navigateToScreen(route: PayloadAction<Page>) {
     try {
-        const { screen, replace } = route.payload;
-
-        const auth: boolean = yield select(getUserAuth);
-        const newLocation = Routes.filter((x) => x.screen === screen)[0];
-        const currentLocation = history.location.pathname;
+        const auth: boolean = yield select(getUserAuth)
+        const newLocation = Routes.filter((x) => x.page === route.payload)[0]
+        const currentLocation = history.location.pathname
 
         if (newLocation.url === currentLocation) {
-            window.scrollTo(0, 0);
-            return;
+            window.scrollTo(0, 0)
+            return
         }
 
         if (newLocation.memberOnly && !auth) {
             const defaultLocationUrl = Routes.filter(
-                (x) => x.screen === AppScreen.Dashboard
-            )[0].url;
+                (x) => x.page === Page.Dashboard
+            )[0].url
 
-            history.replace(defaultLocationUrl);
+            history.replace(defaultLocationUrl)
         }
 
-        if (replace) {
-            history.replace(newLocation.url);
-        } else {
-            history.push(newLocation.url);
-        }
+        history.push(newLocation.url)
+
+        // if (replace) {
+        //     history.replace(newLocation.url)
+        // } else {
+        //     history.push(newLocation.url)
+        // }
     } catch {
-        toast.error("Error navigating you")
+        toast.error('Error navigating you')
     }
 }
 

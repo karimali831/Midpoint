@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { SoftwareType } from '../../../components/Dashboard/Software/SoftwareSelect'
-import { AppScreen } from '../../../enum/AppScreen'
+import { Page } from '../../../enum/Page'
 import {
     DashboardSection,
     MidPointStep,
@@ -10,14 +10,6 @@ import { LoadStartup } from '../../../enum/LoadStartup'
 import { IAwsError } from '../../../interface/IAwsError'
 import { IAxiosError } from '../../../interface/IAxiosError'
 import { INotificationMessage } from '../../../interface/INotificationMessage'
-import { RouteParamList } from '../../../types/types'
-
-// ACTION TYPES
-export type ShowScreenType = {
-    screen: AppScreen
-    replace?: boolean
-    params?: RouteParamList[keyof RouteParamList]
-}
 
 // ACTION CREATORS
 const SetAppFocusedAction = createAction<boolean>('@@App/SetAppFocused')
@@ -25,7 +17,7 @@ const AxiosErrorAlertAction = createAction<IAxiosError>('@@App/AxiosErrorAlert')
 const AwsErrorAlertAction = createAction<IAwsError>('@@App/AwsErrorAlert')
 const LocationChangeAction = createAction('@@App/LocationChange')
 const SetAppReadyAction = createAction<LoadStartup>('@@App/SetAppReady')
-const ShowScreenAction = createAction<ShowScreenType>('@@App/ShowScreen')
+const ShowPageAction = createAction<Page>('@@App/ShowPage')
 const SetSettingAction = createAction<Setting | null>('@App/SetSetting')
 const SetOnConfirmLoadingAction = createAction<boolean>(
     '@@App/SetOnConfirmLoading'
@@ -45,7 +37,7 @@ const SetRegisteringAction = createAction<boolean>('@App/SetRegistering')
 export {
     SetAppFocusedAction,
     SetAppReadyAction,
-    ShowScreenAction,
+    ShowPageAction,
     SetOnConfirmLoadingAction,
     GoBackAction,
     SendNotificationAction,

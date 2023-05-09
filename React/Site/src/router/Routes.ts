@@ -1,41 +1,41 @@
-import { Dashboard } from '../components/Dashboard';
-import { Home } from '../components/Home';
-import { Login } from '../components/Login';
-import { AppScreen } from '../enum/AppScreen';
-import { IRoute } from './Route';
+import { Dashboard } from '../components/Dashboard'
+import { Home } from '../components/Home'
+import { Login } from '../components/Login'
+import { Page } from '../enum/Page'
+import { IRoute } from './Route'
 
 export const Routes: IRoute[] = [
     {
-        screen: AppScreen.Home,
+        page: Page.Home,
         component: Home,
         displayOnMenu: true,
         memberOnly: false,
         headerShown: true,
         order: 1,
-        menuName: "Home",
+        menuName: 'Home',
         path: '/',
-        url: '/',
+        url: '/'
     },
     {
-        screen: AppScreen.Login,
+        page: Page.Login,
         component: Login,
         displayOnMenu: true,
         memberOnly: false,
         headerShown: false,
         order: 2,
-        menuName: "Sign In",
+        menuName: 'Sign In',
         path: '/login',
-        url: '/login',
+        url: '/login'
     },
     {
-        screen: AppScreen.Dashboard,
+        page: Page.Dashboard,
         component: Dashboard,
         displayOnMenu: true,
         memberOnly: true,
         headerShown: true,
         order: 3,
-        menuName: "Dashboard",
+        menuName: 'Dashboard',
         path: '/dashboard/:midPointJoinId*',
-        url: '/dashboard',
+        url: '/dashboard'
     }
-];
+]

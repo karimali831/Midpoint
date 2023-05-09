@@ -1,37 +1,32 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { DashboardSection } from '../../../enum/DashboardSection';
-import { SetDashboardSection } from '../../../state/contexts/app/Actions';
-import { SetMidPointJoinIdAction} from '../../../state/contexts/stream/Actions';
-import { getUserState } from '../../../state/contexts/user/Selectors';
-import { FormInput } from '../../Form/input';
-import { Button } from '@mui/material';
-import { FormValidation } from '../../Login';
-import { MainButton } from '../../Buttons/MainButton';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { DashboardSection } from '../../../enum/DashboardSection'
+import { SetDashboardSection } from '../../../state/contexts/app/Actions'
+import { SetMidPointJoinIdAction } from '../../../state/contexts/stream/Actions'
+import { getUserState } from '../../../state/contexts/user/Selectors'
+import { FormInput } from '../../Form/input'
+import { FormValidation } from '../../Login'
+import { MainButton } from '../../Buttons/MainButton'
 
 export const Connect = () => {
-    const { user } = useSelector(getUserState);
+    const { user } = useSelector(getUserState)
 
-    if (user == null)
-        return null
+    if (user == null) return null
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
     const [midPointJoinId, setMidPointJoinId] = useState<FormValidation>({
         value: '',
         minCharsRequired: 36,
         maxCharsRequired: 36
-    });
-    const [loading, setLoading] = useState<boolean>(false);
+    })
 
     const onSubmit = () => {
-        setLoading(true);
         dispatch(SetMidPointJoinIdAction(midPointJoinId.value))
-    };
+    }
 
     return (
         <div>
@@ -43,21 +38,21 @@ export const Connect = () => {
                 style={{
                     margin: '0 auto',
                     width: 380,
-                    marginTop: 140,
+                    marginTop: 140
                 }}
             >
                 <div
                     style={{
                         display: 'flex',
                         alignItems: 'center',
-                        flexDirection: 'column',
+                        flexDirection: 'column'
                     }}
                 >
                     <span style={{ fontSize: 40 }}>Connect MidPoint.</span>
                     <span
                         style={{
                             marginTop: 5,
-                            color: 'rgba(255, 255, 255, 0.6)',
+                            color: 'rgba(255, 255, 255, 0.6)'
                         }}
                     >
                         Stream with your team. Set the standard.
@@ -68,10 +63,10 @@ export const Connect = () => {
                     onChange={(text) =>
                         setMidPointJoinId({
                             ...midPointJoinId,
-                            value: text,
+                            value: text
                         })
                     }
-                    type={"password"}
+                    type={'password'}
                     validation={midPointJoinId}
                     placeholder={`Enter MidPoint. join ID`}
                 />
@@ -80,16 +75,20 @@ export const Connect = () => {
                         display: 'flex',
                         flexDirection: 'row',
                         alignItems: 'center',
-                        justifyContent: 'space-evenly',
+                        justifyContent: 'space-evenly'
                     }}
                 >
                     <div
-                        onClick={() => dispatch(SetDashboardSection(DashboardSection.Overview))}
+                        onClick={() =>
+                            dispatch(
+                                SetDashboardSection(DashboardSection.Overview)
+                            )
+                        }
                         style={{
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center',
-                            cursor: 'pointer',
+                            cursor: 'pointer'
                         }}
                     >
                         <ArrowBackIcon />
@@ -98,11 +97,11 @@ export const Connect = () => {
                     <MainButton
                         disabled={midPointJoinId.value === ''}
                         onClick={onSubmit}
-                        text='Join MidPoint.'
+                        text="Join MidPoint."
                         icon={<PeopleAltOutlinedIcon />}
                     />
                 </div>
             </motion.form>
         </div>
-    );
-};
+    )
+}

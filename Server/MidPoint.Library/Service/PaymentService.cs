@@ -39,16 +39,17 @@ namespace MidPoint.Library.Service
                     async () =>
                     {
                         return (await _paymentRepository.GetAlLAsync(customerId, activeOnly))
-                        .Select(x => new PaymentViewModel
-                        {
-                            Id = x.Id,
-                            AmountStr = x.Amount.ToCurrencyGbp(),
-                            Status = Utils.UcFirst(x.Status),
-                            CardBrand = Utils.UcFirst(x.CardBrand),
-                            CardLast4 = x.CardLast4,
-                            Tokens = x.PurchasedTokens,
-                            Date = x.Created.ToString("D")
-                        });
+                            .OrderByDescending(x => x.Created)
+                            .Select(x => new PaymentViewModel
+                            {
+                                Id = x.Id,
+                                AmountStr = x.Amount.ToCurrencyGbp(),
+                                Status = Utils.UcFirst(x.Status),
+                                CardBrand = Utils.UcFirst(x.CardBrand),
+                                CardLast4 = x.CardLast4,
+                                Tokens = x.PurchasedTokens,
+                                Date = x.Created.ToString("D")
+                            });
                     });
         }
 

@@ -1,28 +1,38 @@
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import EastIcon from '@mui/icons-material/East';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CloseIcon from '@mui/icons-material/Close';
-import { motion } from 'framer-motion';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { FormInput } from '../../components/Form/input';
-import { FormMessage } from '../../components/Form/message';
-import { IFormMessage, IFormMessageCode } from '../../enum/IFormMessage';
-import { IMessage } from '../../interface/IMessage';
-import { isMobile } from 'react-device-detect';
-import { SetRegisteringAction, ShowScreenAction } from '../../state/contexts/app/Actions';
-import { getAppState } from '../../state/contexts/app/Selectors';
-import { CreateUserAction, SigninLoadingAction } from '../../state/contexts/user/Actions';
-import { getUserState } from '../../state/contexts/user/Selectors';
-import { auth } from '../../config/firebase';
-import { AppScreen } from '../../enum/AppScreen';
-import { LoginHighlight } from './Highlight';
-import { Button, Link } from '@mui/material';
-import { Loader } from '../Loader';
-import { browserLocalPersistence, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import EastIcon from '@mui/icons-material/East'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import { motion } from 'framer-motion'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { FormInput } from '../../components/Form/input'
+import { FormMessage } from '../../components/Form/message'
+import { IFormMessage, IFormMessageCode } from '../../enum/IFormMessage'
+import { IMessage } from '../../interface/IMessage'
+import { isMobile } from 'react-device-detect'
+import {
+    SetRegisteringAction,
+    ShowPageAction
+} from '../../state/contexts/app/Actions'
+import { getAppState } from '../../state/contexts/app/Selectors'
+import {
+    CreateUserAction,
+    SigninLoadingAction
+} from '../../state/contexts/user/Actions'
+import { getUserState } from '../../state/contexts/user/Selectors'
+import { auth } from '../../config/firebase'
+import { Page } from '../../enum/Page'
+import { LoginHighlight } from './Highlight'
+import { Loader } from '../Loader'
+import {
+    browserLocalPersistence,
+    createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword
+} from 'firebase/auth'
 import './styles.css'
-import { MainButton } from '../Buttons/MainButton';
+import { MainButton } from '../Buttons/MainButton'
+import { Link } from '@mui/material'
 
 export type FormValidation = {
     value: string
@@ -38,7 +48,6 @@ type FormFields = {
     name: FormValidation
     password: FormValidation
     repeatPassword: FormValidation
-
 }
 
 export function Login() {
@@ -68,24 +77,11 @@ export function Login() {
     })
     const [messages, setMessages] = useState<IFormMessage[]>([])
 
-    const {
-        username,
-        email,
-        name,
-        password,
-        repeatPassword
-    } = formFields
+    const { username, email, name, password, repeatPassword } = formFields
 
-    const {
-        signingIn,
-        user,
-        authSuccess,
-    } = useSelector(getUserState)
+    const { signingIn, user, authSuccess } = useSelector(getUserState)
 
-    const onInputChange = (
-        name: keyof FormFields,
-        text: string
-    ) => {
+    const onInputChange = (name: keyof FormFields, text: string) => {
         setFormFields({
             ...formFields,
             [name]: {
@@ -96,20 +92,19 @@ export function Login() {
     }
 
     const dispatch = useDispatch()
-    const formMessage = messages.find(x =>
-        x.code !== IFormMessageCode.InvalidEmail &&
-        x.code !== IFormMessageCode.UserNotFound &&
-        x.code !== IFormMessageCode.WrongPassword &&
-        x.code !== IFormMessageCode.PasswowrdsMismatched &&
-        x.code !== IFormMessageCode.EmailAlreadyInUse
+    const formMessage = messages.find(
+        (x) =>
+            x.code !== IFormMessageCode.InvalidEmail &&
+            x.code !== IFormMessageCode.UserNotFound &&
+            x.code !== IFormMessageCode.WrongPassword &&
+            x.code !== IFormMessageCode.PasswowrdsMismatched &&
+            x.code !== IFormMessageCode.EmailAlreadyInUse
     )
 
     React.useEffect(() => {
         if (user) {
             setTimeout(() => {
-                dispatch(ShowScreenAction({
-                    screen: AppScreen.Dashboard
-                }))
+                dispatch(ShowPageAction(Page.Dashboard))
             }, 1000)
         }
     }, [user])
@@ -117,15 +112,16 @@ export function Login() {
     const handleLogin = () => {
         dispatch(SigninLoadingAction(true))
 
-
         auth.setPersistence(browserLocalPersistence)
             .then(() => {
-                return signInWithEmailAndPassword(auth, email.value, password.value)
-                    .catch((message: IMessage) => {
-                        dispatch(SigninLoadingAction(false))
-                        setFormMessage(message)
-                    })
-
+                return signInWithEmailAndPassword(
+                    auth,
+                    email.value,
+                    password.value
+                ).catch((message: IMessage) => {
+                    dispatch(SigninLoadingAction(false))
+                    setFormMessage(message)
+                })
             })
             .catch((message: IMessage) => {
                 dispatch(SigninLoadingAction(false))
@@ -137,18 +133,20 @@ export function Login() {
         dispatch(SigninLoadingAction(true))
 
         createUserWithEmailAndPassword(auth, email.value, password.value)
-            .then(userCredentials => {
-                const user = userCredentials.user;
+            .then((userCredentials) => {
+                const user = userCredentials.user
 
                 if (user) {
-                    dispatch(CreateUserAction({
-                        fullName: name.value,
-                        email: email.value,
-                        firebaseUid: user.uid,
-                        displayName: username.value,
-                        purchasedTokens: 0,
-                        remainingTokens: 0
-                    }))
+                    dispatch(
+                        CreateUserAction({
+                            fullName: name.value,
+                            email: email.value,
+                            firebaseUid: user.uid,
+                            displayName: username.value,
+                            purchasedTokens: 0,
+                            remainingTokens: 0
+                        })
+                    )
                 }
 
                 dispatch(SigninLoadingAction(false))
@@ -160,48 +158,51 @@ export function Login() {
     }
 
     const setFormMessage = (message: IFormMessage) => {
-        const errorExists = messages.some(x => x.code === message.code)
+        const errorExists = messages.some((x) => x.code === message.code)
 
         if (!errorExists) {
-            setMessages(messages => [...messages, message])
+            setMessages((messages) => [...messages, message])
         }
     }
 
     const sendForgotPassword = () => {
         sendPasswordResetEmail(auth, email.value)
             .then(() => {
-                setMessages([{
-                    message: "A link to reset your password has been sent to " + formFields.email.value,
-                    isSuccess: true
-                }])
-
+                setMessages([
+                    {
+                        message:
+                            'A link to reset your password has been sent to ' +
+                            formFields.email.value,
+                        isSuccess: true
+                    }
+                ])
             })
             .catch(setFormMessage)
-
     }
 
     const checkPasswordMismatch = () => {
         const code = IFormMessageCode.PasswowrdsMismatched
-        const errorExists = messages.some(x => x.code === code)
+        const errorExists = messages.some((x) => x.code === code)
 
-        if (password.value === "" || repeatPassword.value === "") {
+        if (password.value === '' || repeatPassword.value === '') {
             if (errorExists) {
-                setMessages(messages.filter(x => x.code !== code))
+                setMessages(messages.filter((x) => x.code !== code))
             }
-        }
-        else {
+        } else {
             const mismatched = formFields.password !== formFields.repeatPassword
 
             if (errorExists && !mismatched) {
-                setMessages(messages.filter(x => x.code !== code))
-            }
-            else {
+                setMessages(messages.filter((x) => x.code !== code))
+            } else {
                 if (mismatched) {
-                    setMessages(messages => [...messages, {
-                        code,
-                        message: "Passwords do no match.",
-                        isClient: true
-                    }])
+                    setMessages((messages) => [
+                        ...messages,
+                        {
+                            code,
+                            message: 'Passwords do no match.',
+                            isClient: true
+                        }
+                    ])
                 }
             }
         }
@@ -212,16 +213,17 @@ export function Login() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className='login-container'
+            className="login-container"
         >
             <div style={{ width: isMobile ? '90%' : 380 }}>
-                <div className='future-box'>
+                <div className="future-box">
                     <span style={{ fontSize: 22 }}>
-                        The future of collaborative music industry projects is in the cloud.
+                        The future of collaborative music industry projects is
+                        in the cloud.
                     </span>
                 </div>
 
-                <div className='align-7 login-left-info'>
+                <div className="align-7 login-left-info">
                     <LoginHighlight
                         icon={<AccessTimeIcon />}
                         title="Start within minutes"
@@ -239,108 +241,121 @@ export function Login() {
                     />
                 </div>
             </div>
-            <form
-                style={{  width: isMobile ? '90%' : 380 }}>
-                <span className='title-right'>
-                    {registering ? "Sign up" : "Sign In"}
+            <form style={{ width: isMobile ? '90%' : 380 }}>
+                <span className="title-right">
+                    {registering ? 'Sign up' : 'Sign In'}
                 </span>
-                {
-                    registering &&
+                {registering && (
                     <FormInput
                         placeholder="Full name"
                         validation={formFields.name}
-                        onChange={e => onInputChange("name", e)}
+                        onChange={(e) => onInputChange('name', e)}
                     />
-                }
+                )}
                 <FormInput
                     placeholder="Email"
                     validation={formFields.email}
-                    onChange={e => onInputChange("email", e)}
-                    message={messages.find(x =>
-                        x.code === IFormMessageCode.InvalidEmail ||
-                        x.code === IFormMessageCode.UserNotFound ||
-                        x.code === IFormMessageCode.EmailAlreadyInUse
+                    onChange={(e) => onInputChange('email', e)}
+                    message={messages.find(
+                        (x) =>
+                            x.code === IFormMessageCode.InvalidEmail ||
+                            x.code === IFormMessageCode.UserNotFound ||
+                            x.code === IFormMessageCode.EmailAlreadyInUse
                     )}
                 />
-                {
-                    registering &&
+                {registering && (
                     <FormInput
                         placeholder="Username"
                         validation={formFields.username}
-                        onChange={e => onInputChange("username", e)}
+                        onChange={(e) => onInputChange('username', e)}
                     />
-                }
+                )}
                 <FormInput
                     placeholder="Password"
                     validation={formFields.password}
-                    onChange={e => onInputChange("password", e)}
-                    message={messages.find(x => x.code === IFormMessageCode.WrongPassword)}
+                    onChange={(e) => onInputChange('password', e)}
+                    message={messages.find(
+                        (x) => x.code === IFormMessageCode.WrongPassword
+                    )}
                     onBlur={checkPasswordMismatch}
                     passwordToggleEnabled={true}
-
                 />
-                {
-                    registering &&
+                {registering && (
                     <FormInput
                         placeholder="Repeat password"
                         validation={formFields.repeatPassword}
-                        onChange={e => onInputChange("repeatPassword", e)}
-                        message={messages.find(x => x.code === IFormMessageCode.PasswowrdsMismatched)}
+                        onChange={(e) => onInputChange('repeatPassword', e)}
+                        message={messages.find(
+                            (x) =>
+                                x.code === IFormMessageCode.PasswowrdsMismatched
+                        )}
                         onBlur={checkPasswordMismatch}
                         passwordToggleEnabled={true}
                     />
-                }
+                )}
                 {!!formMessage && <FormMessage message={formMessage} />}
 
                 <div style={{ marginBottom: 15 }}>
-                    {
-                        registering ?
-                            <>
-                                <div className='align-2'>
-                                    <input type="checkbox" className='mr10' />
-                                    <span className='mt15 fs14'>
-                                        By creating an account you agree with the &nbsp;
-                                        <a href="#" >Terms of Service</a> and the &nbsp;
-                                        <a href="">Privacy Policy</a>.
-                                    </span>
-                                </div>
-                                <div className='align-2'>
-                                    <input type="checkbox" className='mr10'  />
-                                    <span className='mt15 fs14'>
-                                        Please verify yourself.
-                                    </span>
-                                </div>
-                            </>
-                            :
-                                <div className='align-8 mtb10'>
-                                    <Link onClick={sendForgotPassword} href="#">
-                                        <span className='secondary'>
-                                            Forgot password?
-                                        </span>
-                                    </Link>
-                                </div>
-                    }
+                    {registering ? (
+                        <>
+                            <div className="align-2">
+                                <input type="checkbox" className="mr10" />
+                                <span className="mt15 fs14">
+                                    By creating an account you agree with the
+                                    &nbsp;
+                                    <a href="#">Terms of Service</a> and the
+                                    &nbsp;
+                                    <a href="">Privacy Policy</a>.
+                                </span>
+                            </div>
+                            <div className="align-2">
+                                <input type="checkbox" className="mr10" />
+                                <span className="mt15 fs14">
+                                    Please verify yourself.
+                                </span>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="align-8 mtb10">
+                            <Link onClick={sendForgotPassword} href="#">
+                                <span className="secondary">
+                                    Forgot password?
+                                </span>
+                            </Link>
+                        </div>
+                    )}
                 </div>
-                <MainButton 
-                    icon={signingIn ? <Loader />  : authSuccess ? <CheckCircleIcon /> : undefined} 
-                    text={registering ? "Create account" : "Login"} 
+                <MainButton
+                    icon={
+                        signingIn ? (
+                            <Loader />
+                        ) : authSuccess ? (
+                            <CheckCircleIcon />
+                        ) : undefined
+                    }
+                    text={registering ? 'Create account' : 'Login'}
                     success={authSuccess}
-                    onClick={() => registering ? handleSignUp() : handleLogin()}
+                    onClick={() =>
+                        registering ? handleSignUp() : handleLogin()
+                    }
                 />
 
-                <div className='align-6 mt15'>
-                    <span className='secondary'>
-                        {registering ? "Already have an account?" : "Don't have an account?"} &nbsp;
+                <div className="align-6 mt15">
+                    <span className="secondary">
+                        {registering
+                            ? 'Already have an account?'
+                            : "Don't have an account?"}{' '}
+                        &nbsp;
                     </span>
                     <Link
-                        color='#fff'
+                        color="#fff"
                         onClick={() => {
                             setMessages([])
                             dispatch(SetRegisteringAction(!registering))
                         }}
                         href="#"
                     >
-                        {registering ? "Login" : " Sign up"}
+                        {registering ? 'Login' : ' Sign up'}
                     </Link>
                 </div>
             </form>

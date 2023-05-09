@@ -1,20 +1,20 @@
-import * as React from "react";
-import { BrowserHistory } from "history";
-import { Router, Navigator } from "react-router-dom";
+import * as React from 'react'
+import { BrowserHistory } from 'history'
+import { Router } from 'react-router-dom'
 
 type Props = {
-  basename?: string;
-  children: React.ReactNode;
-  history: BrowserHistory;
+    basename?: string
+    children: React.ReactNode
+    history: BrowserHistory
 }
 
 export const CustomRouter = ({ basename, children, history }: Props) => {
     const [state, setState] = React.useState({
         action: history.action,
-        location: history.location,
-    });
-  
-    React.useLayoutEffect(() => history.listen(setState),[history])
+        location: history.location
+    })
+
+    React.useLayoutEffect(() => history.listen(setState), [history])
 
     return (
         <Router
@@ -23,7 +23,7 @@ export const CustomRouter = ({ basename, children, history }: Props) => {
             navigator={history}
             navigationType={state.action}
         >
-        {children}
-    </Router>
-  );
-};
+            {children}
+        </Router>
+    )
+}

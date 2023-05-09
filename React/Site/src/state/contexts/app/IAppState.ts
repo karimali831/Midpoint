@@ -1,5 +1,5 @@
 import { SoftwareType } from '../../../components/Dashboard/Software/SoftwareSelect'
-import { AppScreen } from '../../../enum/AppScreen'
+import { Page } from '../../../enum/Page'
 import {
     DashboardSection,
     MidPointStep,
@@ -12,7 +12,7 @@ import { INotificationOptions } from '../../../interface/INotificationOptions'
 export interface IAppState {
     appReady: ILoadStartup[]
     appFocused: boolean
-    currentScreen: AppScreen
+    page: Page
     showModal: boolean
     modalOnConfirmLoading: boolean
     notificationOptions: INotificationOptions
@@ -27,7 +27,7 @@ export interface IAppState {
 export const appInitialState: IAppState = {
     appReady: InitialStartupLoading(),
     appFocused: true,
-    currentScreen: AppScreen.Dashboard,
+    page: Page.Dashboard,
     showModal: false,
     modalOnConfirmLoading: false,
     notificationOptions: InitialNotificationOptions(),

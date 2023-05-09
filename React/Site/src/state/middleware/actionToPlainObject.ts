@@ -1,11 +1,11 @@
-import { Middleware } from '@reduxjs/toolkit';
-import { IStoreState } from '../IStoreState';
+import { Middleware } from '@reduxjs/toolkit'
+import { IStoreState } from '../IStoreState'
 
 export const actionToPlainObject: Middleware<IStoreState, any> =
-    (store) => (next) => (action) => {
+    () => (next) => (action) => {
         if (!action) {
-            return;
+            return
         }
 
-        return next({ ...action });
-    };
+        return next({ ...action })
+    }

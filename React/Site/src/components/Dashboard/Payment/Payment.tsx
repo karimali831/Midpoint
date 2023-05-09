@@ -25,7 +25,7 @@ export const Payment = () => {
     React.useEffect(() => {}, [])
 
     const [promoCode, setPromoCode] = useState<string>('')
-    const [promoApplied, setPromoApplied] = useState<boolean>(false)
+    const [promoApplied] = useState<boolean>(false)
 
     const { basket } = useSelector(getCheckoutState)
     const { user } = useSelector(getUserState)

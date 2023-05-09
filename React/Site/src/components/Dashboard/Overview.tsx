@@ -8,7 +8,7 @@ import { DashboardSection } from '../../enum/DashboardSection'
 import { SetDashboardSection } from '../../state/contexts/app/Actions'
 import { getUserState } from '../../state/contexts/user/Selectors'
 import { DashboardCard } from './DashboardCard'
-import { getAppState } from '../../state/contexts/app/Selectors'
+import { dateDiff } from '../../utils/Utils'
 
 export const DashboardOverview = () => {
     const dispatch = useDispatch()
@@ -21,39 +21,24 @@ export const DashboardOverview = () => {
     //     }
     // }, [dashboardSection])
 
+    if (!user) return null
+
     return (
         <>
             <span style={{ fontSize: 28 }}>Overview</span>
-            <div
-                style={{
-                    marginTop: 20,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center'
-                }}
-            >
+            <div className="align-2 mt20">
                 <DashboardCard
                     title="Wallet"
                     icon={<AccountBalanceWalletOutlined />}
                     outlined={false}
                 >
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            width: '100%'
-                        }}
-                    >
-                        <span style={{ fontSize: 24, marginRight: 15 }}>
+                    <div className="align-2" style={{ width: '100%' }}>
+                        <span className="fs24 mr15">
                             {user?.remainingTokens ?? 0}
                         </span>
                         <div
+                            className="align-1"
                             style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
                                 width: '100%'
                             }}
                         >
@@ -87,11 +72,17 @@ export const DashboardOverview = () => {
                     icon={<StreamIcon />}
                     outlined={true}
                 >
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: 22 }}>2 streams</span>
-                        <span style={{ fontSize: 12 }}>
-                            Average of 1 stream per week
+                    <div className="align-2">
+                        <span className="fs22">
+                            {user.totalStreams} stream
+                            {user.totalStreams === 1 ? '' : 's'}
                         </span>
+                        {user.totalStreams > 0 && (
+                            <span className="fs12">
+                                Average of 1 stream
+                                {user.totalStreams === 1 ? '' : 's'} per week
+                            </span>
+                        )}
                     </div>
                 </DashboardCard>
                 <DashboardCard
@@ -99,11 +90,15 @@ export const DashboardOverview = () => {
                     icon={<StreamOutlinedIcon />}
                     outlined={true}
                 >
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: 22, marginRight: 15 }}>
-                            October 23rd
+                    <div className="align-2">
+                        <span className="fs22 mr15">
+                            {user.lastStream ?? 'No streams'}
                         </span>
-                        <span style={{ fontSize: 12 }}>6 days ago</span>
+                        {user.lastStream && (
+                            <span className="fs12">
+                                {dateDiff(user.lastStream, Date.UTC)} days ago
+                            </span>
+                        )}
                     </div>
                 </DashboardCard>
             </div>

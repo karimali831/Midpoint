@@ -10,4 +10,10 @@ namespace MidPoint.Library.Model.Db
         public DateTime LaunchedDate { get; set; }
         public DateTime? TerminatedDate { get; set; }
     }
+
+    public class InstanceLog
+    {
+        public DateTime LaunchedDate { get; set; }
+        public int TotalSeconds { get; set; }
+    }
 }

@@ -1,28 +1,36 @@
-
-import MenuIcon from '@mui/icons-material/Menu';
-import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu'
+import {
+    Divider,
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText
+} from '@mui/material'
 import UserIcon from '@mui/icons-material/Person'
 import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppScreen } from '../../enum/AppScreen';
-import { Routes } from '../../router/Routes';
-import { ShowScreenAction } from '../../state/contexts/app/Actions';
-import { getUserState } from '../../state/contexts/user/Selectors';
-import { DrawerItemLink } from './DrawerItemLink';
-import { auth } from '../../config/firebase';
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Page } from '../../enum/Page'
+import { Routes } from '../../router/Routes'
+import { ShowPageAction } from '../../state/contexts/app/Actions'
+import { getUserState } from '../../state/contexts/user/Selectors'
+import { DrawerItemLink } from './DrawerItemLink'
+import { auth } from '../../config/firebase'
 
 export const DrawerContent = () => {
-    const dispatch = useDispatch();
-    const { user } = useSelector(getUserState);
+    const dispatch = useDispatch()
+    const { user } = useSelector(getUserState)
 
     const [state, setState] = useState({
-        open: false,
-    });
+        open: false
+    })
 
     const toggleDrawer =
         (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+            console.info(event.type)
+
             // if (
             //     event.type === 'keydown' &
             //     ((event as React.KeyboardEvent).key === 'Tab' ||
@@ -31,8 +39,8 @@ export const DrawerContent = () => {
             //     return;
             // }
 
-            setState({ ...state, open });
-        };
+            setState({ ...state, open })
+        }
 
     return (
         <div>
@@ -52,9 +60,11 @@ export const DrawerContent = () => {
                     <List>
                         <ListItem>
                             <ListItemIcon>
-                                <UserIcon  />
+                                <UserIcon />
                             </ListItemIcon>
-                            <ListItemText primary={user?.displayName ?? 'Welcome'} />
+                            <ListItemText
+                                primary={user?.displayName ?? 'Welcome'}
+                            />
                         </ListItem>
                         <Divider />
                         {Routes.filter(
@@ -62,18 +72,14 @@ export const DrawerContent = () => {
                                 x.displayOnMenu &&
                                 (!x.memberOnly || (x.memberOnly && user))
                         ).map((route, idx) => {
-                            return <DrawerItemLink key={idx} route={route} />;
+                            return <DrawerItemLink key={idx} route={route} />
                         })}
                         <Divider />
                         <ListItem
                             onClick={() =>
                                 user
                                     ? auth.signOut()
-                                    : dispatch(
-                                        ShowScreenAction({
-                                            screen: AppScreen.Login,
-                                        })
-                                    )
+                                    : dispatch(ShowPageAction(Page.Login))
                             }
                         >
                             <ListItemIcon>
@@ -87,5 +93,5 @@ export const DrawerContent = () => {
                 </div>
             </Drawer>
         </div>
-    );
-};
+    )
+}

@@ -1,5 +1,4 @@
-import { User } from "../graphql/types"
-
+import { User } from '../API'
 
 export interface IMessage {
     id: string

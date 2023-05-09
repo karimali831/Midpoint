@@ -1,7 +1,6 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(() => {
     return {
         root: {
             // width: 250
@@ -10,7 +9,7 @@ const useStyles = makeStyles()((theme: Theme) => {
         paper: {
             background: '#121212'
         }
-    };
-});
+    }
+})
 
-export default useStyles;
+export default useStyles

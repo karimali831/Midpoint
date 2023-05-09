@@ -111,7 +111,8 @@ namespace MidPoint.Web
                             "https://karimali-001-site5.itempurl.com",
                             "https://beattrice.netlify.app",
                             "https://www.mid-point.co.uk",
-                            "https://mid-point.azurewebsites.net"
+                            "https://mid-point.azurewebsites.net",
+                            "https://midpoint.netlify.app"
                         )
                         .AllowAnyHeader()
                         .AllowAnyMethod()

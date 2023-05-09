@@ -12,8 +12,12 @@ namespace MidPoint.Library.Model
         public string FirebaseUid { get; set; }
         public string Email { get; set; }
         public string DisplayName { get; set; }
-        public int? PurchasedTokens { get; set; }
-        public int? RemainingTokens { get; set; }
+        public int PurchasedTokens { get; set; }
+        public int RemainingTokens { get; set; }
+        public int TotalStreams { get; set; }
+        public int TotalSeconds { get; set; }
         public string? CreatedInstanceId { get; set; }
+        public string? LastStream { get; set; }
+
     }
 }

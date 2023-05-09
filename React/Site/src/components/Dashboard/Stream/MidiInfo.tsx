@@ -1,43 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { IMidiDevice } from '../../../models/IMidiDevice';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { IMidiDevice } from '../../../models/IMidiDevice'
 import {
     ControllerReadyAction,
     SetMidiOutputsAction,
     MidiInputStateChangeAction
-} from '../../../state/contexts/midi/Actions';
-import { getMidiState } from '../../../state/contexts/midi/Selectors';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import Collapse from '@mui/material/Collapse';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { StreamSetup } from './Setup';
-import VideoStream from './Stream';
+} from '../../../state/contexts/midi/Actions'
+import { getMidiState } from '../../../state/contexts/midi/Selectors'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import Collapse from '@mui/material/Collapse'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { StreamSetup } from './Setup'
+import VideoStream from './Stream'
 
 interface IOwnProps {
-    camOn: boolean;
+    camOn: boolean
 }
 
 export const StreamMidiInfo = (props: IOwnProps) => {
-    const [inputExpanded, setInputExpanded] = useState<number[]>([]);
-    const [outputExpanded, setOutputExpanded] = useState<number[]>([]);
-    const [midi, setMidi] = useState<any>(null);
-    const [data, setData] = useState<any>(null);
-    const [channel, setChannel] = useState<number>(0);
-    const [velocity, setVelocity] = useState<number>(0);
-    const [note, setNote] = useState<number>(0);
-    const [cmd, setCmd] = useState<number>(0);
-    const [type, setType] = useState<number>(0);
+    const [inputExpanded, setInputExpanded] = useState<number[]>([])
+    const [outputExpanded, setOutputExpanded] = useState<number[]>([])
+    const [midi, setMidi] = useState<any>(null)
+    const [data, setData] = useState<any>(null)
+    const [channel, setChannel] = useState<number>(0)
+    const [velocity, setVelocity] = useState<number>(0)
+    const [note, setNote] = useState<number>(0)
+    const [cmd, setCmd] = useState<number>(0)
+    const [type, setType] = useState<number>(0)
 
-    const dispatch = useDispatch();
-    const { inputs, outputs } = useSelector(getMidiState);
+    const dispatch = useDispatch()
+    const { inputs, outputs } = useSelector(getMidiState)
+
+    console.log(midi, data, channel, velocity, note, cmd, type)
 
     useEffect(() => {
         navigator
             .requestMIDIAccess({
                 sysex: false
             })
-            .then(onMIDISuccess);
-    }, []);
+            .then(onMIDISuccess)
+    }, [])
 
     useEffect(() => {
         if (
@@ -45,18 +47,18 @@ export const StreamMidiInfo = (props: IOwnProps) => {
                 (x) => x.connection === 'open' && x.state === 'connected'
             )
         ) {
-            dispatch(ControllerReadyAction(true));
+            dispatch(ControllerReadyAction(true))
         } else {
-            dispatch(ControllerReadyAction(false));
+            dispatch(ControllerReadyAction(false))
         }
-    }, [inputs]);
+    }, [inputs])
 
     const onMIDISuccess = (midiAccess: any) => {
-        console.log('Midi connect success');
-        setMidi(midiAccess);
+        console.log('Midi connect success')
+        setMidi(midiAccess)
 
-        const inputs = midiAccess.inputs.values();
-        const outputs = midiAccess.outputs.values();
+        const inputs = midiAccess.inputs.values()
+        const outputs = midiAccess.outputs.values()
         // loop through all inputs
         for (
             let input = inputs.next();
@@ -64,10 +66,10 @@ export const StreamMidiInfo = (props: IOwnProps) => {
             input = inputs.next()
         ) {
             // listen for midi messages
-            input.value.onmidimessage = onMIDIMessage;
+            input.value.onmidimessage = onMIDIMessage
         }
 
-        let outputDevices: IMidiDevice[] = [];
+        let outputDevices: IMidiDevice[] = []
 
         // loop through all outputs
         for (
@@ -75,57 +77,57 @@ export const StreamMidiInfo = (props: IOwnProps) => {
             output && !output.done;
             output = outputs.next()
         ) {
-            outputDevices.push(output.value);
+            outputDevices.push(output.value)
         }
-        dispatch(SetMidiOutputsAction(outputDevices));
+        dispatch(SetMidiOutputsAction(outputDevices))
 
         // listen for connect/disconnect message
-        midiAccess.onstatechange = onStateChange;
-    };
+        midiAccess.onstatechange = onStateChange
+    }
 
     const onStateChange = (event: any) => {
-        const port = event.port;
+        const port = event.port
 
         if (port.type === 'input') {
-            dispatch(MidiInputStateChangeAction(port));
+            dispatch(MidiInputStateChangeAction(port))
         }
-    };
+    }
 
     const onMIDIMessage = (event: any) => {
-        const data = event.data;
-        const cmd = data[0] >> 4;
-        const channel = data[0] & 0xf;
-        const type = event.data[0] & 0xf0;
-        const note = event.data[1];
-        const velocity = event.data[2];
+        const data = event.data
+        const cmd = data[0] >> 4
+        const channel = data[0] & 0xf
+        const type = event.data[0] & 0xf0
+        const note = event.data[1]
+        const velocity = event.data[2]
 
-        setCmd(cmd);
-        setVelocity(velocity);
-        setChannel(channel);
-        setNote(note);
-        setType(type);
-        setData(event.data);
-    };
+        setCmd(cmd)
+        setVelocity(velocity)
+        setChannel(channel)
+        setNote(note)
+        setType(type)
+        setData(event.data)
+    }
 
     const expandInputInfo = (idx: number) => {
-        const exist = inputExpanded.some((x) => x === idx);
+        const exist = inputExpanded.some((x) => x === idx)
 
         if (exist) {
-            setInputExpanded(inputExpanded.filter((x) => x !== idx));
+            setInputExpanded(inputExpanded.filter((x) => x !== idx))
         } else {
-            setInputExpanded((state) => [...state, idx]);
+            setInputExpanded((state) => [...state, idx])
         }
-    };
+    }
 
     const expandOutputInfo = (idx: number) => {
-        const exist = outputExpanded.some((x) => x === idx);
+        const exist = outputExpanded.some((x) => x === idx)
 
         if (exist) {
-            setOutputExpanded(outputExpanded.filter((x) => x !== idx));
+            setOutputExpanded(outputExpanded.filter((x) => x !== idx))
         } else {
-            setOutputExpanded((state) => [...state, idx]);
+            setOutputExpanded((state) => [...state, idx])
         }
-    };
+    }
 
     return (
         <>
@@ -161,7 +163,7 @@ export const StreamMidiInfo = (props: IOwnProps) => {
                             inputs.map((input, idx) => {
                                 const devExpanded = inputExpanded.some(
                                     (x) => x === idx
-                                );
+                                )
 
                                 return (
                                     <React.Fragment key={idx}>
@@ -276,7 +278,7 @@ export const StreamMidiInfo = (props: IOwnProps) => {
                                             </div>
                                         </Collapse>
                                     </React.Fragment>
-                                );
+                                )
                             })
                         )}
                     </div>
@@ -290,7 +292,7 @@ export const StreamMidiInfo = (props: IOwnProps) => {
                             outputs.map((input, idx) => {
                                 const devExpanded = outputExpanded.some(
                                     (x) => x === idx
-                                );
+                                )
 
                                 return (
                                     <React.Fragment key={idx}>
@@ -380,11 +382,11 @@ export const StreamMidiInfo = (props: IOwnProps) => {
                                             </div>
                                         </Collapse>
                                     </React.Fragment>
-                                );
+                                )
                             })}
                     </div>
                 </div>
             )}
         </>
-    );
-};
+    )
+}

@@ -14,13 +14,13 @@ import {
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { MainButton } from '../../components/Buttons/MainButton'
-import { AppScreen } from '../../enum/AppScreen'
+import { Page } from '../../enum/Page'
 import { Routes } from '../../router/Routes'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import {
     SetDashboardSection,
     SetRegisteringAction,
-    ShowScreenAction
+    ShowPageAction
 } from '../../state/contexts/app/Actions'
 import { getAppState } from '../../state/contexts/app/Selectors'
 import { getUserState } from '../../state/contexts/user/Selectors'
@@ -37,21 +37,18 @@ export interface IOwnProps {
     handleProfileMenuOpen: (event: React.MouseEvent<HTMLElement>) => void
 }
 
-export const MenuBar: React.FC<IOwnProps> = (props) => {
+export const MenuBar = () => {
     const [viewingWebsite, setViewingWebsite] = useState<boolean>(true)
     const { user } = useSelector(getUserState)
-    const { currentScreen } = useSelector(getAppState)
+    const { page } = useSelector(getAppState)
     const dispatch = useDispatch()
     const { classes } = useStyles()
 
     const { basket } = useSelector(getCheckoutState)
 
     useEffect(() => {
-        setViewingWebsite(
-            currentScreen === AppScreen.Home ||
-                currentScreen === AppScreen.Login
-        )
-    }, [currentScreen])
+        setViewingWebsite(page === Page.Home || page === Page.Login)
+    }, [page])
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
         null
@@ -65,9 +62,9 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
         setAnchorElNav(null)
     }
 
-    const goToPage = (screen: AppScreen) => {
+    const goToPage = (screen: Page) => {
         setAnchorElNav(null)
-        dispatch(ShowScreenAction({ screen }))
+        dispatch(ShowPageAction(screen))
     }
 
     return (
@@ -101,11 +98,7 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                     >
                         <span
                             style={{ cursor: 'pointer' }}
-                            onClick={() =>
-                                dispatch(
-                                    ShowScreenAction({ screen: AppScreen.Home })
-                                )
-                            }
+                            onClick={() => dispatch(ShowPageAction(Page.Home))}
                         >
                             MidPoint.
                         </span>
@@ -131,9 +124,7 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                                         onClick={() => {
                                             setViewingWebsite(false)
                                             dispatch(
-                                                ShowScreenAction({
-                                                    screen: AppScreen.Dashboard
-                                                })
+                                                ShowPageAction(Page.Dashboard)
                                             )
                                         }}
                                     />
@@ -149,9 +140,7 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                                                     SetRegisteringAction(false)
                                                 )
                                                 dispatch(
-                                                    ShowScreenAction({
-                                                        screen: AppScreen.Login
-                                                    })
+                                                    ShowPageAction(Page.Login)
                                                 )
                                             }}
                                         >
@@ -164,9 +153,7 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                                                     SetRegisteringAction(true)
                                                 )
                                                 dispatch(
-                                                    ShowScreenAction({
-                                                        screen: AppScreen.Login
-                                                    })
+                                                    ShowPageAction(Page.Login)
                                                 )
                                             }}
                                         />
@@ -245,17 +232,16 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
                                 (x) =>
                                     x.displayOnMenu &&
                                     (!x.memberOnly || (x.memberOnly && !!user))
-                            ).map((page, idx) => {
-                                if (!!user && page.screen === AppScreen.Login)
-                                    return
+                            ).map((route, idx) => {
+                                if (!!user && route.page === Page.Login) return
 
                                 return (
                                     <MenuItem
                                         key={idx}
-                                        onClick={() => goToPage(page.screen)}
+                                        onClick={() => goToPage(route.page)}
                                     >
                                         <Typography textAlign="center">
-                                            {page.menuName}
+                                            {route.menuName}
                                         </Typography>
                                     </MenuItem>
                                 )
@@ -274,9 +260,7 @@ export const MenuBar: React.FC<IOwnProps> = (props) => {
             {basket.length > 0 && (
                 <div
                     onClick={() => {
-                        dispatch(
-                            ShowScreenAction({ screen: AppScreen.Dashboard })
-                        )
+                        dispatch(ShowPageAction(Page.Dashboard))
                         dispatch(SetDashboardSection(DashboardSection.Payment))
                     }}
                     style={{

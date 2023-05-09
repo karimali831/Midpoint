@@ -14,6 +14,9 @@ export const getUser = /* GraphQL */ `
       defaultMidiDevice
       purchasedTokens
       remainingTokens
+      totalStreams
+      totalSeconds
+      lastStream
       createdInstanceId
       hostRoomUser {
         items {
@@ -61,6 +64,9 @@ export const listUsers = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -91,6 +97,9 @@ export const getHostRoomUser = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -167,6 +176,9 @@ export const listHostRoomUsers = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -217,6 +229,9 @@ export const getHostRoom = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -341,6 +356,9 @@ export const getHostRoomChatMessage = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -416,6 +434,9 @@ export const listHostRoomChatMessages = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -473,6 +494,9 @@ export const hostRoomUsersByUserId = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -530,6 +554,9 @@ export const hostRoomUsersByHostRoomId = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -634,6 +661,9 @@ export const hostRoomChatMessagesByUserId = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -690,6 +720,9 @@ export const hostRoomChatMessagesByRoomId = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt

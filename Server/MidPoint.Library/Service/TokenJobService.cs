@@ -63,7 +63,6 @@ namespace MidPoint.Library.Service
                 var customerId = instance.Tags.First(x => x.Key == "CustomerId").Value;
 
                 var user = await _awsUserService.GetAsync(awsUid);
-                var preTokens = user.RemainingTokens ?? 0;
                 var purchasedTokens = await _paymentService.GetTotalPurchasedTokens(customerId);
 
                 //var purchasedTokens = user.PurchasedTokens ?? 0;
@@ -71,7 +70,7 @@ namespace MidPoint.Library.Service
                 var tokensByMinutesUsed = deductTokens * (timeUsed.TotalMinutes - leeWayMinutes);
                 var tokens = ConvertToInt(purchasedTokens - tokensByMinutesUsed);
                 var secondsUsed = ConvertToInt(timeUsed.TotalSeconds - (leeWayMinutes * 60));
-                var deducted = preTokens - tokens;
+                var deducted = user.RemainingTokens - tokens;
 
                 if (tokens <= 0)
                     terminateInstanceIds.Add((instance.InstanceId, awsUid, customerId));
@@ -96,7 +95,7 @@ namespace MidPoint.Library.Service
                 {
                     Id = Guid.NewGuid(),
                     Ec2InstanceId = instance.InstanceId,
-                    PreTokens = preTokens,
+                    PreTokens = user.RemainingTokens,
                     PostTokens = tokens,
                     SecondsUsed = secondsUsed,
                     Deducted = deducted,

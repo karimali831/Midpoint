@@ -9,7 +9,7 @@ namespace MidPoint.Library.Repository
         Task CreateAsync(Instance model);
         Task<Instance> GetAsync(int id);
         Task SetTerminatedAsync(string instanceId);
-        Task<IEnumerable<Instance>> GetAllAsync(string awsUid, bool activeOnly);
+        Task<IEnumerable<InstanceLog>> GetCompletedAsync(string awsUid, bool activeOnly);
     }
 
     public class InstanceRepository : DapperBaseRepository, IInstanceRepository
@@ -42,11 +42,19 @@ namespace MidPoint.Library.Repository
                 });
         }
 
-        public async Task<IEnumerable<Instance>> GetAllAsync(string awsUid, bool activeOnly)
+        public async Task<IEnumerable<InstanceLog>> GetCompletedAsync(string awsUid, bool activeOnly)
         {
-            return await QueryAsync<Instance>($"{DapperHelper.SELECT(Table, Fields)} WHERE AwsUid = @awsUid {(activeOnly ? "AND Active = 1" : "")}", 
-                new { awsUid });
+            string sqlTxt = $@"
+                SELECT LaunchedDate, DATEDIFF(SECOND, LaunchedDate, TerminatedDate) AS TotalSeconds
+                FROM {Table}
+                WHERE AwsUid = @awsUid 
+                AND TerminatedDate IS NOT NULL
+                {(activeOnly ? "AND Active = 1" : "")}
+                ORDER BY TerminatedDate DESC
+            ";
+
+            return await QueryAsync<InstanceLog>(sqlTxt, new { awsUid });
         }
-        
+      
     }
 }

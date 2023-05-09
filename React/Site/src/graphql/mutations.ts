@@ -17,6 +17,9 @@ export const createUser = /* GraphQL */ `
       defaultMidiDevice
       purchasedTokens
       remainingTokens
+      totalStreams
+      totalSeconds
+      lastStream
       createdInstanceId
       hostRoomUser {
         items {
@@ -54,6 +57,9 @@ export const updateUser = /* GraphQL */ `
       defaultMidiDevice
       purchasedTokens
       remainingTokens
+      totalStreams
+      totalSeconds
+      lastStream
       createdInstanceId
       hostRoomUser {
         items {
@@ -91,6 +97,9 @@ export const deleteUser = /* GraphQL */ `
       defaultMidiDevice
       purchasedTokens
       remainingTokens
+      totalStreams
+      totalSeconds
+      lastStream
       createdInstanceId
       hostRoomUser {
         items {
@@ -135,6 +144,9 @@ export const createHostRoomUser = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -201,6 +213,9 @@ export const updateHostRoomUser = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -267,6 +282,9 @@ export const deleteHostRoomUser = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -339,6 +357,9 @@ export const createHostRoom = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -425,6 +446,9 @@ export const updateHostRoom = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -511,6 +535,9 @@ export const deleteHostRoom = /* GraphQL */ `
           defaultMidiDevice
           purchasedTokens
           remainingTokens
+          totalStreams
+          totalSeconds
+          lastStream
           createdInstanceId
           createdAt
           updatedAt
@@ -590,6 +617,9 @@ export const createHostRoomChatMessage = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -655,6 +685,9 @@ export const updateHostRoomChatMessage = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken
@@ -720,6 +753,9 @@ export const deleteHostRoomChatMessage = /* GraphQL */ `
         defaultMidiDevice
         purchasedTokens
         remainingTokens
+        totalStreams
+        totalSeconds
+        lastStream
         createdInstanceId
         hostRoomUser {
           nextToken

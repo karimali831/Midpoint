@@ -53,15 +53,6 @@ namespace MidPoint.Web.Controllers
                     Request.Headers["Stripe-Signature"],
                     _stripeConfig.Value.WebhookSecret
                 );
-
-                if (stripeEvent.Data.Object is SetupIntent setupIntent)
-                {
-                    // Update default payment method to subscription and customer entities
-                    if (stripeEvent.Type == Events.SetupIntentSucceeded)
-                    {
-                        // Attach to customer entity first before updating Subscription default payment method
-                    }
-                }
              
                 if (stripeEvent.Data.Object is Customer customer)
                 {
@@ -83,8 +74,7 @@ namespace MidPoint.Web.Controllers
                             var purchasedTokens = paymentIntent.Metadata.First(x => x.Key == "Tokens").Value;
                            
                             var user = await _awsUserService.GetAsync(billingCustomer.AwsUid);
-                            var preTokens = user.RemainingTokens ?? 0;
-                            var tokens = int.Parse(purchasedTokens) + preTokens;
+                            var tokens = int.Parse(purchasedTokens) + user.RemainingTokens;
 
                             var liveInstanceTotalDeductions = 0;
                             if (user.CreatedInstanceId is not null)
@@ -110,11 +100,7 @@ namespace MidPoint.Web.Controllers
                                 Created = DateTime.UtcNow
                             });
 
-                            //var total = await _paymentService.GetTotalPurchasedTokens(awsUid)
-                            //total - liveInstanceTotalDeductions
-
-                            //var total = await _paymentService.GetTotalPurchasedTokens(billingCustomer.CustomerId);
-
+  
                             await _awsUserService.UpdateAsync("purchasedTokens", tokens, billingCustomer.AwsUid);
                             await _awsUserService.UpdateAsync("remainingTokens", calcTokens, billingCustomer.AwsUid);
                             

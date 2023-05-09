@@ -52,7 +52,6 @@ import { SetMidPointJoinIdAction } from '../../state/contexts/stream/Actions'
 import { WebRTC } from './WebRTC'
 import WarningIcon from '@mui/icons-material/Warning'
 import { InstanceTimer } from './InstanceTimer'
-import { duration } from 'moment'
 
 export const Dashboard = () => {
     const [leeWayActive, setLeeWayActive] = useState<boolean>(true)

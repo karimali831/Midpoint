@@ -99,41 +99,61 @@ namespace MidPoint.Library.Service
                 }).Send();
             }
         }
+
         public async Task<AwsUser> GetAsync(string awsUid)
         {
-            var result = await _client.ScanAsync(new ScanRequest
+            try
             {
-                TableName = TblName,
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                var result = await _client.ScanAsync(new ScanRequest
+                {
+                    TableName = TblName,
+                    ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
                     { ":id", new AttributeValue { S = awsUid } },
                 },
-                FilterExpression = "id = :id"
-            });
+                    FilterExpression = "id = :id"
+                });
 
-            var user = result.Items.FirstOrDefault();
+                var user = result.Items.FirstOrDefault();
 
-            if (user == null)
-                throw new Exception("No email");
+                if (user == null)
+                    throw new Exception("No email");
 
-            var id = user.First(x => x.Key == "id").Value;
-            var fullName = user.First(x => x.Key == "fullName").Value;
-            var firebaseUid = user.First(x => x.Key == "firebaseUid").Value;
-            var email = user.First(x => x.Key == "email").Value;
-            var purchasedTokens = user.FirstOrDefault(x => x.Key == "purchasedTokens").Value;
-            var remainingTokens = user.FirstOrDefault(x => x.Key == "remainingTokens").Value;
-            var createdInstanceId = user.FirstOrDefault(x => x.Key == "createdInstanceId").Value;
+                var id = user.First(x => x.Key == "id").Value;
+                var fullName = user.First(x => x.Key == "fullName").Value;
+                var firebaseUid = user.First(x => x.Key == "firebaseUid").Value;
+                var email = user.First(x => x.Key == "email").Value;
+                var purchasedTokens = user.First(x => x.Key == "purchasedTokens").Value;
+                var remainingTokens = user.First(x => x.Key == "remainingTokens").Value;
+                var totalStreams = user.First(x => x.Key == "totalStreams").Value;
+                var totalSeconds = user.First(x => x.Key == "totalSeconds").Value;
+                var lastStream = user.FirstOrDefault(x => x.Key == "lastStream").Value?.S;
+                var createdInstanceId = user.FirstOrDefault(x => x.Key == "createdInstanceId").Value?.S;
 
-            return new AwsUser
+                return new AwsUser
+                {
+                    Id = id.S,
+                    FullName = fullName.S,
+                    FirebaseUid = firebaseUid.S,
+                    Email = email.S,
+                    PurchasedTokens = int.Parse(purchasedTokens.S),
+                    RemainingTokens = int.Parse(remainingTokens.N),
+                    TotalStreams = int.Parse(totalStreams.N),
+                    TotalSeconds = int.Parse(totalSeconds.N),
+                    CreatedInstanceId = createdInstanceId,
+                    LastStream = lastStream
+                };
+            }
+            catch (Exception exp)
             {
-                Id = id.S,
-                FullName = fullName.S,
-                FirebaseUid = firebaseUid.S,
-                Email = email.S,
-                PurchasedTokens = purchasedTokens.N != null ? int.Parse(purchasedTokens.N) : 0,
-                RemainingTokens = remainingTokens.N != null ? int.Parse(remainingTokens.N) : 0,
-                CreatedInstanceId = createdInstanceId?.S
-            };
+                _exceptionHandlerService.ReportException(exp).AddTags(new Dictionary<string, string?>
+                {
+                    { nameof(Exception), nameof(GetAsync) },
+                    { "AwsUid", awsUid }
+                }).Send();
+
+                throw;
+            }
         }
     }
 }

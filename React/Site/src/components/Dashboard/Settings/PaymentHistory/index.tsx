@@ -5,15 +5,18 @@ import { useSelector } from 'react-redux'
 import { getUserState } from '../../../../state/contexts/user/Selectors'
 import { BarLoader } from 'react-spinners'
 import './styles.css'
+import { motion } from 'framer-motion'
 
 export const PaymentHistory = () => {
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(GetPaymentsAction())
-    }, [])
-
     const { loadingPayments, payments } = useSelector(getUserState)
+
+    useEffect(() => {
+        if (payments.length === 0) {
+            dispatch(GetPaymentsAction())
+        }
+    }, [])
 
     return (
         <>
@@ -22,7 +25,11 @@ export const PaymentHistory = () => {
             {loadingPayments ? (
                 <BarLoader color="#36d7b7" />
             ) : (
-                <>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
                     {payments.map((payment) => {
                         return (
                             <div key={payment.id} className="item-container">
@@ -48,7 +55,7 @@ export const PaymentHistory = () => {
                             </div>
                         )
                     })}
-                </>
+                </motion.div>
             )}
         </>
     )

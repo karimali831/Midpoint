@@ -200,6 +200,10 @@ a:hover {
     margin-top: 15px;
 }
 
+.mt20 {
+    margin-top: 20px;
+}
+
 .mt30 {
     margin-top: 30px;
 }
@@ -210,6 +214,10 @@ a:hover {
 
 .mr10 {
     margin-right: 10px;
+}
+
+.mr15 {
+    margin-right: 15px;
 }
 
 .mr20 {
@@ -251,6 +259,10 @@ a:hover {
 
 .fs20 {
     font-size: 20px;
+}
+
+.fs22 {
+    font-size: 22px;
 }
 
 .fs24 {

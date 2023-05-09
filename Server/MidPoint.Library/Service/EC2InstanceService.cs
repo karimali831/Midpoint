@@ -115,7 +115,7 @@ namespace MidPoint.Library.Service
                     var totalTokenDeductions = await _tokenLogRepository.GetTotalDeductions(instance.InstanceId);
 
                     // Deduct purchase tokens used 
-                    var calc = (user.PurchasedTokens ?? 0) - totalTokenDeductions;
+                    var calc = user.PurchasedTokens - totalTokenDeductions;
                     await _awsUserService.UpdateAsync("purchasedTokens", (calc < 0 ? 0 : calc).ToString(),
                         instance.AwsUid);
 
@@ -130,6 +130,19 @@ namespace MidPoint.Library.Service
                     
                     // Terminate instance in local db
                     await _instanceRepository.SetTerminatedAsync(instance.InstanceId);
+
+                    // Update total streams and last stream
+                    var completedStreams = await _instanceRepository.GetCompletedAsync(instance.AwsUid, activeOnly: false);
+                    var lastStream = completedStreams.First();
+
+                    await _awsUserService.UpdateAsync("totalStreams", completedStreams.Count(),
+                       instance.AwsUid);
+
+                    await _awsUserService.UpdateAsync("lastStream", completedStreams.First().LaunchedDate.ToString("dd/MM/yyyy HH:mm"),
+                       instance.AwsUid);
+
+                    await _awsUserService.UpdateAsync("totalSeconds", completedStreams.Sum(x => x.TotalSeconds),
+                       instance.AwsUid);
                 }
             }
             catch (Exception exp)

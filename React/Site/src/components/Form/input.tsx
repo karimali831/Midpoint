@@ -1,28 +1,27 @@
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import React, { useRef, useState } from 'react';
-import { IFormMessage } from '../../enum/IFormMessage';
-import { FormValidation } from '../../screens/Login';
-import { IsValidEmail, isValidUrl } from '../../utils/Validators';
-import { FormMessage } from './message';
-import './styles.css';
+import CheckIcon from '@mui/icons-material/Check'
+import CloseIcon from '@mui/icons-material/Close'
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
+import React, { useRef, useState } from 'react'
+import { IFormMessage } from '../../enum/IFormMessage'
+import { IsValidEmail, isValidUrl } from '../../utils/Validators'
+import { FormMessage } from './message'
+import './styles.css'
+import { FormValidation } from '../Login'
 
 interface IOwnProps {
     placeholder: string
     validation: FormValidation
-    type?: "text" | "password"
+    type?: 'text' | 'password'
     passwordToggleEnabled?: boolean
     message?: IFormMessage
-    autoCompleteOff?: boolean,
-    hideStatus?: boolean,
+    autoCompleteOff?: boolean
+    hideStatus?: boolean
     onChange: (text: string) => void
     onBlur?: (text: string) => void
 }
 
 export const FormInput: React.FC<IOwnProps> = (props) => {
-
     const ref = useRef<HTMLInputElement>(null)
     const [value, setValue] = useState<string>(props.validation.value)
     const [showPwd, setShowPwd] = useState<boolean>(false)
@@ -40,7 +39,7 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
         onBlur,
         validation: {
             minCharsRequired,
-            maxCharsRequired,
+            // maxCharsRequired,
             emailValidator,
             urlValidator
         }
@@ -56,17 +55,17 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
 
     React.useEffect(() => {
         if (!!alert) {
-            if (value.length >= Number(minCharsRequired) || value.length === 0) {
+            if (
+                value.length >= Number(minCharsRequired) ||
+                value.length === 0
+            ) {
                 setAlert(undefined)
                 setValidValue(false)
             }
         }
-
-
     }, [value])
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
         setValue(e.target.value)
         onChange(e.target.value)
     }
@@ -77,39 +76,36 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
         if (e.target.value.length < Number(minCharsRequired)) {
             if (value.length > 0) {
                 setAlert({
-                    message: `${placeholder}  ${(minCharsRequired === 1 ? "cannot be empty." : `must be at least ${minCharsRequired} characters.`)}`
+                    message: `${placeholder}  ${
+                        minCharsRequired === 1
+                            ? 'cannot be empty.'
+                            : `must be at least ${minCharsRequired} characters.`
+                    }`
                 })
-            }
-            else {
+            } else {
                 if (validValue) {
                     setValidValue(false)
                 }
             }
-        }
-        else if (emailValidator) {
+        } else if (emailValidator) {
             if (!IsValidEmail(value)) {
                 setAlert({
                     message: `The email address is badly formatted.` // same as aws server  error
                 })
-            }
-            else {
+            } else {
                 setAlert(undefined)
                 setValidValue(true)
             }
-        }
-        else if (urlValidator) {
+        } else if (urlValidator) {
             if (!isValidUrl(value)) {
                 setAlert({
                     message: `The link is badly formatted.`
                 })
-            }
-            else {
+            } else {
                 setAlert(undefined)
                 setValidValue(true)
             }
-        }
-
-        else {
+        } else {
             setValidValue(true)
         }
 
@@ -123,31 +119,44 @@ export const FormInput: React.FC<IOwnProps> = (props) => {
                     ref={ref}
                     className="mp"
                     placeholder={placeholder}
-                    type={type ?? (passwordToggleEnabled ? !showPwd ? "password" : "text" : "text")}
+                    type={
+                        type ??
+                        (passwordToggleEnabled
+                            ? !showPwd
+                                ? 'password'
+                                : 'text'
+                            : 'text')
+                    }
                     style={{ width: '100%' }}
-                    autoComplete={autoCompleteOff ? "off" : undefined}
+                    autoComplete={autoCompleteOff ? 'off' : undefined}
                     onChange={onInputChange}
                     onBlur={onInputBlur}
                     value={value}
                 />
                 <div style={{ position: 'absolute', top: 20, right: 0 }}>
-                    {!!passwordToggleEnabled &&
+                    {!!passwordToggleEnabled && (
                         <span onClick={() => setShowPwd(!showPwd)}>
-                            {showPwd ? <VisibilityOffOutlinedIcon style={{ color: 'grey ' }} /> : <VisibilityOutlinedIcon style={{ color: 'grey ' }} />}
+                            {showPwd ? (
+                                <VisibilityOffOutlinedIcon
+                                    style={{ color: 'grey ' }}
+                                />
+                            ) : (
+                                <VisibilityOutlinedIcon
+                                    style={{ color: 'grey ' }}
+                                />
+                            )}
                         </span>
-                    }
-                    
-                    {
-                        !hideStatus ?
-                            <>
-                                {!!alert ? <CloseIcon style={{ color: "#C41919" }} /> :
-                                    validValue ? <CheckIcon style={{ color: "#45C419" }} />
-                                        : null
-                                }
-                            </>
+                    )}
 
-                        : null
-                    }
+                    {!hideStatus ? (
+                        <>
+                            {!!alert ? (
+                                <CloseIcon style={{ color: '#C41919' }} />
+                            ) : validValue ? (
+                                <CheckIcon style={{ color: '#45C419' }} />
+                            ) : null}
+                        </>
+                    ) : null}
                 </div>
 
                 {!!alert && <FormMessage message={alert} />}

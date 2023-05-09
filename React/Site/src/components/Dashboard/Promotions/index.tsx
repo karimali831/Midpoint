@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import './styles.css'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { getUserState } from '../../../state/contexts/user/Selectors'
 import { BarLoader } from 'react-spinners'
 import { GetPromotionsAction } from '../../../state/contexts/user/Actions'
+import { motion } from 'framer-motion'
 
 export const Promotions = () => {
-    const [dense, setDense] = useState(true)
-    const [secondary, setSecondary] = useState(true)
-
     const { promotions, user, loadingPromoCodes } = useSelector(getUserState)
 
     const dispatch = useDispatch()
@@ -17,7 +15,9 @@ export const Promotions = () => {
     if (user?.purchasedTokens == 0) return null
 
     useEffect(() => {
-        dispatch(GetPromotionsAction())
+        if (promotions.length === 0) {
+            dispatch(GetPromotionsAction())
+        }
     }, [])
 
     return (
@@ -27,39 +27,45 @@ export const Promotions = () => {
             {loadingPromoCodes ? (
                 <BarLoader color="#36d7b7" />
             ) : (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Expires</th>
-                            <th>They Claimed</th>
-                            <th>You Claimed</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {promotions.length > 0 &&
-                            promotions.map((promo, idx) => {
-                                return (
-                                    <tr key={idx}>
-                                        <td>{promo.couponName}</td>
-                                        <td>{promo.code}</td>
-                                        <td>{promo.expiresStr}</td>
-                                        <td>
-                                            {promo.receiverClaimedDateStr
-                                                ? 'Yes'
-                                                : 'No'}
-                                        </td>
-                                        <td>
-                                            {promo.creatorClaimedDateStr
-                                                ? 'Yes'
-                                                : 'No'}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                    </tbody>
-                </table>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Expires</th>
+                                <th>They Claimed</th>
+                                <th>You Claimed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {promotions.length > 0 &&
+                                promotions.map((promo, idx) => {
+                                    return (
+                                        <tr key={idx}>
+                                            <td>{promo.couponName}</td>
+                                            <td>{promo.code}</td>
+                                            <td>{promo.expiresStr}</td>
+                                            <td>
+                                                {promo.receiverClaimedDateStr
+                                                    ? 'Yes'
+                                                    : 'No'}
+                                            </td>
+                                            <td>
+                                                {promo.creatorClaimedDateStr
+                                                    ? 'Yes'
+                                                    : 'No'}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                        </tbody>
+                    </table>
+                </motion.div>
             )}
         </>
     )

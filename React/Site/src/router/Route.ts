@@ -1,10 +1,10 @@
-import { ReactElement } from 'react';
-import { AppScreen } from '../enum/AppScreen';
+import { ReactElement } from 'react'
+import { Page } from '../enum/Page'
 
 export interface IRoute {
-    screen: AppScreen
+    page: Page
     displayOnMenu: boolean
-    memberOnly: boolean;
+    memberOnly: boolean
     component: React.ComponentType<any>
     menuName?: string
     icon?: ReactElement

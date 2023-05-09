@@ -8,7 +8,7 @@ import {
     SetRegisteringAction,
     SetSettingAction,
     SetSoftwareAction,
-    ShowScreenAction
+    ShowPageAction
 } from './Actions'
 import { appInitialState } from './IAppState'
 
@@ -28,8 +28,8 @@ export const appReducer = createReducer(appInitialState, (builder) => {
             state.appReady = modify
         })
 
-        .addCase(ShowScreenAction, (state, action) => {
-            state.currentScreen = action.payload.screen
+        .addCase(ShowPageAction, (state, action) => {
+            state.page = action.payload
         })
         .addCase(SetOnConfirmLoadingAction, (state, action) => {
             state.modalOnConfirmLoading = action.payload

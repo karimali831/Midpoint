@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidPoint.Web", "MidPoint.Web.csproj", "{9F903AB1-89AA-4E25-8003-FAE7CCBAC10D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidPoint.Library", "..\MidPoint.Library\MidPoint.Library.csproj", "{16ADC255-D736-4755-82C1-D6E585A2362A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidPoint.Library", "..\MidPoint.Library\MidPoint.Library.csproj", "{16ADC255-D736-4755-82C1-D6E585A2362A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

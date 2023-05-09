@@ -1,24 +1,7 @@
-import { NavigatorScreenParams } from '@react-navigation/native';
-import firebase from "firebase/app";
-import { AppScreen } from '../src/enum/AppScreen';
-
-export type TopNavigatorParamsList = {
-    Splash: undefined;
-    Tabs: undefined;
-};
-
-export type RootNavigatorParamsList = {
-    "MidPoint": NavigatorScreenParams<TopNavigatorParamsList>;
-};
-
-export type RouteParamList = {
-    [AppScreen.Dashboard]: undefined;
-    [AppScreen.Home]: undefined;
-    [AppScreen.Login]: undefined;
-};
+import { User } from 'firebase/auth'
 
 export type HostParams = {
     midPointJoinId: string
 }
 
-export type IFirebaseUser = firebase.User
+export type IFirebaseUser = User

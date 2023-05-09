@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 const useNetworkStatus = () => {
-    const [connected, setConnected] = useState(navigator.onLine);
+    const [connected, setConnected] = useState(navigator.onLine)
 
     // useEffect(() => {
     //      const networkState = async () => {
@@ -12,28 +12,28 @@ const useNetworkStatus = () => {
     //                 }
     //                 else {
     //                     setConnected(false)
-    //                
+    //
     //             })
     //     }
 
     //     networkState()
     // }, [])
 
-    const setStatus = (status: boolean) => {
-        setConnected(status);
-    };
+    // const setStatus = (status: boolean) => {
+    //     setConnected(status);
+    // };
 
     useEffect(() => {
-        window.addEventListener('online', () => setConnected(true));
-        window.addEventListener('offline', () => setConnected(false));
+        window.addEventListener('online', () => setConnected(true))
+        window.addEventListener('offline', () => setConnected(false))
 
         return () => {
-            window.removeEventListener('online', () => setConnected(true));
-            window.removeEventListener('offline', () => setConnected(false));
-        };
-    }, []);
+            window.removeEventListener('online', () => setConnected(true))
+            window.removeEventListener('offline', () => setConnected(false))
+        }
+    }, [])
 
-    return connected;
-};
+    return connected
+}
 
-export default useNetworkStatus;
+export default useNetworkStatus

@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { hideLoading, showLoading } from 'react-redux-loading-bar'
 import { useSelector } from 'react-redux'
-import {
-    getLoadingBar,
-    getStreamState
-} from '../../../state/contexts/stream/Selectors'
+import { getStreamState } from '../../../state/contexts/stream/Selectors'
 import {
     SetDashboardSection,
     SetMidPointStep
@@ -39,7 +36,7 @@ export const StartStream = () => {
 
     if (!user || !selectedHostRoom) return null
 
-    const percentage = useSelector(getLoadingBar)
+    // const percentage = useSelector(getLoadingBar)
     const { userConnection } = useSelector(getStreamState)
     const { instance } = useSelector(getInstanceState)
 
@@ -130,12 +127,12 @@ export const StartStream = () => {
         // setTimeout(() =>  start(uc), 2000)
     }
 
-    const SoundPlay = (src: any) => {
-        // const sound = new Howl({
-        //     src
-        // })
-        // sound.play()
-    }
+    // const SoundPlay = (src: any) => {
+    // const sound = new Howl({
+    //     src
+    // })
+    // sound.play()
+    // }
 
     // Howler.volume(1.0)
 

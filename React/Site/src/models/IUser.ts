@@ -1,6 +1,5 @@
-
 export interface IUser {
-    id: string;
+    id: string
     firebaseUid: string
     email: string
     displayName: string
@@ -8,5 +7,7 @@ export interface IUser {
     purchasedTokens: number | null
     remainingTokens: number | null
     createdInstanceId: string | null
+    totalStreams: number
+    totalSeconds: number
+    lastStream: string | null
 }
-
