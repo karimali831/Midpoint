@@ -2,8 +2,8 @@
 using MidPoint.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using MidPoint.Library.DTO;
-using MidPoint.Library.Model.Db;
 using Coupon = MidPoint.Library.Model.Db.Coupon;
+using MidPoint.Library.Model;
 
 namespace MidPoint.Web.Controllers.Api
 {
@@ -16,19 +16,28 @@ namespace MidPoint.Web.Controllers.Api
         private readonly IPromotionService _promotionService;
         private readonly IStripeCustomerService _stripeCustomerService;
         private readonly IBillingCustomerService _billingCustomerService;
+        private readonly IAwsUserService _awsUserService;
 
         public OrderController(
             IStripePaymentService stripePaymentService,
             IStripePriceService stripePriceService,
             IPromotionService promotionService,
             IBillingCustomerService billingCustomerService,
-            IStripeCustomerService stripeCustomerService)
+            IStripeCustomerService stripeCustomerService,
+            IAwsUserService awsUserService)
         {
             _stripePaymentService = stripePaymentService;
             _stripePriceService = stripePriceService;
             _promotionService = promotionService;
             _billingCustomerService = billingCustomerService;
             _stripeCustomerService = stripeCustomerService;
+            _awsUserService = awsUserService;
+        }
+
+        [HttpGet(nameof(GetUser))]
+        public async Task<AwsUser> GetUser()
+        {
+            return await _awsUserService.GetAsync("d773226e-b9e0-4472-8117-7808bcddf5d7");
         }
 
         [HttpGet(nameof(GetPricingModel))]

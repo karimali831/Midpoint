@@ -4,11 +4,13 @@ import StreamOutlinedIcon from '@mui/icons-material/StreamOutlined'
 import { motion } from 'framer-motion'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { DashboardSection } from '../../enum/DashboardSection'
-import { SetDashboardSection } from '../../state/contexts/app/Actions'
-import { getUserState } from '../../state/contexts/user/Selectors'
-import { DashboardCard } from './DashboardCard'
-import { dateDiff } from '../../utils/Utils'
+import { getUserState } from '../../../state/contexts/user/Selectors'
+import { DashboardCard } from '../DashboardCard'
+import { SetDashboardSection } from '../../../state/contexts/app/Actions'
+import { DashboardSection } from '../../../enum/DashboardSection'
+import { dateDiff, ordinalDate } from '../../../utils/Utils'
+import './styles.css'
+import moment from 'moment'
 
 export const DashboardOverview = () => {
     const dispatch = useDispatch()
@@ -22,6 +24,14 @@ export const DashboardOverview = () => {
     // }, [dashboardSection])
 
     if (!user) return null
+
+    let lastStreamDaysAgo
+    if (user.lastStream) {
+        lastStreamDaysAgo = dateDiff(
+            moment(new Date()),
+            moment(user.lastStream)
+        )
+    }
 
     return (
         <>
@@ -44,6 +54,7 @@ export const DashboardOverview = () => {
                         >
                             <span>Tokens</span>
                             <div
+                                className="get-tokens-btn align-6 link"
                                 onClick={() =>
                                     dispatch(
                                         SetDashboardSection(
@@ -51,16 +62,6 @@ export const DashboardOverview = () => {
                                         )
                                     )
                                 }
-                                style={{
-                                    width: 100,
-                                    borderRadius: 25,
-                                    border: '1px solid #eee',
-                                    padding: 5,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer'
-                                }}
                             >
                                 <span>Get tokens</span>
                             </div>
@@ -72,7 +73,14 @@ export const DashboardOverview = () => {
                     icon={<StreamIcon />}
                     outlined={true}
                 >
-                    <div className="align-2">
+                    <div
+                        className="align-7 link"
+                        onClick={() =>
+                            dispatch(
+                                SetDashboardSection(DashboardSection.Streams)
+                            )
+                        }
+                    >
                         <span className="fs22">
                             {user.totalStreams} stream
                             {user.totalStreams === 1 ? '' : 's'}
@@ -90,13 +98,28 @@ export const DashboardOverview = () => {
                     icon={<StreamOutlinedIcon />}
                     outlined={true}
                 >
-                    <div className="align-2">
+                    <div
+                        className="align-7 link"
+                        onClick={() =>
+                            dispatch(
+                                SetDashboardSection(DashboardSection.Streams)
+                            )
+                        }
+                    >
                         <span className="fs22 mr15">
-                            {user.lastStream ?? 'No streams'}
+                            {user.lastStream
+                                ? ordinalDate(
+                                      moment(user.lastStream).format(`MMMM, E`)
+                                  )
+                                : 'No streams'}
                         </span>
                         {user.lastStream && (
                             <span className="fs12">
-                                {dateDiff(user.lastStream, Date.UTC)} days ago
+                                {lastStreamDaysAgo === 0
+                                    ? 'Today'
+                                    : ` day${
+                                          lastStreamDaysAgo === 1 ? '' : 's'
+                                      } ago`}
                             </span>
                         )}
                     </div>

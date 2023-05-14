@@ -134,7 +134,7 @@ namespace MidPoint.Web.Controllers
             }
             catch (StripeException exp)
             {
-                _exceptionHandlerService.ReportException(exp)
+                _exceptionHandlerService.ReportException(exp.InnerException ?? exp)
                     .AddTags(new Dictionary<string, string?> { 
                         { "Stripe", "Webhook"  } 
                     })
@@ -143,7 +143,7 @@ namespace MidPoint.Web.Controllers
             }
             catch (Exception exp)
             {
-                _exceptionHandlerService.ReportException(exp)
+                _exceptionHandlerService.ReportException(exp.InnerException ?? exp)
                     .AddTags(new Dictionary<string, string?> {
                         { "Stripe", "Webhook"  }
                     })

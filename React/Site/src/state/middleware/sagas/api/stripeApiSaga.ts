@@ -11,6 +11,7 @@ import {
     CreatePaymentIntentFailureAction,
     CreatePaymentIntentSuccessAction,
     GetPricingPlanAction,
+    GetPricingPlanFailureAction,
     GetPricingPlanSuccessAction
 } from '../../../contexts/checkout/Actions'
 import { getUser } from '../../../contexts/user/Selectors'
@@ -30,6 +31,7 @@ export function* getPricingPlan() {
         yield put(GetPricingPlanSuccessAction(response))
     } catch (e: any) {
         console.error(e)
+        yield put(GetPricingPlanFailureAction())
         toast.error('Server error occurred')
     }
 }

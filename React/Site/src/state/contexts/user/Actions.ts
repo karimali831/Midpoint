@@ -31,6 +31,7 @@ const SignOutAction = createAction('@@User/SignOutAction')
 const GetPromotionsSuccessAction = createAction<IPromotion[]>(
     '@@User/GetPromotionsSuccess'
 )
+const GetPromotionsFailureAction = createAction('@@User/GetPromotionsFailure')
 const GetPromotionsAction = createAction('@@Checkout/GetPromotions')
 const GetPaymentsSuccessAction = createAction<IPayment[]>(
     '@@User/GetPaymentsSuccess'
@@ -54,5 +55,6 @@ export {
     GetPromotionsSuccessAction,
     GetPromotionsAction,
     GetPaymentsSuccessAction,
-    GetPaymentsAction
+    GetPaymentsAction,
+    GetPromotionsFailureAction
 }

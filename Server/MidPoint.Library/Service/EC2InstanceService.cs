@@ -25,7 +25,7 @@ namespace MidPoint.Library.Service
         private readonly IExceptionHandlerService _exceptionHandlerService;
         private readonly ITokenLogRepository _tokenLogRepository;
         private readonly IPaymentService _paymentService;
-        private readonly IInstanceRepository _instanceRepository;
+        private readonly IInstanceService _instanceService;
 
         public Ec2InstanceService(
             IOptions<AwsConfig> awsConfig,
@@ -33,12 +33,12 @@ namespace MidPoint.Library.Service
             ITokenLogRepository tokenLogRepository,
             IPaymentService paymentService,
             IExceptionHandlerService exceptionHandlerService, 
-            IInstanceRepository instanceRepository)
+            IInstanceService instanceService)
         {
             _awsUserService = awsUserService;
             _paymentService = paymentService;
             _exceptionHandlerService = exceptionHandlerService;
-            _instanceRepository = instanceRepository;
+            _instanceService = instanceService;
             _tokenLogRepository = tokenLogRepository;
 
             var accessKey = awsConfig.Value.AccessKey;
@@ -129,19 +129,18 @@ namespace MidPoint.Library.Service
                     await _paymentService.SetInactiveAsync(instance.CustomerId);
                     
                     // Terminate instance in local db
-                    await _instanceRepository.SetTerminatedAsync(instance.InstanceId);
+                    await _instanceService.SetTerminatedAsync(instance.InstanceId);
 
                     // Update total streams and last stream
-                    var completedStreams = await _instanceRepository.GetCompletedAsync(instance.AwsUid, activeOnly: false);
-                    var lastStream = completedStreams.First();
+                    var completedStreams = await _instanceService.GetCompletedAsync(instance.AwsUid, activeOnly: false);
 
-                    await _awsUserService.UpdateAsync("totalStreams", completedStreams.Count(),
+                    await _awsUserService.UpdateAsync("totalStreams", completedStreams.Count,
+                       instance.AwsUid);
+                    
+                    await _awsUserService.UpdateAsync("lastStream", completedStreams.First().LaunchedDate,
                        instance.AwsUid);
 
-                    await _awsUserService.UpdateAsync("lastStream", completedStreams.First().LaunchedDate.ToString("dd/MM/yyyy HH:mm"),
-                       instance.AwsUid);
-
-                    await _awsUserService.UpdateAsync("totalSeconds", completedStreams.Sum(x => x.TotalSeconds),
+                    await _awsUserService.UpdateAsync("totalSeconds", completedStreams.Sum(x => x.MinutesUsed),
                        instance.AwsUid);
                 }
             }
@@ -185,7 +184,7 @@ namespace MidPoint.Library.Service
             await CheckState(new List<string> { instance.InstanceId });
             await _awsUserService.UpdateAsync("createdInstanceId", instance.InstanceId, awsUid);
 
-            await _instanceRepository.CreateAsync(new Model.Db.Instance
+            await _instanceService.CreateAsync(new Model.Db.Instance
             {
                 Id = instance.InstanceId,
                 AwsUid = awsUid,

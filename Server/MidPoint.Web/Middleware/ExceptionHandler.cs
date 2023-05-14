@@ -30,8 +30,8 @@ public static class ExceptionMiddleware
 
                     if (exception != null)
                     {
-                        var exceptionHandlerService = app.ApplicationServices.GetService<IExceptionHandlerService>(); 
-                        exceptionHandlerService?.ReportException(exception.Error).Send();
+                        var exceptionHandlerService = app.ApplicationServices.GetRequiredService<IExceptionHandlerService>(); 
+                        exceptionHandlerService.ReportException(exception.Error).Send();
 
                         if (env.IsDevelopment())
                         {

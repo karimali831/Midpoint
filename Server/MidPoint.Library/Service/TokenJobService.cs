@@ -16,7 +16,6 @@ namespace MidPoint.Library.Service
         private readonly IAwsUserService _awsUserService;
         private readonly IEc2InstanceService _ec2InstanceService;
         private readonly ITokenLogRepository _tokenLogRepository;
-        private readonly IHostEnvironment _hostEnvironment;
         private readonly IPaymentService _paymentService;
 
         public TokenJobService(
@@ -29,7 +28,6 @@ namespace MidPoint.Library.Service
             _awsUserService = awsUserService;
             _ec2InstanceService = ec2InstanceService;
             _tokenLogRepository = tokenLogRepository;
-            _hostEnvironment = hostEnvironment;
             _paymentService = paymentService;
         }
 
@@ -81,7 +79,6 @@ namespace MidPoint.Library.Service
 
                 var infoObj = new
                 {
-                    _hostEnvironment.EnvironmentName,
                     utcNowDate,
                     launchDate,
                     timeUsed,

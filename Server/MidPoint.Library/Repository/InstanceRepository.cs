@@ -9,7 +9,7 @@ namespace MidPoint.Library.Repository
         Task CreateAsync(Instance model);
         Task<Instance> GetAsync(int id);
         Task SetTerminatedAsync(string instanceId);
-        Task<IEnumerable<InstanceLog>> GetCompletedAsync(string awsUid, bool activeOnly);
+        Task<IList<InstanceLog>> GetCompletedAsync(string awsUid, bool activeOnly);
     }
 
     public class InstanceRepository : DapperBaseRepository, IInstanceRepository
@@ -28,13 +28,15 @@ namespace MidPoint.Library.Repository
 
         public async Task<Instance> GetAsync(int id)
         {
-            return await QuerySingleAsync<Instance>($"{DapperHelper.SELECT(Table, Fields)} WHERE Id = @id AND Active = 1",
+            return await QuerySingleAsync<Instance>(
+                $"{DapperHelper.SELECT(Table, Fields)} WHERE Id = @id AND Active = 1",
                 new { id });
         }
 
         public async Task SetTerminatedAsync(string instanceId)
         {
-            await ExecuteAsync($"UPDATE {Table} SET Status = @status, TerminatedDate = GETDATE() WHERE Id = @instanceId", 
+            await ExecuteAsync(
+                $"UPDATE {Table} SET Status = @status, TerminatedDate = GETDATE() WHERE Id = @instanceId",
                 new
                 {
                     status = Ec2InstanceStatus.Terminated,
@@ -42,10 +44,15 @@ namespace MidPoint.Library.Repository
                 });
         }
 
-        public async Task<IEnumerable<InstanceLog>> GetCompletedAsync(string awsUid, bool activeOnly)
+        public async Task<IList<InstanceLog>> GetCompletedAsync(string awsUid, bool activeOnly)
         {
-            string sqlTxt = $@"
-                SELECT LaunchedDate, DATEDIFF(SECOND, LaunchedDate, TerminatedDate) AS TotalSeconds
+            var sqlTxt = $@"
+                SELECT 
+                    LaunchedDate, 
+                    TerminatedDate, 
+                    Status, 
+                    DATEDIFF(SECOND, LaunchedDate, TerminatedDate) AS SecondsUsed, 
+                    DATEDIFF(MINUTE, LaunchedDate, TerminatedDate) AS MinutesUsed
                 FROM {Table}
                 WHERE AwsUid = @awsUid 
                 AND TerminatedDate IS NOT NULL
@@ -53,8 +60,8 @@ namespace MidPoint.Library.Repository
                 ORDER BY TerminatedDate DESC
             ";
 
-            return await QueryAsync<InstanceLog>(sqlTxt, new { awsUid });
+            return (await QueryAsync<InstanceLog>(sqlTxt, new { awsUid }))
+                .ToList();
         }
-      
     }
 }

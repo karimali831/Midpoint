@@ -6,6 +6,7 @@ import {
     GetPaymentsAction,
     GetPaymentsSuccessAction,
     GetPromotionsAction,
+    GetPromotionsFailureAction,
     GetPromotionsSuccessAction,
     GetUserSuccessAction,
     LoginSuccessAction,
@@ -56,6 +57,9 @@ export const userReducer = createReducer(userInitialState, (builder) => {
         })
         .addCase(GetPromotionsSuccessAction, (state, action) => {
             state.promotions = action.payload
+            state.loadingPromoCodes = false
+        })
+        .addCase(GetPromotionsFailureAction, (state) => {
             state.loadingPromoCodes = false
         })
         .addCase(GetPromotionsAction, (state) => {

@@ -4,21 +4,15 @@ namespace MidPoint.Library.ExceptionHandler.Sentry
 {
     public class SentryErrorBuilder : IErrorBuilder
     {
-        private readonly Exception exception;
-        private readonly List<SentryObject> objects = new();
-        private readonly IDictionary<string, string> tags = new Dictionary<string, string>();
-        private readonly SentryClient sentryClient;
+        private readonly Exception _exception;
+        private readonly List<SentryObject> _objects = new();
+        private readonly IDictionary<string, string> _tags = new Dictionary<string, string>();
 
         internal SentryErrorBuilder(Exception exception)
         {
-            this.exception = exception;
+            _exception = exception;
         }
         
-        private IErrorBuilder AddObject(object data, string name = null, int? maxDepth = 1)
-        {
-            objects.Add(new SentryObject { Data = data, Name = name, MaxDepth = maxDepth });
-            return this;
-        }
         
         public IErrorBuilder AddTags(IDictionary<string, string?> tags)
         {
@@ -26,7 +20,7 @@ namespace MidPoint.Library.ExceptionHandler.Sentry
             {
                 if (!string.IsNullOrEmpty(property.Key))
                 {
-                    this.tags.Add(property);
+                    this._tags.Add(property!);
                 }
             }
             
@@ -35,20 +29,26 @@ namespace MidPoint.Library.ExceptionHandler.Sentry
 
         private SentryEvent CreateSentryEvent()
         {
-            var e = new SentryEvent(exception);
+            var eve = new SentryEvent(_exception);
             
-            foreach (var t in tags)
+            foreach (var t in _tags)
             {
-                e.SetTag(t.Key, t.Value);
+                eve.SetTag(t.Key, t.Value);
             }
-            AddDataToException(e.Exception, objects);
-            return e;
+
+            if (eve.Exception != null)
+            {
+                AddDataToException(eve.Exception, _objects);
+            }
+            
+
+            return eve;
         }
 
         public void Send()
         {
-            var e = CreateSentryEvent();
-            sentryClient.CaptureEvent(e);
+            var eve = CreateSentryEvent();
+            SentrySdk.CaptureEvent(eve);
         }
 
         private static void AddDataToException(Exception e, List<SentryObject> objects)

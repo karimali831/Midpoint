@@ -21,3 +21,43 @@ namespace MidPoint.Library.Model
 
     }
 }
+
+// N : all number types
+// S : all string types
+// B : binary type MemoryStream, byte[]
+// N : bool (0 false, 1 true)
+// BS : binary set)
+// SS : string set type
+// NS : number set type
+// S : DateTime (ISO-8601 formatted strings)
+
+// supported datetypes
+//bool
+
+//byte
+
+//char
+
+//DateTime
+
+//decimal
+
+//double
+
+//float
+
+//Int16
+
+//Int32
+
+//Int64
+
+//SByte
+
+//string
+
+//UInt16
+
+//UInt32
+
+//UInt64

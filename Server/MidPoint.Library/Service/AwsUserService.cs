@@ -1,6 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
 using MidPoint.Library.ExceptionHandler;
@@ -68,33 +67,13 @@ namespace MidPoint.Library.Service
 
                 await _client.UpdateItemAsync(request);
             }
-            catch (AmazonDynamoDBException e)
+            catch (Exception exp)
             {
-                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string?>
-                {
-                    { nameof(AmazonDynamoDBException), nameof(UpdateAsync) },
-                    { "Field", field },
-                    { "Value", value is null ? string.Empty : value.ToString()  },
-                    { "AwsUid", awsUid }
-                }).Send();
-            }
-            catch (AmazonServiceException e)
-            {
-                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string?>
+                _exceptionHandlerService.ReportException(exp).AddTags(new Dictionary<string, string?>
                 {
                     { nameof(AmazonServiceException), nameof(UpdateAsync) },
                     { "Field", field },
                     { "Value", value is null ? string.Empty : value.ToString()  },
-                    { "AwsUid", awsUid }
-                }).Send();
-            }
-            catch (Exception e)
-            {
-                _exceptionHandlerService.ReportException(e).AddTags(new Dictionary<string, string?>
-                {
-                    { nameof(Exception), nameof(UpdateAsync) },
-                    { "Field", field },
-                    { "Value", value is null ? string.Empty : value.ToString() },
                     { "AwsUid", awsUid }
                 }).Send();
             }
@@ -104,20 +83,18 @@ namespace MidPoint.Library.Service
         {
             try
             {
-                var result = await _client.ScanAsync(new ScanRequest
+                var request = new GetItemRequest
                 {
                     TableName = TblName,
-                    ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                {
-                    { ":id", new AttributeValue { S = awsUid } },
-                },
-                    FilterExpression = "id = :id"
-                });
+                    Key = new Dictionary<string, AttributeValue>() { 
+                        { "id", new AttributeValue { S = awsUid } 
+                    } },
+                };
 
-                var user = result.Items.FirstOrDefault();
+                var response = await _client.GetItemAsync(request);
 
-                if (user == null)
-                    throw new Exception("No email");
+                var user = response.Item;
+ 
 
                 var id = user.First(x => x.Key == "id").Value;
                 var fullName = user.First(x => x.Key == "fullName").Value;
@@ -127,8 +104,8 @@ namespace MidPoint.Library.Service
                 var remainingTokens = user.First(x => x.Key == "remainingTokens").Value;
                 var totalStreams = user.First(x => x.Key == "totalStreams").Value;
                 var totalSeconds = user.First(x => x.Key == "totalSeconds").Value;
-                var lastStream = user.FirstOrDefault(x => x.Key == "lastStream").Value?.S;
-                var createdInstanceId = user.FirstOrDefault(x => x.Key == "createdInstanceId").Value?.S;
+                var lastStream = user.FirstOrDefault(x => x.Key == "lastStream").Value;
+                var createdInstanceId = user.FirstOrDefault(x => x.Key == "createdInstanceId").Value;
 
                 return new AwsUser
                 {
@@ -136,12 +113,12 @@ namespace MidPoint.Library.Service
                     FullName = fullName.S,
                     FirebaseUid = firebaseUid.S,
                     Email = email.S,
-                    PurchasedTokens = int.Parse(purchasedTokens.S),
-                    RemainingTokens = int.Parse(remainingTokens.N),
-                    TotalStreams = int.Parse(totalStreams.N),
-                    TotalSeconds = int.Parse(totalSeconds.N),
-                    CreatedInstanceId = createdInstanceId,
-                    LastStream = lastStream
+                    PurchasedTokens = int.Parse(purchasedTokens.N ?? purchasedTokens.S),
+                    RemainingTokens = int.Parse(remainingTokens.N ?? remainingTokens.S),
+                    TotalStreams = int.Parse(totalStreams.N ?? totalStreams.S),
+                    TotalSeconds = int.Parse(totalSeconds.N ?? totalSeconds.S),
+                    CreatedInstanceId = createdInstanceId?.S,
+                    LastStream = lastStream?.S
                 };
             }
             catch (Exception exp)
@@ -154,6 +131,7 @@ namespace MidPoint.Library.Service
 
                 throw;
             }
+            
         }
     }
 }
