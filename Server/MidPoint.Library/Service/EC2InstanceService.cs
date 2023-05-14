@@ -137,7 +137,7 @@ namespace MidPoint.Library.Service
                     await _awsUserService.UpdateAsync("totalStreams", completedStreams.Count,
                        instance.AwsUid);
                     
-                    await _awsUserService.UpdateAsync("lastStream", completedStreams.First().LaunchedDate,
+                    await _awsUserService.UpdateAsync("lastStream", completedStreams.First().LaunchedDate.ToString("MM/dd/yyyy HH:mm"),
                        instance.AwsUid);
 
                     await _awsUserService.UpdateAsync("totalSeconds", completedStreams.Sum(x => x.MinutesUsed),

@@ -16,3 +16,23 @@ export function timeout(delay: number) {
 export const dateDiff = (first: any, second: any) => {
     return Math.round((second - first) / (1000 * 60 * 60 * 24))
 }
+
+export const ordinalDate = (input: string) => {
+    alert(input)
+
+    const [dayName, day] = input.split(',')
+    const number = Number(day.trim()) % 10
+
+    const ordinal =
+        ~~((number % 100) / 10) === 1
+            ? 'th'
+            : number === 1
+            ? 'st'
+            : number === 2
+            ? 'nd'
+            : number === 3
+            ? 'rd'
+            : 'th'
+
+    return `${dayName} ${number}${ordinal}`
+}

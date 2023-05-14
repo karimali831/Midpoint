@@ -8,7 +8,8 @@ export enum DashboardSection {
     Settings,
     Connect,
     Start,
-    Starting
+    Starting,
+    Streams
 }
 
 export enum MidPointStep {

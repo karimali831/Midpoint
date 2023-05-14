@@ -9,6 +9,7 @@ import { subscriptionApi } from '../../../api/subscriptionApi'
 import { GetUserAction } from '../../../state/contexts/user/Actions'
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
 import { Hub } from 'aws-amplify'
+import AnimatedNumbers from 'react-animated-numbers'
 import { OnUpdateUserSubscription } from '../../../API'
 import { useDispatch } from 'react-redux'
 import { SubscriptionValue } from '../../../graphql/api'
@@ -108,6 +109,7 @@ export const InstanceTimer = (props: IOwnProps) => {
                 color={minutesRemaining < 10 ? 'error' : 'info'}
             />
             <div
+                className="align-2"
                 style={{
                     marginTop: 15,
                     textAlign: isMini ? 'center' : 'left',
@@ -115,19 +117,21 @@ export const InstanceTimer = (props: IOwnProps) => {
                         minutesRemaining < 10 ? 'rgb(238, 175, 175)' : 'white'
                 }}
             >
-                {minutesRemaining}
+                <AnimatedNumbers animateToNumber={minutesRemaining} />
+                &nbsp;
                 {isMini
-                    ? ' min'
-                    : ` minute${minutesRemaining === 1 ? '' : 's'} left`}
+                    ? 'min'
+                    : `minute${minutesRemaining === 1 ? '' : 's'} left`}
             </div>
             <div
-                className="secondary fs14"
+                className="secondary fs14 align-2"
                 style={{
                     marginTop: 5,
                     textAlign: isMini ? 'center' : 'left'
                 }}
             >
-                {tokensRemaining}{' '}
+                <AnimatedNumbers animateToNumber={tokensRemaining} />
+                &nbsp;
                 {!isMini &&
                     `token${tokensRemaining === 1 ? '' : 's'} remaining`}
             </div>

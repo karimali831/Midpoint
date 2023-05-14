@@ -1,6 +1,7 @@
 import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined'
 import StreamIcon from '@mui/icons-material/Stream'
 import StreamOutlinedIcon from '@mui/icons-material/StreamOutlined'
+import AnimatedNumbers from 'react-animated-numbers'
 import { motion } from 'framer-motion'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
@@ -44,7 +45,14 @@ export const DashboardOverview = () => {
                 >
                     <div className="align-2" style={{ width: '100%' }}>
                         <span className="fs24 mr15">
-                            {user?.remainingTokens ?? 0}
+                            {user.remainingTokens != null &&
+                            user.remainingTokens > 0 ? (
+                                <AnimatedNumbers
+                                    animateToNumber={user.remainingTokens}
+                                />
+                            ) : (
+                                0
+                            )}
                         </span>
                         <div
                             className="align-1"

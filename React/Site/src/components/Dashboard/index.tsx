@@ -52,6 +52,7 @@ import { SetMidPointJoinIdAction } from '../../state/contexts/stream/Actions'
 import { WebRTC } from './WebRTC'
 import WarningIcon from '@mui/icons-material/Warning'
 import { InstanceTimer } from './InstanceTimer'
+import { Streams } from './Streams'
 
 export const Dashboard = () => {
     const [leeWayActive, setLeeWayActive] = useState<boolean>(true)
@@ -336,6 +337,8 @@ export const Dashboard = () => {
                             <Promotions />
                         ) : dashboardSection === DashboardSection.Start ? (
                             <StartStream />
+                        ) : dashboardSection === DashboardSection.Streams ? (
+                            <Streams />
                         ) : null}
                     </div>
                 </div>

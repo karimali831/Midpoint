@@ -33,6 +33,7 @@
         "howler": "^2.2.3",
         "moment": "^2.29.4",
         "react": "^18.2.0",
+        "react-animated-numbers": "^0.16.0",
         "react-device-detect": "^2.2.3",
         "react-dom": "^18.2.0",
         "react-hot-toast": "^2.4.1",

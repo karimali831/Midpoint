@@ -2,24 +2,27 @@
 using Microsoft.AspNetCore.Mvc;
 using MidPoint.Library.Enum;
 using MidPoint.Library.Model;
+using MidPoint.Library.Model.Db;
 using MidPoint.Library.Service;
 
 namespace MidPoint.Web.Controllers.Api
 {
     [Route("api/[controller]")]
-    // [ApiKey]
     [ApiController]
-    public class EC2InstanceController : ControllerBase
+    public class Ec2InstanceController : ControllerBase
     {
         private readonly IEc2InstanceService _ec2InstanceService;
         private readonly IBillingCustomerService _billingCustomerService;
+        private readonly IInstanceService _instanceService;
 
-        public EC2InstanceController(
+        public Ec2InstanceController(
             IEc2InstanceService ec2InstanceService,
-            IBillingCustomerService billingCustomerService)
+            IBillingCustomerService billingCustomerService, 
+            IInstanceService instanceService)
         {
             _ec2InstanceService = ec2InstanceService;
             _billingCustomerService = billingCustomerService;
+            _instanceService = instanceService;
         }
 
         [HttpGet("get/{instanceId}/{awsUid}")]
@@ -81,6 +84,12 @@ namespace MidPoint.Web.Controllers.Api
             };
 
             await _ec2InstanceService.TerminateAsync(data);
+        }
+
+        [HttpGet("get/{awsUid}")]
+        public async Task<IEnumerable<InstanceLog>> GetInstances(string awsUid)
+        {
+            return await _instanceService.GetCompletedAsync(awsUid, activeOnly: false);
         }
     }
 }

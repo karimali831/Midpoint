@@ -123,7 +123,7 @@ namespace MidPoint.Web
             // Add functionality to inject IOptions<T>
             services.AddOptions();
             services.AddMvc();
-            services.AddSingleton<IEc2InstanceService, Ec2InstanceService>();
+            services.AddScoped<IEc2InstanceService, Ec2InstanceService>();
 
             var other = this.Configuration.GetAWSOptions("other");
 
@@ -158,8 +158,10 @@ namespace MidPoint.Web
 
 
             backgroundJobs.Enqueue(() => Console.WriteLine("Hello world from Hangfire!"));
+
+            using var scope = app.ApplicationServices.CreateScope();
             RecurringJob.AddOrUpdate("Deduct tokens every minute",
-                () => app.ApplicationServices.GetRequiredService<ITokenJobService>().UpdateAsync(),
+                () => scope.ServiceProvider.GetRequiredService<ITokenJobService>().UpdateAsync(),
                 Cron.Minutely
             );
 

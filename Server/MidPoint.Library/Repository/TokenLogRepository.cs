@@ -1,4 +1,5 @@
-﻿using MidPoint.Library.Helper;
+﻿using Amazon.DynamoDBv2.DocumentModel;
+using MidPoint.Library.Helper;
 using MidPoint.Library.Model.Db;
 
 namespace MidPoint.Library.Repository
@@ -18,10 +19,21 @@ namespace MidPoint.Library.Repository
         public TokenLogRepository(IConfigHelper config) : base(config)
         {
         }
-        
+
         public async Task<bool> AddAsync(TokenLog model)
         {
-            return await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
+            // strange we need to do this it's inserting duplicating id
+            var existing = await ItemExistsAsync($"SELECT COUNT(1) FROM {Table} WHERE Id = @Id", new { model.Id });
+
+            if (!existing) 
+            { 
+                return await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
+            }
+            else
+            {
+                model.Id = Guid.NewGuid();
+                return await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
+            }
         }
 
         public async Task<IEnumerable<TokenLog>> GetAllByInstanceId(string instanceId)

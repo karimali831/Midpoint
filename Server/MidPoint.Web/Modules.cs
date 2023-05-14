@@ -13,7 +13,6 @@ namespace MidPoint.Web
         {
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<IConfigHelper, ConfigHelper>();
-            services.AddSingleton<ITokenJobService, TokenJobService>();
             services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
 
             // web rtc
@@ -22,8 +21,8 @@ namespace MidPoint.Web
             );
 
             services.AddSingleton<IStripeProductService, StripeProductService>();
-            services.AddSingleton<IAwsUserService, AwsUserService>();
-            
+            services.AddScoped<IAwsUserService, AwsUserService>();
+            services.AddScoped<ITokenJobService, TokenJobService>();
             services.AddScoped<IStripePaymentService, StripePaymentService>();
             services.AddScoped<IStripePriceService, StripePriceService>();
             services.AddScoped<IStripeCustomerService, StripeCustomerService>();
@@ -32,13 +31,13 @@ namespace MidPoint.Web
             services.AddScoped<ICouponService, CouponService>();
             services.AddScoped<IBillingCustomerService, BillingCustomerService>();
             services.AddScoped<IPromotionService, PromotionService>();
-            services.AddSingleton<IPaymentService, PaymentService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IInstanceService, InstanceService>();
             
             // repositories
-            services.AddSingleton<ITokenLogRepository, TokenLogRepository>();
-            services.AddSingleton<IPaymentRepository, PaymentRepository>();
-            services.AddSingleton<IInstanceRepository, InstanceRepository>();
-            
+            services.AddScoped<ITokenLogRepository, TokenLogRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IInstanceRepository, InstanceRepository>();
             services.AddScoped<IBillingCustomerRepository, BillingCustomerRepository>();
             services.AddScoped<IPromotionRepository, PromotionRepository>();
             services.AddScoped<ICouponRepository, CouponRepository>();
