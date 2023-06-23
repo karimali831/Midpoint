@@ -3,6 +3,7 @@ import { IUser } from '../../../../models/IUser'
 import { getUser } from '../../../contexts/user/Selectors'
 import {
     GetPaymentsAction,
+    GetPaymentsFailureAction,
     GetPaymentsSuccessAction
 } from '../../../contexts/user/Actions'
 import { paymentApi } from '../../../../api/paymentApi'
@@ -13,10 +14,12 @@ export default function* paymentApiSaga() {
 }
 
 export function* getPayments() {
-    const user: IUser = yield select(getUser)
-    const response: IPayment[] = yield call(paymentApi.getPayments, user.id)
+    try {
+        const user: IUser = yield select(getUser)
+        const response: IPayment[] = yield call(paymentApi.getPayments, user.id)
 
-    if (response.length > 0) {
         yield put(GetPaymentsSuccessAction(response))
+    } catch (e: any) {
+        yield put(GetPaymentsFailureAction(e.message))
     }
 }

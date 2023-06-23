@@ -1,17 +1,19 @@
-import React, { ReactElement } from 'react';
-import './styles.css';
+import React, { ReactElement } from 'react'
+import './styles.css'
 
 interface IOwnProps {
-    text: string;
-    icon?: ReactElement;
-    width?: number;
-    height?: number;
-    outline?: boolean;
-    disabled?: boolean;
-    danger?: boolean;
-    success?: boolean;
-    secondary?: boolean;
-    onClick?: () => void;
+    text: string
+    icon?: ReactElement
+    width?: number
+    height?: number
+    outline?: boolean
+    disabled?: boolean
+    danger?: boolean
+    warning?: boolean
+    success?: boolean
+    secondary?: boolean
+    small?: boolean
+    onClick?: () => void
 }
 
 export const MainButton: React.FC<IOwnProps> = (props) => {
@@ -24,20 +26,24 @@ export const MainButton: React.FC<IOwnProps> = (props) => {
         danger,
         success,
         secondary,
+        small,
+        warning,
         height,
         onClick
-    } = props;
+    } = props
 
-    let bgColor;
+    let bgColor
 
     if (success) {
-        bgColor = '#45C419';
+        bgColor = '#45C419'
     } else if (danger) {
-        bgColor = 'rgb(196, 25, 25)';
+        bgColor = 'rgb(196, 25, 25)'
+    } else if (warning) {
+        bgColor = 'rgb(255, 167, 38)'
     } else if (outline) {
-        ('transparent');
+        ;('transparent')
     } else {
-        bgColor = '#195DC4';
+        bgColor = '#195DC4'
     }
 
     return (
@@ -51,11 +57,11 @@ export const MainButton: React.FC<IOwnProps> = (props) => {
                 opacity: disabled ? 0.25 : 1,
                 width: width ?? undefined,
                 cursor: onClick ? 'pointer' : 'default',
-                height: secondary ? 15 : height ?? undefined
+                height: secondary || small ? 15 : height ?? undefined
             }}
         >
-            {icon && <span className="mr5 mt5">{icon}</span>}
-            <span className="fs14">{text}</span>
+            {icon && <span className="mr10 mt5">{icon}</span>}
+            <span className={secondary || small ? 'fs12' : 'fs14'}>{text}</span>
         </div>
-    );
-};
+    )
+}

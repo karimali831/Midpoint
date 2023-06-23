@@ -50,6 +50,11 @@ export const streamReducer = createReducer(streamInitialState, (builder) => {
         })
         .addCase(SetUserConnectionAction, (state, action) => {
             state.userConnection = action.payload
+
+            if (action.payload === null) {
+                state.timeLiveDuration = null
+                state.timeLiveStr = '0m 0s'
+            }
         })
         .addCase(SetTimeLiveAction, (state, action) => {
             state.timeLiveDuration = action.payload.duration

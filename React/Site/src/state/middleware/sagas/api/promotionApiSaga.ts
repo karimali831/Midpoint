@@ -8,7 +8,6 @@ import {
     GetPromotionsSuccessAction
 } from '../../../contexts/user/Actions'
 import { IPromotion } from '../../../../models/IPromotion'
-import toast from 'react-hot-toast'
 
 export default function* promotionApiSaga() {
     yield takeLatest(GetPromotionsAction.type, getPromotions)
@@ -26,7 +25,6 @@ export function* getPromotions() {
             yield put(GetPromotionsSuccessAction(response))
         }
     } catch (error: any) {
-        yield put(GetPromotionsFailureAction())
-        toast.error(error.message)
+        yield put(GetPromotionsFailureAction(error.message))
     }
 }

@@ -1,17 +1,25 @@
-import { IStripePricePlan } from "../models/IStripePricePlan";
-import { rootUrl } from "../utils/UrlHelper";
-import HttpClient from "./httpClient";
+import { IStripePricePlan } from '../models/IStripePricePlan'
+import { rootUrl } from '../utils/UrlHelper'
+import HttpClient from './httpClient'
 
 class StripeApi extends HttpClient {
     public constructor() {
-        super(rootUrl + "/api/order");
+        super(rootUrl + '/api/order')
     }
 
-    public getPricingModel = async () => 
-        this.api.get<IStripePricePlan[]>('/GetPricingModel')
-    
-    public createPaymentIntent = async (priceId: string, awsUid: string, promoCode?: string) => 
-        this.api.post<IRetrieveSecretTokenApiResponse>(`/CreatePaymentIntent/${priceId}/${awsUid}${promoCode ? `/${promoCode}` : ""}`)
+    public getPricingModel = async () =>
+        await this.api.get<IStripePricePlan[]>('/GetPricingModel')
+
+    public createPaymentIntent = async (
+        priceId: string,
+        awsUid: string,
+        promoCode?: string
+    ) =>
+        await this.api.post<IRetrieveSecretTokenApiResponse>(
+            `/CreatePaymentIntent/${priceId}/${awsUid}${
+                promoCode ? `/${promoCode}` : ''
+            }`
+        )
 }
 
 export interface IRetrieveSecretTokenApiResponse {
@@ -22,4 +30,4 @@ export interface IRetrieveSecretTokenApiResponse {
     amount?: string
 }
 
-export const stripeApi = new StripeApi();
+export const stripeApi = new StripeApi()

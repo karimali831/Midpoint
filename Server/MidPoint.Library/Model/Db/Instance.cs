@@ -1,4 +1,5 @@
 ﻿using MidPoint.Library.Enum;
+using System.Net;
 
 namespace MidPoint.Library.Model.Db
 {
@@ -6,7 +7,7 @@ namespace MidPoint.Library.Model.Db
     {
         public string Id { get; set; }
         public string AwsUid { get; set; }
-        public Ec2InstanceStatus Status { get; set; }
+        public HttpStatusCode Status { get; set; }
         public DateTime LaunchedDate { get; set; }
         public DateTime? TerminatedDate { get; set; }
     }

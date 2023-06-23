@@ -7,6 +7,7 @@ export interface IInstanceState {
     instanceFailure: string | null
     instancesFailure: string | null
     loadingInstances: boolean
+    starting: boolean
 }
 
 export const instanceInitialState: IInstanceState = {
@@ -14,5 +15,6 @@ export const instanceInitialState: IInstanceState = {
     instances: [],
     instanceFailure: null,
     instancesFailure: null,
-    loadingInstances: false
+    loadingInstances: false,
+    starting: false
 }

@@ -157,7 +157,7 @@ namespace MidPoint.Library.Service
 
             var launchRequest = new RunInstancesRequest()
             {
-                ImageId = "ami-01e91a8e71e619d87",
+                ImageId = "ami-01438d6029c106183",
                 InstanceType = InstanceType.T2Micro,
                 MinCount = 1,
                 MaxCount = 1,
@@ -184,19 +184,23 @@ namespace MidPoint.Library.Service
             await CheckState(new List<string> { instance.InstanceId });
             await _awsUserService.UpdateAsync("createdInstanceId", instance.InstanceId, awsUid);
 
-            await _instanceService.CreateAsync(new Model.Db.Instance
+            if ((Ec2InstanceStatus)instance.State.Code == Ec2InstanceStatus.Running)
             {
-                Id = instance.InstanceId,
-                AwsUid = awsUid,
-                Status = (Ec2InstanceStatus)launchResponse.HttpStatusCode,
-                LaunchedDate = instance.LaunchTime
-            });
+                await _instanceService.CreateAsync(new Model.Db.Instance
+                {
+                    Id = instance.InstanceId,
+                    AwsUid = awsUid,
+                    Status = launchResponse.HttpStatusCode,
+                    LaunchedDate = instance.LaunchTime
+                });
+            }
             
 
             return new EC2Response
             {
                 Message = launchResponse.ResponseMetadata.RequestId,
-                Status = launchResponse.HttpStatusCode,
+                StatusCode = launchResponse.HttpStatusCode,
+                State = (Ec2InstanceStatus)instance.State.Code,
                 LaunchTime = instance.LaunchTime,
                 HostRoomId = hostRoomId
             };

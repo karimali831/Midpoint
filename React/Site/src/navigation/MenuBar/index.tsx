@@ -11,7 +11,7 @@ import {
     Tooltip,
     Typography
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { MainButton } from '../../components/Buttons/MainButton'
 import { Page } from '../../enum/Page'
@@ -22,7 +22,6 @@ import {
     SetRegisteringAction,
     ShowPageAction
 } from '../../state/contexts/app/Actions'
-import { getAppState } from '../../state/contexts/app/Selectors'
 import { getUserState } from '../../state/contexts/user/Selectors'
 import useStyles from '../styles'
 import { NavbarProfile } from './Profile'
@@ -38,17 +37,11 @@ export interface IOwnProps {
 }
 
 export const MenuBar = () => {
-    const [viewingWebsite, setViewingWebsite] = useState<boolean>(true)
     const { user } = useSelector(getUserState)
-    const { page } = useSelector(getAppState)
     const dispatch = useDispatch()
     const { classes } = useStyles()
 
     const { basket } = useSelector(getCheckoutState)
-
-    useEffect(() => {
-        setViewingWebsite(page === Page.Home || page === Page.Login)
-    }, [page])
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
         null
@@ -115,80 +108,54 @@ export const MenuBar = () => {
                             }
                         }}
                     >
-                        {viewingWebsite ? (
+                        {!user ? (
                             <>
-                                {!!user ? (
-                                    <MainButton
-                                        width={100}
-                                        text="Dashboard"
-                                        onClick={() => {
-                                            setViewingWebsite(false)
-                                            dispatch(
-                                                ShowPageAction(Page.Dashboard)
-                                            )
-                                        }}
-                                    />
-                                ) : (
-                                    <>
-                                        <span
-                                            style={{
-                                                width: 60,
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => {
-                                                dispatch(
-                                                    SetRegisteringAction(false)
-                                                )
-                                                dispatch(
-                                                    ShowPageAction(Page.Login)
-                                                )
-                                            }}
-                                        >
-                                            Sign In
-                                        </span>
-                                        <MainButton
-                                            text="Sign up"
-                                            onClick={() => {
-                                                dispatch(
-                                                    SetRegisteringAction(true)
-                                                )
-                                                dispatch(
-                                                    ShowPageAction(Page.Login)
-                                                )
-                                            }}
-                                        />
-                                    </>
-                                )}
+                                <span
+                                    style={{
+                                        width: 60,
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={() => {
+                                        dispatch(SetRegisteringAction(false))
+                                        dispatch(ShowPageAction(Page.Login))
+                                    }}
+                                >
+                                    Sign In
+                                </span>
+                                <MainButton
+                                    text="Sign up"
+                                    onClick={() => {
+                                        dispatch(SetRegisteringAction(true))
+                                        dispatch(ShowPageAction(Page.Login))
+                                    }}
+                                />
                             </>
                         ) : (
-                            !!user && (
-                                <>
-                                    <NotificationsIcon />
-                                    <span>{user.displayName}</span>
+                            <>
+                                <NotificationsIcon />
+                                <span>{user.displayName}</span>
 
-                                    <Tooltip
-                                        classes={{
-                                            arrow: classes.arrow,
-                                            tooltip: classes.tooltip
+                                <Tooltip
+                                    classes={{
+                                        arrow: classes.arrow,
+                                        tooltip: classes.tooltip
+                                    }}
+                                    title={<NavbarProfile />}
+                                    arrow
+                                >
+                                    <img
+                                        src={images.adamProfilePic}
+                                        style={{
+                                            width: 40,
+                                            height: 40,
+                                            objectFit: 'cover',
+                                            borderRadius: 50
                                         }}
-                                        title={<NavbarProfile />}
-                                        arrow
-                                    >
-                                        <img
-                                            src={images.adamProfilePic}
-                                            style={{
-                                                width: 40,
-                                                height: 40,
-                                                objectFit: 'cover',
-                                                borderRadius: 50
-                                            }}
-                                        />
-                                    </Tooltip>
-                                </>
-                            )
+                                    />
+                                </Tooltip>
+                            </>
                         )}
                     </Box>
-
                     {/* Mobile view */}
                     <Box
                         sx={{

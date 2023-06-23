@@ -109,7 +109,7 @@ export const InstanceTimer = (props: IOwnProps) => {
                 color={minutesRemaining < 10 ? 'error' : 'info'}
             />
             <div
-                className="align-2"
+                className={isMini ? 'align-13' : 'align-2'}
                 style={{
                     marginTop: 15,
                     textAlign: isMini ? 'center' : 'left',
@@ -124,7 +124,7 @@ export const InstanceTimer = (props: IOwnProps) => {
                     : `minute${minutesRemaining === 1 ? '' : 's'} left`}
             </div>
             <div
-                className="secondary fs14 align-2"
+                className={`secondary fs14 ${isMini ? 'align-13' : 'align-2'}`}
                 style={{
                     marginTop: 5,
                     textAlign: isMini ? 'center' : 'left'

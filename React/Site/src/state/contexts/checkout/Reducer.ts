@@ -36,9 +36,12 @@ export const checkoutReducer = createReducer(
             .addCase(GetPricingPlanSuccessAction, (state, action) => {
                 state.pricingPlan = action.payload
                 state.loadingPricingPlan = false
+                state.pricingPlanFailure = null
             })
-            .addCase(GetPricingPlanFailureAction, (state) => {
+            .addCase(GetPricingPlanFailureAction, (state, action) => {
+                state.pricingPlan = []
                 state.loadingPricingPlan = false
+                state.pricingPlanFailure = action.payload
             })
             .addCase(CreatePaymentIntentAction, (state) => {
                 state.paymentIntentLoading = true

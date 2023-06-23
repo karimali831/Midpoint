@@ -14,6 +14,8 @@ export interface IUserState {
     payments: IPayment[]
     loadingPromoCodes: boolean
     loadingPayments: boolean
+    paymentsFailure: string | null
+    promotionsFailure: string | null
 }
 
 export const userInitialState: IUserState = {
@@ -27,5 +29,7 @@ export const userInitialState: IUserState = {
     promotions: [],
     payments: [],
     loadingPromoCodes: false,
-    loadingPayments: false
+    loadingPayments: false,
+    paymentsFailure: null,
+    promotionsFailure: null
 }

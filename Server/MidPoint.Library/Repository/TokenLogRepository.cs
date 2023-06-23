@@ -6,7 +6,7 @@ namespace MidPoint.Library.Repository
 {
     public interface ITokenLogRepository
     {
-        Task<bool> AddAsync(TokenLog model);
+        Task AddAsync(TokenLog model);
         Task<int> GetTotalDeductions(string instanceId);
         Task SetInactiveAsync(string instanceId);
     }
@@ -20,20 +20,20 @@ namespace MidPoint.Library.Repository
         {
         }
 
-        public async Task<bool> AddAsync(TokenLog model)
+        public async Task AddAsync(TokenLog model)
         {
             // strange we need to do this it's inserting duplicating id
-            var existing = await ItemExistsAsync($"SELECT COUNT(1) FROM {Table} WHERE Id = @Id", new { model.Id });
+            var existing = await ItemExistsAsync($"{DapperHelper.SELECT(Table, Fields)} WHERE Id = @Id", new { model.Id });
 
             if (!existing) 
             { 
-                return await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
+                await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
             }
-            else
-            {
-                model.Id = Guid.NewGuid();
-                return await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
-            }
+            //else
+            //{
+            //    model.Id = Guid.NewGuid();
+            //    return await ExecuteAsync(DapperHelper.INSERT(Table, Fields), model);
+            //}
         }
 
         public async Task<IEnumerable<TokenLog>> GetAllByInstanceId(string instanceId)

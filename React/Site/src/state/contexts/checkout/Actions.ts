@@ -13,7 +13,7 @@ const GetPricingPlanAction = createAction('@@Checkout/GetPricingPlan')
 const GetPricingPlanSuccessAction = createAction<IStripePricePlan[]>(
     '@@Checkout/GetPricingPlanSuccess'
 )
-const GetPricingPlanFailureAction = createAction(
+const GetPricingPlanFailureAction = createAction<string>(
     '@@Checkout/GetPricingPlanFailure'
 )
 

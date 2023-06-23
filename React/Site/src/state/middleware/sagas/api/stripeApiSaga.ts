@@ -28,11 +28,11 @@ export function* getPricingPlan() {
         const response: IStripePricePlan[] = yield call(
             stripeApi.getPricingModel
         )
+
         yield put(GetPricingPlanSuccessAction(response))
     } catch (e: any) {
         console.error(e)
-        yield put(GetPricingPlanFailureAction())
-        toast.error('Server error occurred')
+        yield put(GetPricingPlanFailureAction(e.message))
     }
 }
 
@@ -52,7 +52,6 @@ export function* createPaymentIntent(
             action.payload
         )
 
-        console.log(response)
         if (response) {
             yield put(CreatePaymentIntentSuccessAction(response))
         }

@@ -41,8 +41,9 @@ namespace MidPoint.Web.Controllers.Api
 
             return new EC2Response
             {
-                Status = (HttpStatusCode)20,
+                StatusCode = (HttpStatusCode)20,
                 Message = null,
+                State = (Ec2InstanceStatus)instance.State.Code,
                 HostRoomId = instance.Tags.First(x => x.Key == "HostRoomId").Value,
                 LaunchTime = instance.LaunchTime
             };

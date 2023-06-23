@@ -9,29 +9,27 @@ import { getUserState } from '../../../state/contexts/user/Selectors'
 import { DashboardCard } from '../DashboardCard'
 import { SetDashboardSection } from '../../../state/contexts/app/Actions'
 import { DashboardSection } from '../../../enum/DashboardSection'
-import { dateDiff, ordinalDate } from '../../../utils/Utils'
+import { ordinalDate } from '../../../utils/Utils'
 import './styles.css'
 import moment from 'moment'
 
 export const DashboardOverview = () => {
     const dispatch = useDispatch()
     const { user } = useSelector(getUserState)
-    // const { dashboardSection } = useSelector(getAppState)
-
-    // useEffect(() => {
-    //     if (dashboardSection === DashboardSection.Overview) {
-    //         dispatch(GetUserAction)
-    //     }
-    // }, [dashboardSection])
 
     if (!user) return null
 
     let lastStreamDaysAgo
     if (user.lastStream) {
-        lastStreamDaysAgo = dateDiff(
-            moment(new Date()),
-            moment(user.lastStream)
-        )
+        const todayDate = moment()
+        const lastStreamDate = moment(user.lastStream)
+
+        lastStreamDaysAgo = todayDate.diff(lastStreamDate, 'days')
+
+        // lastStreamDaysAgo = dateDiff(
+        //     moment(user.lastStream),
+        //     moment(new Date())
+        // )
     }
 
     return (
@@ -90,11 +88,12 @@ export const DashboardOverview = () => {
                         }
                     >
                         <span className="fs22">
-                            {user.totalStreams} stream
+                            {user.totalStreams == 0 ? 'No' : user.totalStreams}{' '}
+                            stream
                             {user.totalStreams === 1 ? '' : 's'}
                         </span>
                         {user.totalStreams > 0 && (
-                            <span className="fs12">
+                            <span className="fs12 secondary">
                                 Average of 1 stream
                                 {user.totalStreams === 1 ? '' : 's'} per week
                             </span>
@@ -117,15 +116,15 @@ export const DashboardOverview = () => {
                         <span className="fs22 mr15">
                             {user.lastStream
                                 ? ordinalDate(
-                                      moment(user.lastStream).format(`MMMM, E`)
+                                      moment(user.lastStream).format(`MMMM, DD`)
                                   )
                                 : 'No streams'}
                         </span>
                         {user.lastStream && (
-                            <span className="fs12">
+                            <span className="fs12 secondary">
                                 {lastStreamDaysAgo === 0
                                     ? 'Today'
-                                    : ` day${
+                                    : `${lastStreamDaysAgo} day${
                                           lastStreamDaysAgo === 1 ? '' : 's'
                                       } ago`}
                             </span>

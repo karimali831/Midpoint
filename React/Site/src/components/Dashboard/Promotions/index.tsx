@@ -6,13 +6,13 @@ import { getUserState } from '../../../state/contexts/user/Selectors'
 import { BarLoader } from 'react-spinners'
 import { GetPromotionsAction } from '../../../state/contexts/user/Actions'
 import { motion } from 'framer-motion'
+import { Alert } from '@mui/material'
 
 export const Promotions = () => {
-    const { promotions, user, loadingPromoCodes } = useSelector(getUserState)
+    const { promotions, loadingPromoCodes, promotionsFailure } =
+        useSelector(getUserState)
 
     const dispatch = useDispatch()
-
-    if (user?.purchasedTokens == 0) return null
 
     useEffect(() => {
         if (promotions.length === 0) {
@@ -23,8 +23,9 @@ export const Promotions = () => {
     return (
         <>
             <span className="fs28">Promotions</span>
-
-            {loadingPromoCodes ? (
+            {promotionsFailure ? (
+                <Alert severity="error">{promotionsFailure}</Alert>
+            ) : loadingPromoCodes ? (
                 <BarLoader color="#36d7b7" />
             ) : (
                 <motion.div

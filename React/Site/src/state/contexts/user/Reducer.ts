@@ -4,6 +4,7 @@ import {
     DJReadyAction,
     FirebaseAuthEmptyAction,
     GetPaymentsAction,
+    GetPaymentsFailureAction,
     GetPaymentsSuccessAction,
     GetPromotionsAction,
     GetPromotionsFailureAction,
@@ -59,8 +60,10 @@ export const userReducer = createReducer(userInitialState, (builder) => {
             state.promotions = action.payload
             state.loadingPromoCodes = false
         })
-        .addCase(GetPromotionsFailureAction, (state) => {
+        .addCase(GetPromotionsFailureAction, (state, action) => {
+            state.promotions = []
             state.loadingPromoCodes = false
+            state.promotionsFailure = action.payload
         })
         .addCase(GetPromotionsAction, (state) => {
             state.loadingPromoCodes = true
@@ -68,8 +71,14 @@ export const userReducer = createReducer(userInitialState, (builder) => {
         .addCase(GetPaymentsSuccessAction, (state, action) => {
             state.payments = action.payload
             state.loadingPayments = false
+            state.paymentsFailure = null
         })
         .addCase(GetPaymentsAction, (state) => {
             state.loadingPayments = true
+        })
+        .addCase(GetPaymentsFailureAction, (state, action) => {
+            state.payments = []
+            state.loadingPayments = false
+            state.paymentsFailure = action.payload
         })
 })

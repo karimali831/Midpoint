@@ -6,11 +6,13 @@ import { GetPricingPlanAction } from '../../state/contexts/checkout/Actions'
 import { getCheckoutState } from '../../state/contexts/checkout/Selectors'
 import { TokenCard } from './TokenCard'
 import { BarLoader } from 'react-spinners'
+import { Alert } from '@mui/material'
 
 export const Tokens = () => {
     const dispatch = useDispatch()
 
-    const { pricingPlan, loadingPricingPlan } = useSelector(getCheckoutState)
+    const { pricingPlan, loadingPricingPlan, pricingPlanFailure } =
+        useSelector(getCheckoutState)
 
     useEffect(() => {
         if (pricingPlan.length == 0) {
@@ -20,11 +22,11 @@ export const Tokens = () => {
 
     return (
         <>
-            <span style={{ fontSize: 28 }}>Get tokens</span>
-            {loadingPricingPlan ? (
-                <div style={{ marginTop: 10 }}>
-                    <BarLoader color="#36d7b7" />
-                </div>
+            <span className="fs28">Get tokens</span>
+            {pricingPlanFailure ? (
+                <Alert severity="error">{pricingPlanFailure}</Alert>
+            ) : loadingPricingPlan ? (
+                <BarLoader color="#36d7b7" />
             ) : (
                 <motion.div
                     initial={{ opacity: 0 }}

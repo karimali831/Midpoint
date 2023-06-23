@@ -1,3 +1,4 @@
+import { Ec2InstanceStatus } from '../enum/Ec2InstanceStatus'
 import { HttpStatusCode } from '../enum/HttpStatusCode'
 import { IInstance } from '../models/IStream'
 import { rootUrl } from '../utils/UrlHelper'
@@ -9,21 +10,24 @@ class ECEInstanceApi extends HttpClient {
     }
 
     public start = async (awsUid: string, hostRoomId: string) =>
-        this.api.get<EC2Response>(`/ec2instance/start/${awsUid}/${hostRoomId}`)
+        await this.api.get<EC2Response>(
+            `/ec2instance/start/${awsUid}/${hostRoomId}`
+        )
 
     public get = async (instanceId: string, awsUid: string) =>
-        this.api.get<Date>(`/ec2instance/get/${instanceId}/${awsUid}`)
+        await this.api.get<Date>(`/ec2instance/get/${instanceId}/${awsUid}`)
 
     public terminate = async (awsUid: string) =>
-        this.api.get(`/ec2instance/terminate/${awsUid}`)
+        await this.api.get(`/ec2instance/terminate/${awsUid}`)
 
     public getInstances = async (awsUid: string) =>
-        this.api.get<IInstance[]>(`/ec2instance/get/${awsUid}`)
+        await this.api.get<IInstance[]>(`/ec2instance/get/${awsUid}`)
 }
 
 export interface EC2Response {
     message: string
-    status: HttpStatusCode
+    statusCode: HttpStatusCode
+    state: Ec2InstanceStatus
     launchTime: Date | null
     hostRoomId: string | null
 }

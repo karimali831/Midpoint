@@ -3,7 +3,7 @@ import { EC2Response } from '../../../api/ec2InstanceApi'
 import { IInstance } from '../../../models/IStream'
 
 const TerminateAction = createAction('@@Instance/Terminate')
-
+const StartingAction = createAction('@@Instance/Starting')
 const GetInstancesAction = createAction('@@Instance/GetInstances')
 const GetInstancesSuccessAction = createAction<IInstance[]>(
     '@@Instance/GetInstancesSuccess'
@@ -24,5 +24,6 @@ export {
     CreateFailureAction,
     GetInstancesAction,
     GetInstancesFailureAction,
-    GetInstancesSuccessAction
+    GetInstancesSuccessAction,
+    StartingAction
 }

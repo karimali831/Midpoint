@@ -51,7 +51,7 @@ export const SoftwareInstall = () => {
                 />
                 <div
                     onClick={() =>
-                        dispatch(SetMidPointStep(MidPointStep.SoftwareSelect))
+                        dispatch(SetMidPointStep(MidPointStep.Stream))
                     }
                     style={{
                         margin: '30px 0',

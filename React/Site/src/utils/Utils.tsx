@@ -18,8 +18,6 @@ export const dateDiff = (first: any, second: any) => {
 }
 
 export const ordinalDate = (input: string) => {
-    alert(input)
-
     const [dayName, day] = input.split(',')
     const number = Number(day.trim()) % 10
 
@@ -34,5 +32,5 @@ export const ordinalDate = (input: string) => {
             ? 'rd'
             : 'th'
 
-    return `${dayName} ${number}${ordinal}`
+    return `${dayName} ${day}${ordinal}`
 }

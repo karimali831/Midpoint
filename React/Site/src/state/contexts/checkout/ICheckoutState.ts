@@ -2,6 +2,7 @@ import { IStripePricePlan } from '../../../models/IStripePricePlan'
 
 export interface ICheckoutState {
     loadingPricingPlan: boolean
+    pricingPlanFailure: string | null
     basket: IStripePricePlan[]
     pricingPlan: IStripePricePlan[]
 
@@ -15,6 +16,7 @@ export interface ICheckoutState {
 
 export const checkoutInitialState: ICheckoutState = {
     loadingPricingPlan: false,
+    pricingPlanFailure: null,
     basket: [],
     pricingPlan: [],
     paymentIntentLoading: false,

@@ -61,9 +61,9 @@ namespace MidPoint.Library.Service
                 var customerId = instance.Tags.First(x => x.Key == "CustomerId").Value;
 
                 var user = await _awsUserService.GetAsync(awsUid);
-                var purchasedTokens = await _paymentService.GetTotalPurchasedTokens(customerId);
-
-                //var purchasedTokens = user.PurchasedTokens ?? 0;
+                //var purchasedTokens = await _paymentService.GetTotalPurchasedTokens(customerId);
+                //var totalDeducted = await _tokenLogRepository.GetTotalDeductions(instance.InstanceId);
+                var purchasedTokens = user.PurchasedTokens;
 
                 var tokensByMinutesUsed = deductTokens * (timeUsed.TotalMinutes - leeWayMinutes);
                 var tokens = ConvertToInt(purchasedTokens - tokensByMinutesUsed);

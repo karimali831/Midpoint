@@ -4,7 +4,9 @@ import {
     CreateSuccessAction,
     GetInstancesAction,
     GetInstancesFailureAction,
-    GetInstancesSuccessAction
+    GetInstancesSuccessAction,
+    StartingAction,
+    TerminateAction
 } from './Actions'
 import { instanceInitialState } from './IInstanceState'
 
@@ -14,10 +16,11 @@ export const instanceReducer = createReducer(
         builder
             .addCase(CreateSuccessAction, (state, action) => {
                 state.instance = action.payload
-                state.instanceFailure = null
+                state.starting = false
             })
             .addCase(CreateFailureAction, (state, action) => {
                 state.instanceFailure = action.payload
+                state.starting = false
             })
             .addCase(GetInstancesAction, (state) => {
                 state.loadingInstances = true
@@ -31,6 +34,13 @@ export const instanceReducer = createReducer(
                 state.instances = []
                 state.instancesFailure = action.payload
                 state.loadingInstances = false
+            })
+            .addCase(StartingAction, (state) => {
+                state.starting = true
+                state.instanceFailure = null
+            })
+            .addCase(TerminateAction, (state) => {
+                state.instance = null
             })
     }
 )

@@ -84,7 +84,10 @@ namespace MidPoint.Web.Controllers
                             }
 
                             var calcTokens = tokens - liveInstanceTotalDeductions;
+                            var remainingTokens = calcTokens <= 0 ? 0 : calcTokens;
                             var paymentMethod = await _stripePaymentMethodService.GetAsync(paymentIntent.PaymentMethodId);
+
+                        
 
                             await _paymentService.AddAsync(new Payment
                             {
@@ -92,7 +95,7 @@ namespace MidPoint.Web.Controllers
                                 CustomerId = paymentIntent.CustomerId,
                                 //PurchasedTokens = tokens,
                                 PurchasedTokens = int.Parse(purchasedTokens),
-                                RemainingTokens = calcTokens,
+                                RemainingTokens = remainingTokens,
                                 Amount = paymentIntent.Amount,
                                 Status = paymentIntent.Status,
                                 CardBrand = paymentMethod.Card.Brand,
@@ -100,9 +103,10 @@ namespace MidPoint.Web.Controllers
                                 Created = DateTime.UtcNow
                             });
 
-  
+
+                            //await _awsUserService.UpdateAsync("purchasedTokens", tokens, billingCustomer.AwsUid);
                             await _awsUserService.UpdateAsync("purchasedTokens", tokens, billingCustomer.AwsUid);
-                            await _awsUserService.UpdateAsync("remainingTokens", calcTokens, billingCustomer.AwsUid);
+                            await _awsUserService.UpdateAsync("remainingTokens", tokens, billingCustomer.AwsUid);
                             
                             var promoCode = paymentIntent.Metadata.FirstOrDefault(x => x.Key == "PromoCode").Value;
 

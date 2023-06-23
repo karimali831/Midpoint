@@ -7,12 +7,12 @@ export const rootUrl3: string = 'https://localhost:7100'
 export const rootUrl4: string = 'https://localhost:44376'
 
 export const rootUrl: string =
-    process.env.NODE_ENV === 'development' ? rootUrl3 : rootUrl1
+    process.env.NODE_ENV === 'development' ? rootUrl4 : rootUrl1
 
 export const siteUrl: string =
     process.env.NODE_ENV === 'development'
         ? // isDev
           'http://localhost:3000'
-        : 'https://beattrice.netlify.app'
+        : 'https://midpoint.netlify.app'
 
 export const joinLink = (roomId: string) => `${siteUrl}/dashboard/${roomId}`

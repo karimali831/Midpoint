@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { hideLoading, showLoading } from 'react-redux-loading-bar'
+import { hideLoading } from 'react-redux-loading-bar'
 import { useSelector } from 'react-redux'
 import { getStreamState } from '../../../state/contexts/stream/Selectors'
 import {
@@ -14,7 +14,6 @@ import {
     MessageReceivedAction,
     SendMessageAction,
     SetConnectionStateAction,
-    SetHostRoomAction,
     SetUserConnectionAction,
     UsersInRoomAction
 } from '../../../state/contexts/stream/Actions'
@@ -33,6 +32,7 @@ export const StartStream = () => {
     const { user } = useSelector(getUserState)
 
     const { selectedHostRoom, midPointJoinId } = useSelector(getStreamState)
+    const { starting } = useSelector(getInstanceState)
 
     if (!user || !selectedHostRoom) return null
 
@@ -62,7 +62,7 @@ export const StartStream = () => {
             setHasEnoughTokens(true)
 
             if (instance == null) {
-                toast.loading('Launching new cloud instance...')
+                if (starting) return
                 dispatch(CreateAction())
             }
         } else {
@@ -73,13 +73,12 @@ export const StartStream = () => {
 
     React.useEffect(() => {
         if (instance) {
-            dispatch(showLoading())
             startWebRtc()
         }
     }, [instance])
 
     const startWebRtc = async () => {
-        toast.loading('Starting WebRTC...')
+        toast.loading('Connecting...')
         // await timeout(2000)
 
         if (selectedHostRoom == null) {
@@ -120,7 +119,6 @@ export const StartStream = () => {
                 pageNumber: 1
             })
         )
-        dispatch(SetHostRoomAction(selectedHostRoom))
         dispatch(SetUserConnectionAction(uc))
 
         start(uc)
@@ -217,6 +215,7 @@ export const StartStream = () => {
                 .catch((error) => toast.error(error.message))
                 .finally(() => {
                     toast.remove()
+                    toast.success('Connected')
                     dispatch(hideLoading())
 
                     // toast.success("You're all set!")
@@ -258,10 +257,7 @@ export const StartStream = () => {
         if (!!userConnection?.hubConnection) {
             await userConnection.hubConnection
                 .stop()
-                .then(() => {
-                    dispatch(SetUserConnectionAction(null))
-                    dispatch(SetHostRoomAction(null))
-                })
+                .then(() => dispatch(SetUserConnectionAction(null)))
                 .catch((err) => {
                     console.error(err)
                     toast.error(err.message)

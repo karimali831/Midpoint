@@ -8,22 +8,34 @@ import {
     GetInstancesAction,
     GetInstancesFailureAction,
     GetInstancesSuccessAction,
+    StartingAction,
     TerminateAction
 } from '../../../contexts/instance/Actions'
 import { HttpStatusCode } from '../../../../enum/HttpStatusCode'
 import { hideLoading, showLoading } from 'react-redux-loading-bar'
 import { IUser } from '../../../../models/IUser'
 import { getUser } from '../../../contexts/user/Selectors'
-import { getSelectedHostRoom } from '../../../contexts/stream/Selectors'
+import {
+    getLoadingBar,
+    getSelectedHostRoom
+} from '../../../contexts/stream/Selectors'
 import { HostRoom } from '../../../../API'
 import { DashboardSection } from '../../../../enum/DashboardSection'
 import {
     DeleteHostRoomAction,
-    SetHostRoomAction,
     SetUserConnectionAction
 } from '../../../contexts/stream/Actions'
-import { SetDashboardSection } from '../../../contexts/app/Actions'
+import {
+    SetDashboardSection,
+    ShowPageAction
+} from '../../../contexts/app/Actions'
 import { IInstance } from '../../../../models/IStream'
+import { getAppState } from '../../../contexts/app/Selectors'
+import { IAppState } from '../../../contexts/app/IAppState'
+import { Page } from '../../../../enum/Page'
+import { getInstanceState } from '../../../contexts/instance/Selectors'
+import { IInstanceState } from '../../../contexts/instance/IInstanceState'
+import { Ec2InstanceStatus } from '../../../../enum/Ec2InstanceStatus'
 
 export default function* ec2InstanceSaga() {
     yield takeLatest(CreateAction.type, createInstance)
@@ -36,7 +48,6 @@ export function* terminateInstance() {
         toast.remove()
 
         yield put(SetUserConnectionAction(null))
-        yield put(SetHostRoomAction(null))
         yield put(SetDashboardSection(DashboardSection.Overview))
 
         const selectedHostRoom: HostRoom | null = yield select(
@@ -55,9 +66,20 @@ export function* terminateInstance() {
 }
 
 export function* createInstance() {
-    yield put(showLoading())
-
     try {
+        const instance: IInstanceState = yield select(getInstanceState)
+        yield put(StartingAction())
+
+        const percentage: number | null = yield select(getLoadingBar)
+
+        console.log(percentage)
+
+        if (!instance.starting) {
+            yield put(showLoading())
+        }
+        yield put(StartingAction())
+
+        toast.loading('Launching new cloud instance...')
         const user: IUser = yield select(getUser)
         const hostRoom: HostRoom = yield select(getSelectedHostRoom)
 
@@ -67,20 +89,32 @@ export function* createInstance() {
             hostRoom.id
         )
 
-        // const response: EC2Response = {
-        //     message: '',
-        //     status: HttpStatusCode.OK,
-        //     launchTime: new Date(),
-        //     hostRoomId: hostRoom.id
-        // }
-
         toast.remove()
 
-        if (response.status == HttpStatusCode.OK && response.launchTime) {
+        console.log(response)
+
+        if (
+            response.statusCode == HttpStatusCode.OK &&
+            response.launchTime &&
+            response.state === Ec2InstanceStatus.Pending
+        ) {
+            yield put(showLoading())
             yield put(CreateSuccessAction(response))
+
+            const app: IAppState = yield select(getAppState)
+
+            if (app.page !== Page.Dashboard) {
+                yield put(ShowPageAction(Page.Dashboard))
+            }
+
+            if (app.dashboardSection !== DashboardSection.Overview) {
+                yield put(SetDashboardSection(DashboardSection.Start))
+            }
+        } else {
+            yield put(hideLoading())
+            yield put(CreateFailureAction(response.message))
         }
     } catch (e: any) {
-        toast.remove()
         yield put(hideLoading())
         yield put(CreateFailureAction(e.message))
     }

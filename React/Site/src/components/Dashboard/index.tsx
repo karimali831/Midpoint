@@ -1,6 +1,7 @@
 import FacebookIcon from '@mui/icons-material/Facebook'
 import InsightsIcon from '@mui/icons-material/Insights'
 import InstagramIcon from '@mui/icons-material/Instagram'
+import TokenIcon from '@mui/icons-material/Token'
 import CastConnectedIcon from '@mui/icons-material/CastConnected'
 import CloseIcon from '@mui/icons-material/Close'
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
@@ -53,15 +54,15 @@ import { WebRTC } from './WebRTC'
 import WarningIcon from '@mui/icons-material/Warning'
 import { InstanceTimer } from './InstanceTimer'
 import { Streams } from './Streams'
+import { getInstanceState } from '../../state/contexts/instance/Selectors'
 
 export const Dashboard = () => {
     const [leeWayActive, setLeeWayActive] = useState<boolean>(true)
 
     const { dashboardSection, midpointStep } = useSelector(getAppState)
     const { user } = useSelector(getUserState)
-
+    const { starting } = useSelector(getInstanceState)
     const { userConnection, timeLiveDuration } = useSelector(getStreamState)
-
     const { midPointJoinId } = useParams<HostParams>()
 
     const dispatch = useDispatch()
@@ -232,12 +233,25 @@ export const Dashboard = () => {
                                                 )
                                             )
                                         }
-                                        icon={<PowerSettingsNewIcon />}
+                                        // warning={starting}
+                                        icon={
+                                            user?.remainingTokens === 0 ? (
+                                                <TokenIcon />
+                                            ) : (
+                                                <PowerSettingsNewIcon />
+                                            )
+                                        }
                                         disabled={
                                             dashboardSection ===
                                             DashboardSection.Start
                                         }
-                                        text="Start MidPoint."
+                                        text={
+                                            user?.remainingTokens === 0
+                                                ? 'Buy Tokens'
+                                                : starting
+                                                ? 'Starting...'
+                                                : 'Start MidPoint.'
+                                        }
                                     />
                                     <div style={{ marginTop: 10 }} />
                                     <MainButton

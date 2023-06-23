@@ -8,7 +8,7 @@ class PaymentApi extends HttpClient {
     }
 
     public getPayments = async (awsUid: string) =>
-        this.api.get<IPayment[]>(`/Get/${awsUid}`)
+        await this.api.get<IPayment[]>(`/Get/${awsUid}`)
 }
 
 export const paymentApi = new PaymentApi()

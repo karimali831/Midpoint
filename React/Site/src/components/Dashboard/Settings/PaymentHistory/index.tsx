@@ -6,11 +6,13 @@ import { getUserState } from '../../../../state/contexts/user/Selectors'
 import { BarLoader } from 'react-spinners'
 import './styles.css'
 import { motion } from 'framer-motion'
+import { Alert } from '@mui/material'
 
 export const PaymentHistory = () => {
     const dispatch = useDispatch()
 
-    const { loadingPayments, payments } = useSelector(getUserState)
+    const { loadingPayments, payments, paymentsFailure } =
+        useSelector(getUserState)
 
     useEffect(() => {
         if (payments.length === 0) {
@@ -21,8 +23,9 @@ export const PaymentHistory = () => {
     return (
         <>
             <span className="fs28">Payment History</span>
-
-            {loadingPayments ? (
+            {paymentsFailure ? (
+                <Alert severity="error">{paymentsFailure}</Alert>
+            ) : loadingPayments ? (
                 <BarLoader color="#36d7b7" />
             ) : (
                 <motion.div
@@ -30,6 +33,12 @@ export const PaymentHistory = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                 >
+                    {payments.length === 0 ? (
+                        <Alert severity="info">
+                            You have no payment history
+                        </Alert>
+                    ) : null}
+
                     {payments.map((payment) => {
                         return (
                             <div key={payment.id} className="item-container">

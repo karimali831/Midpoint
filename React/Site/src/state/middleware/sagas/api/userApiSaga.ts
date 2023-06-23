@@ -146,7 +146,6 @@ export function* firebaseAuthenticated(action: PayloadAction<IFirebaseUser>) {
         }
     } catch (e) {
         toast.error('An error occurred')
-
         yield put(AwsErrorAlertAction(e as IAwsError))
         yield call(authLoadDone)
     }
